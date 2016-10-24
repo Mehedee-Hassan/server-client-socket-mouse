@@ -100,6 +100,7 @@ public class MessageActivity extends Activity
     String dstAddress;
     int dstPort;
     String response = "";
+     
 
 
     Client(String ip) {
