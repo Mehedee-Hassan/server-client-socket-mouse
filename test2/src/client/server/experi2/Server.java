@@ -1,4 +1,4 @@
-package client.server.app;
+package client.server.experi2;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,39 +12,59 @@ import java.net.UnknownHostException;
  * Created by mhr on 10/21/16.
  */
 public class Server {
+    public static String FLAG = "_SEARCH";
+    public static String N_FLAG = "_MOUSE";
 
-
+    public static int flag_block = -1;
     public static void main(String [] args) throws IOException{
 
 
         ServerSocket serverSocket = new ServerSocket(9000);
-        Socket clientSocket = null;
-        clientSocket = serverSocket.accept();
-        DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
-        String ip = dataInputStream.readUTF();
+
+
+        while (true) {
+            Socket clientSocket = null;
+            clientSocket = serverSocket.accept();
+
+
+            DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
+            String flag = dataInputStream.readUTF();
+
+
+            System.out.println(flag);
+
+
+            if (flag.equalsIgnoreCase(FLAG)) {
+                flag_block = 1;
+            } else if (flag.equalsIgnoreCase(N_FLAG)) {
+                flag_block = 2;
+
+            }
+
+            System.out.println(flag_block);
+
+            if (flag_block == 1) {
+                DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
+                outToClient.writeUTF(getHostName());
+            } else if (flag_block == 2) {
+
+
+                {
+                   // clientSocket = serverSocket.accept();
+                    dataInputStream = new DataInputStream(clientSocket.getInputStream());
+                    String message = dataInputStream.readUTF();
+
+                    System.out.println(message);
+
+
+                }
+            }
+
+
+        }
 
 
 
-
-        System.out.println(ip);
-
-
-
-
-int i = 1;
-    while(i++ < 10){
-        clientSocket = serverSocket.accept();
-		  dataInputStream = new DataInputStream(clientSocket.getInputStream());
-         String message = dataInputStream.readUTF();
-
-        System.out.println(message);
-
-
-
-    }
-
-        if(!serverSocket.isClosed())
-            serverSocket.close();
 
 
     }

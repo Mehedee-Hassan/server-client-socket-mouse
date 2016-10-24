@@ -23,6 +23,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -75,10 +76,14 @@ public class MessageActivity extends Activity
 
  class Client extends AsyncTask<Void, Void, Void> {
 
-     String TAG = "_MessageActivity";
+
+    public static List<String> _ipList;
+
+    String TAG = "_MessageActivity";
     String dstAddress;
-    int dstPort;
+
     String response = "";
+
 
 
 
@@ -86,7 +91,8 @@ public class MessageActivity extends Activity
 
         Log.d(TAG ,"|"+ip+"|");
         dstAddress = ip;
-        dstPort = 8888;
+
+        _ipList = new ArrayList<>();
     }
 
     @Override
@@ -103,7 +109,7 @@ public class MessageActivity extends Activity
 
 
             String[] temp = dstAddress.split(Pattern.quote("."));
-            byte[] ip = new byte[4];//= localhost.getAddress();
+            byte[] ip = new byte[4];
 
 
             ip[0] = (byte)(Integer.parseInt(temp[0]));
@@ -120,6 +126,8 @@ public class MessageActivity extends Activity
 
 
             boolean first = true;
+
+            _ipList.clear();
             for (int i = 1; i <= 254; i++) {
                 ip[3] = (byte) i;
 
@@ -139,13 +147,32 @@ public class MessageActivity extends Activity
     }
 
 
+     @Override
+     protected void onPostExecute(Void aVoid) {
+         super.onPostExecute(aVoid);
 
+
+         Log.d(TAG,"ip list size = "+_ipList.size());
+
+         for(String a : _ipList){
+             Log.d(TAG, " list element ="+a);
+
+         }
+     }
+
+     public static void clear_IpList(){
+        _ipList.clear();
+    }
 }
 
 
 
 
 class IpTest implements Runnable{
+
+
+    public static String FLAG = "_SEARCH";
+    public static String N_FLAG = "_MOUSE";
 
     String TAG = "IpTest";
     byte[] ipAddress ;
@@ -158,12 +185,13 @@ class IpTest implements Runnable{
         this.ipAddress = ipAddress;
     }
 
+
+
+
+
     @Override
     public void run() {
-        System.out.println ("new thread");
-
         test(getHostAddress());
-
     }
 
     private String getHostAddress() {
@@ -203,15 +231,28 @@ class IpTest implements Runnable{
                                 +" "+address.getCanonicalHostName()
                         );
 
-                        socket = new Socket(address.getHostAddress(), 9000);
+                        socket = new Socket(address, 9000);
 
-                        Log.d(TAG ," try catch ="+address.toString());
+
+                        Log.d(TAG ," try catch ="+address.toString()+" "+address.getHostName());
+
+                        Client._ipList.add(address.getHostAddress());
 
                         DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
-                        DOS.writeUTF(address.getHostAddress());
+                        DOS.writeUTF(FLAG);
 
 
 
+                        DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+                        String serverHostName = "" ;
+
+                         serverHostName
+                                = dataInputStream.readUTF();
+
+                        Log.d(TAG ,"server's host name = "+serverHostName);
+
+
+                        Client._ipList.add(serverHostName);
 
 
                     } catch(Exception ex){
@@ -237,7 +278,7 @@ class IpTest implements Runnable{
 
 
                 } else {
-                    //System.out.println(address + " - the host address and the host name are same");
+
                 }
             }
         }catch (Exception ex){
