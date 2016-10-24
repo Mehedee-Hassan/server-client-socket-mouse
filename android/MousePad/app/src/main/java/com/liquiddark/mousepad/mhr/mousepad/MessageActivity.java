@@ -1,26 +1,26 @@
 package com.liquiddark.mousepad.mhr.mousepad;
 
 import android.app.Activity;
-import android.net.wifi.ScanResult;
+import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.net.ConnectException;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -28,38 +28,56 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class MessageActivity extends Activity
-    {
-    static String TAG = "_MessageActivity";
+     {
 
-    Button button;
+        static String TAG = "_MessageActivity";
+        public static ArrayAdapter<String> ClientList ;
+        ListView clientListView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        {
 
-        button = (Button) findViewById(R.id.button);
-        Log.d("==on click view ===" ,"created");
-
-
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                try {
-                    String ipAddress = getIp();
+            try {
+                String ipAddress = getIp();
 
 
-                    Client client = new Client(ipAddress);
-                    client.execute();
+                Client client = new Client(ipAddress);
+                client.execute();
 
 
-                }catch (Exception ex){
-                    Log.e(TAG ,"on click button error == "+ex);
-                }
+            } catch (Exception ex) {
+                Log.e(TAG, "on click button error == " + ex);
             }
-        });
+
+            ClientList = new ArrayAdapter<String>(this, R.layout.list_view_item1, Client._hostNameList);
+
+
+
+
+
+            clientListView = (ListView) findViewById(R.id.clientListView);
+            clientListView.setAdapter(ClientList);
+
+            clientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    Intent openMousePad = new Intent(MessageActivity.this, ReceiveActivity.class);
+                    openMousePad.putExtra("_IP", Client._ipList.get(position));
+
+                    startActivity(openMousePad);
+
+                }
+            });
+        }
     }
+
+
 
         private String getIp() {
             WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
@@ -71,13 +89,36 @@ public class MessageActivity extends Activity
         }
 
 
-    }
+        @Override
+        protected void onRestart() {
+            super.onRestart();
+
+        }
+
+        @Override
+        protected void onResume() {
+            super.onResume();
+
+        }
+
+        @Override
+        protected void onPause() {
+            super.onPause();
+            onStop();
+        }
+
+
+
+}
 
 
  class Client extends AsyncTask<Void, Void, Void> {
 
 
-    public static List<String> _ipList;
+     public static List<String> _hostNameList;
+     public static List<String> _ipList;
+
+
 
     String TAG = "_MessageActivity";
     String dstAddress;
@@ -92,7 +133,10 @@ public class MessageActivity extends Activity
         Log.d(TAG ,"|"+ip+"|");
         dstAddress = ip;
 
+        _hostNameList = new ArrayList<>();
         _ipList = new ArrayList<>();
+
+
     }
 
     @Override
@@ -116,6 +160,7 @@ public class MessageActivity extends Activity
             ip[1] = (byte)(Integer.parseInt(temp[1]));
             ip[2] = (byte)(Integer.parseInt(temp[2]));
             ip[3] = (byte)(Integer.parseInt(temp[3]));
+            int tempIp4thPart = (Integer.parseInt(temp[3]));
 
             ip[0] &=  0xFF;
             ip[1] &=  0xFF;
@@ -127,8 +172,10 @@ public class MessageActivity extends Activity
 
             boolean first = true;
 
-            _ipList.clear();
-            for (int i = 1; i <= 254; i++) {
+
+            clear_IpAndHostList();
+            for (int i = 1; i <= 254 ; i++) {
+
                 ip[3] = (byte) i;
 
                 (new Thread(new IpTest(ip))).start();
@@ -152,16 +199,21 @@ public class MessageActivity extends Activity
          super.onPostExecute(aVoid);
 
 
-         Log.d(TAG,"ip list size = "+_ipList.size());
+         Log.d(TAG,"ip list size = "+ _hostNameList.size());
 
-         for(String a : _ipList){
+
+         MessageActivity.ClientList.notifyDataSetChanged();
+
+
+         for(String a : _hostNameList){
              Log.d(TAG, " list element ="+a);
 
          }
      }
 
-     public static void clear_IpList(){
-        _ipList.clear();
+     public static void clear_IpAndHostList(){
+        _hostNameList.clear();
+         _ipList.clear();
     }
 }
 
@@ -252,7 +304,7 @@ class IpTest implements Runnable{
                         Log.d(TAG ,"server's host name = "+serverHostName);
 
 
-                        Client._ipList.add(serverHostName);
+                        Client._hostNameList.add(serverHostName);
 
 
                     } catch(Exception ex){

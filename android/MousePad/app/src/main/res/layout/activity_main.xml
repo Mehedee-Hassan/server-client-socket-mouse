@@ -7,29 +7,37 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MessageActivity">
+    tools:context=".MessageActivity"
+    android:background="@color/message_activity_back"
+    >
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Message"
+        android:text="Search for your device"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/textView" />
+        android:id="@+id/textView"
+        />
 
-    <EditText
+
+    <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentStart="true" />
+        android:text="Connect to .. "
+        android:id="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="52dp"
+        android:layout_below="@+id/textView" />
 
-    <Button
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Send"
-        android:id="@+id/button"
-        android:layout_below="@+id/editText"
+        android:id="@+id/clientListView"
+        android:layout_below="@+id/textView2"
         android:layout_alignParentStart="true"
-        android:clickable="true"/>
+        android:layout_marginTop="30dp"
+        />
+
+
 </RelativeLayout>

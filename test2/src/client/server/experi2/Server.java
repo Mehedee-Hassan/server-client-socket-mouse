@@ -36,17 +36,16 @@ public class Server {
 
             if (flag.equalsIgnoreCase(FLAG)) {
                 flag_block = 1;
-            } else if (flag.equalsIgnoreCase(N_FLAG)) {
-                flag_block = 2;
-
-            }
 
             System.out.println(flag_block);
 
-            if (flag_block == 1) {
+            //if (flag_block == 1)
+            {
                 DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
                 outToClient.writeUTF(getHostName());
-            } else if (flag_block == 2) {
+            } }else
+            //else if (flag_block == 2)
+            {
 
 
                 {
@@ -62,11 +61,6 @@ public class Server {
 
 
         }
-
-
-
-
-
     }
 
     private static void sendHostNameToClient(String ip) throws UnknownHostException {

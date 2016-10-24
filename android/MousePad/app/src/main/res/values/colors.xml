@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="e67e22">#e67e22</color>
+    <color name="mouse_pad_back">#34495e</color>
+    <color name="mouse_pointer">#ecf0f1</color>
+    <color name="message_activity_back">#1abc9c</color>
+
 </resources>
