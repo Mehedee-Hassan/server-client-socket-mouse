@@ -184,3 +184,109 @@ public class MessageActivity extends Activity
 
 
 }
+
+
+
+
+class IpTest implements Runnable{
+
+    String TAG = "IpTest";
+    byte[] ipAddress ;
+
+    public IpTest(){
+
+    }
+
+    public IpTest(byte[] ipAddress){
+        this.ipAddress = ipAddress;
+    }
+
+    @Override
+    public void run() {
+        System.out.println ("new thread");
+
+        test(getHostAddress());
+
+    }
+
+    private String getHostAddress() {
+        InetAddress addr = null;
+        try {
+            addr = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        String ip = addr.getHostAddress();
+
+
+        return ip;
+    }
+
+
+    void test(String dstAddress){
+        Socket socket = null;
+
+
+
+        //===
+        try {
+
+
+            {
+                InetAddress address = InetAddress.getByAddress(ipAddress);
+
+
+                if (address.isReachable(500)) {
+
+
+
+                    try {
+
+                        System.out.println(TAG+"doInBackground: address =" +address+" "+address.getHostName() +" "+address.getHostAddress()
+                                +" "+address.getCanonicalHostName()
+                        );
+
+                        socket = new Socket(address.getHostAddress(), 9000);
+
+                        System.out.println(TAG+" try catch ="+address.toString());
+
+                        DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
+                        DOS.writeUTF(address.getHostAddress());
+
+
+
+
+
+                    } catch(Exception ex){
+                        System.out.println(TAG+"exception ");
+
+
+                    }
+
+
+                    finally {
+                        if (socket != null) {
+                            try {
+                                socket.close();
+                            } catch (IOException e) {
+
+
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                } else if (!address.getHostAddress().equals(address.getHostName())) {
+
+
+                } else {
+                    //System.out.println(address + " - the host address and the host name are same");
+                }
+            }
+        }catch (Exception ex){
+
+        }
+    }
+
+
+}
