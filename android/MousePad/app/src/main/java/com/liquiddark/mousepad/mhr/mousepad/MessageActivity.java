@@ -51,22 +51,10 @@ public class MessageActivity extends Activity
 
                     Client client = new Client(ipAddress);
                     client.execute();
-                    Log.d(TAG,"==onclick=="+"0");
-                  //  Socket socket = new Socket(ipAddress, 8080);
-
-                    Log.d(TAG,"==onclick=="+"1");
-                    //DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
-                    Log.d(TAG,"==onclick=="+"2");
-
-                    //DOS.writeUTF("HELLO_WORLD");
-                    Log.d(TAG,"==onclick=="+"3");
-                   // socket.close();
-
-
 
 
                 }catch (Exception ex){
-                    Log.e("==on click button ===" ,"error == "+ex);
+                    Log.e(TAG ,"on click button error == "+ex);
                 }
             }
         });
@@ -76,17 +64,8 @@ public class MessageActivity extends Activity
             WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
             WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
             int ip = wifiInfo.getIpAddress();
-            String ipAddress = //Formatter.formatIpAddress(wifiMgr.getDhcpInfo().serverAddress);
-            Formatter.formatIpAddress(ip);
+            String ipAddress = Formatter.formatIpAddress(ip);                 //Formatter.formatIpAddress(wifiMgr.getDhcpInfo().serverAddress);
 
-
-            List<ScanResult> results = wifiMgr.getScanResults();
-
-
-
-
-
-            Log.d(TAG ,"ip = "+ Formatter.formatIpAddress(wifiMgr.getDhcpInfo().gateway)+"  "+Formatter.formatIpAddress(wifiMgr.getDhcpInfo().serverAddress));
             return ipAddress;
         }
 
@@ -100,7 +79,7 @@ public class MessageActivity extends Activity
     String dstAddress;
     int dstPort;
     String response = "";
-     
+
 
 
     Client(String ip) {
@@ -124,9 +103,6 @@ public class MessageActivity extends Activity
 
 
             String[] temp = dstAddress.split(Pattern.quote("."));
-
-
-            // IPv4 usage
             byte[] ip = new byte[4];//= localhost.getAddress();
 
 
@@ -144,16 +120,13 @@ public class MessageActivity extends Activity
 
 
             boolean first = true;
-            // looping
             for (int i = 1; i <= 254; i++) {
                 ip[3] = (byte) i;
                 InetAddress address = InetAddress.getByAddress(ip);
 
-                //Log.d(TAG, "doInBackground: address =" +address);
                 if (address.isReachable(500)) {
 
 
-///// TODO: 10/23/16 make an array of ip for all diveice that has that specific port open
 
                     try {
 
@@ -177,16 +150,6 @@ public class MessageActivity extends Activity
                         continue;
 
                     }
-//                    catch (UnknownHostException e) {
-//
-//                        e.printStackTrace();
-//
-//                    } catch (ConnectException e) {
-//
-//                        Log.d(TAG ,"exception ");
-//                        //continue;
-//
-//                    }
 
                     finally {
                         if (socket != null) {
@@ -204,7 +167,6 @@ public class MessageActivity extends Activity
 
 
                 } else {
-                    //System.out.println(address + " - the host address and the host name are same");
                 }
             }
         }catch (Exception ex){
