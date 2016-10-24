@@ -122,52 +122,7 @@ public class MessageActivity extends Activity
             boolean first = true;
             for (int i = 1; i <= 254; i++) {
                 ip[3] = (byte) i;
-                InetAddress address = InetAddress.getByAddress(ip);
-
-                if (address.isReachable(500)) {
-
-
-
-                    try {
-
-                        Log.d(TAG, "doInBackground: address =" +address+" "+address.getHostName() +" "+address.getHostAddress()
-+" "+address.getCanonicalHostName()
-                        );
-
-                        socket = new Socket(address.getHostAddress(), 9000);
-
-                        Log.d(TAG," try catch ="+address.toString());
-
-                        DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
-                        DOS.writeUTF(address.getHostAddress());
-
-
-
-
-
-                    } catch(Exception ex){
-                        Log.d(TAG ,"exception ");
-                        continue;
-
-                    }
-
-                    finally {
-                        if (socket != null) {
-                            try {
-                                socket.close();
-                            } catch (IOException e) {
-
-
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                } else if (!address.getHostAddress().equals(address.getHostName())) {
-
-
-                } else {
-                }
+                
             }
         }catch (Exception ex){
 
@@ -242,13 +197,13 @@ class IpTest implements Runnable{
 
                     try {
 
-                        System.out.println(TAG+"doInBackground: address =" +address+" "+address.getHostName() +" "+address.getHostAddress()
+                        Log.d(TAG ,"doInBackground: address =" +address+" "+address.getHostName() +" "+address.getHostAddress()
                                 +" "+address.getCanonicalHostName()
                         );
 
                         socket = new Socket(address.getHostAddress(), 9000);
 
-                        System.out.println(TAG+" try catch ="+address.toString());
+                        Log.d(TAG ," try catch ="+address.toString());
 
                         DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
                         DOS.writeUTF(address.getHostAddress());
@@ -258,7 +213,7 @@ class IpTest implements Runnable{
 
 
                     } catch(Exception ex){
-                        System.out.println(TAG+"exception ");
+                        Log.d(TAG ,"exception ");
 
 
                     }
