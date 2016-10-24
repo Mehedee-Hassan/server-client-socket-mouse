@@ -12,10 +12,9 @@ public class Client {
     public static void main(String[] args){
         Socket socket = null;
         try {
-            socket = new Socket("192.168.1.101", 8888);
+            socket = new Socket("192.168.1.100", 9000);
 
-
-        DataOutputStream DOS = null;
+            DataOutputStream DOS = null;
             DOS = new DataOutputStream(socket.getOutputStream());
             DOS.writeUTF("HELLO_WORLD");
 
