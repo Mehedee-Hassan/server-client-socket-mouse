@@ -122,7 +122,9 @@ public class MessageActivity extends Activity
             boolean first = true;
             for (int i = 1; i <= 254; i++) {
                 ip[3] = (byte) i;
-                
+
+                (new Thread(new IpTest(ip))).start();
+
             }
         }catch (Exception ex){
 
@@ -191,7 +193,7 @@ class IpTest implements Runnable{
                 InetAddress address = InetAddress.getByAddress(ipAddress);
 
 
-                if (address.isReachable(500)) {
+                if (address.isReachable(1500)) {
 
 
 
