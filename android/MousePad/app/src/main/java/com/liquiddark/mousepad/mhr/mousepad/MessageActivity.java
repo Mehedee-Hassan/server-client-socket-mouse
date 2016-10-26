@@ -7,6 +7,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Formatter;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -35,51 +36,58 @@ public class MessageActivity extends Activity
         ListView clientListView;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        {
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
 
-            try {
-                String ipAddress = getIp();
+            super.onCreate(savedInstanceState);
 
 
-                Client client = new Client(ipAddress);
-                client.execute();
+
+            setContentView(R.layout.activity_main);
+            {
+
+                initClient();
+
+                ClientList = new ArrayAdapter<String>(this, R.layout.list_view_item1, Client._hostNameList);
 
 
-            } catch (Exception ex) {
-                Log.e(TAG, "on click button error == " + ex);
+
+
+
+                clientListView = (ListView) findViewById(R.id.clientListView);
+                clientListView.setAdapter(ClientList);
+
+                clientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        Intent openMousePad = new Intent(MessageActivity.this, ReceiveActivity.class);
+                        openMousePad.putExtra("_IP", Client._ipList.get(position));
+
+                        startActivity(openMousePad);
+
+                    }
+                });
             }
-
-            ClientList = new ArrayAdapter<String>(this, R.layout.list_view_item1, Client._hostNameList);
-
-
-
-
-
-            clientListView = (ListView) findViewById(R.id.clientListView);
-            clientListView.setAdapter(ClientList);
-
-            clientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    Intent openMousePad = new Intent(MessageActivity.this, ReceiveActivity.class);
-                    openMousePad.putExtra("_IP", Client._ipList.get(position));
-
-                    startActivity(openMousePad);
-
-                }
-            });
         }
-    }
+
+         private void initClient() {
+             try {
+                 String ipAddress = getIp();
 
 
+                 Client client = new Client(ipAddress);
+                 client.execute();
 
-        private String getIp() {
+
+             } catch (Exception ex) {
+                 Log.e(TAG, "on click button error == " + ex);
+             }
+         }
+
+
+         private String getIp() {
             WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
             WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
             int ip = wifiInfo.getIpAddress();
@@ -93,6 +101,8 @@ public class MessageActivity extends Activity
         protected void onRestart() {
             super.onRestart();
 
+            MessageActivity.ClientList.clear();
+            initClient();
         }
 
         @Override
@@ -104,12 +114,19 @@ public class MessageActivity extends Activity
         @Override
         protected void onPause() {
             super.onPause();
-            onStop();
+
         }
 
 
 
-}
+
+
+
+
+
+
+
+     }
 
 
  class Client extends AsyncTask<Void, Void, Void> {
@@ -120,7 +137,7 @@ public class MessageActivity extends Activity
 
 
 
-    String TAG = "_MessageActivity";
+    String TAG = "_MessageActivandroid.util.DisplayMetricsity";
     String dstAddress;
 
     String response = "";
@@ -170,10 +187,10 @@ public class MessageActivity extends Activity
             Log.d(TAG,""+ip.length+" "+ip[0]+" "+ip[1]);
 
 
-            boolean first = true;
 
 
-            clear_IpAndHostList();
+
+           // clear_IpAndHostList();
             for (int i = 1; i <= 254 ; i++) {
 
                 ip[3] = (byte) i;
