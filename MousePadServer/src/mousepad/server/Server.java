@@ -1,10 +1,13 @@
-package client.server.experi2;
+package mousepad.server;
 
 import java.awt.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 /**
  * Created by mhr on 10/21/16.
@@ -26,12 +29,15 @@ public class Server {
         while (true) {
 
             Socket clientSocket = null;
-            if(serverSocket.isClosed())
-                serverSocket = new ServerSocket(9000); // some times after a long time data pass exception occur
             clientSocket = serverSocket.accept();
 
 
             DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
+
+
+            if(serverSocket.isClosed() || serverSocket == null)
+                serverSocket = new ServerSocket(9000); // some times after a long time data pass exception occur
+
             String flag_or_message = dataInputStream.readUTF();
 
 
