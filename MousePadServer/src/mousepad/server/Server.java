@@ -1,6 +1,9 @@
 package mousepad.server;
 
+import mousepad.server.constant.Constant;
+
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -48,6 +51,7 @@ public class Server {
                 //flag_block = 1;
 
                 //if (flag_block == 1)
+                System.out.println("search ="+flag_or_message);
 
                 DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
                 outToClient.writeUTF(getHostName());
@@ -93,12 +97,19 @@ public class Server {
 
 
             System.out.println("=current mouse pos ="+currentX+" "+currentY);
-            robot.mouseMove((int)xf+currentX,(int)yf+currentY);
 
+            if(flag_i == Constant.Action.SHORT_TOUCH){
 
+                robot.mousePress( InputEvent.BUTTON1_MASK );
+                robot.mouseRelease( InputEvent.BUTTON1_MASK );
 
-            currentX = MouseInfo.getPointerInfo().getLocation().x;
-            currentY = MouseInfo.getPointerInfo().getLocation().y;
+            }else{
+                robot.mouseMove((int)xf+currentX,(int)yf+currentY);
+
+                currentX = MouseInfo.getPointerInfo().getLocation().x;
+                currentY = MouseInfo.getPointerInfo().getLocation().y;
+
+            }
 
 
             if(flag_i == 2){

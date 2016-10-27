@@ -1,0 +1,1 @@
+javaw -Xmx200m -jar E:\programming\_project\server-client-socket-mouse-master\MousePadServer\out\artifacts\MousePadServer_jar\MousePadServer.jar

@@ -10,6 +10,7 @@ import android.support.annotation.ColorRes;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.MovementMethod;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
@@ -19,6 +20,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.widget.TextView;
 
+import com.liquiddark.mousepad.mhr.mousepad.constant.Constant;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -26,11 +29,16 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class ReceiveActivity extends Activity {
 
+
+
+    private static final int MAX_CLICK_DURATION = 200;
+    private long startClickTime = Calendar.getInstance().getTimeInMillis();
 
     public static String ipTosend ="";
     public static byte[] IpToTheThread;
@@ -86,7 +94,6 @@ public class ReceiveActivity extends Activity {
 
         IpToTheThread = ip;
 
-
         MousePad.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -97,15 +104,30 @@ public class ReceiveActivity extends Activity {
 
 
                 String coordinateTemp = "";
-                if(action == MotionEvent.ACTION_UP){
+
+                if(action == MotionEvent.ACTION_DOWN){
+                    action = 1;
+                    coordinateTemp= 0 + " "+ 0;
+                    saveX = event.getX();
+                    saveY = event.getY();
+
+
+                    startClickTime = Calendar.getInstance().getTimeInMillis();
+
+                }
+                else if(action == MotionEvent.ACTION_UP){
 
                     action = 2;
                     coordinateTemp= 0 + " "+ 0;
                     saveX = event.getX();
                     saveY = event.getY();
 
-                }else if(action == MotionEvent.ACTION_DOWN){
-                    action = 1;
+
+                    if( Calendar.getInstance().getTimeInMillis()- startClickTime < MAX_CLICK_DURATION ){
+                        action = Constant.Action.SHORT_TOUCH;
+                    }
+
+                }else if(action == MotionEvent.ACTION_HOVER_MOVE){
                     coordinateTemp= 0 + " "+ 0;
                     saveX = event.getX();
                     saveY = event.getY();
@@ -118,11 +140,8 @@ public class ReceiveActivity extends Activity {
                     saveX = event.getX();
                     saveY = event.getY();
 
-                }else if(action == MotionEvent.ACTION_HOVER_MOVE){
-                    action =4;
-                    saveX = event.getX();
-                    saveY = event.getY();
                 }
+
 
 
                 String val = action+" "+ coordinateTemp;
@@ -158,6 +177,7 @@ class IpTest2 implements Runnable{
     String val;
     String TAG = "IpTest";
     byte[] ipAddress ;
+
 
     public IpTest2(){
 
