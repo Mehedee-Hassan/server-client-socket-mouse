@@ -4,6 +4,7 @@ import mousepad.server.constant.Constant;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,10 +24,15 @@ public class Server {
     private static int lasty = 0;
 
     public static int flag_block = -1;
+    private static String COMMAND_CLOSE_WINDOW = "7";
+    private static String COMMAND_TAB_WINDOW = "8";
+    private static String COMMAND_ENTER = "9";
+
     public static void main(String [] args) throws IOException{
 
 
         ServerSocket serverSocket = new ServerSocket(9000);
+
 
 
         while (true) {
@@ -44,7 +50,7 @@ public class Server {
             String flag_or_message = dataInputStream.readUTF();
 
 
-            System.out.println(flag_or_message);
+            System.out.println("flag_or_message_read="+flag_or_message);
 
 
             if (flag_or_message.equalsIgnoreCase(FLAG)) {
@@ -57,12 +63,62 @@ public class Server {
                 outToClient.writeUTF(getHostName());
 
 
-            }else
+            }else if(flag_or_message.equalsIgnoreCase(COMMAND_CLOSE_WINDOW)) {
+
+                try {
+                    System.out.println("close window block try");
+                    Robot robot = new Robot();
+                    robot.keyPress(KeyEvent.VK_ALT);
+                    robot.keyPress(KeyEvent.VK_F4);
+                    robot.keyRelease(KeyEvent.VK_ALT);
+                    robot.keyRelease(KeyEvent.VK_F4);
+
+                } catch (AWTException e) {
+
+                    System.out.println("close window block exception");
+
+                    e.printStackTrace();
+                }
+            }
+            else if(flag_or_message.equalsIgnoreCase(COMMAND_TAB_WINDOW)) {
+
+                try {
+                    System.out.println("close window block try");
+                    Robot robot = new Robot();
+                    robot.keyPress(KeyEvent.VK_ALT);
+                    robot.keyPress(KeyEvent.VK_TAB);
+                    robot.keyRelease(KeyEvent.VK_ALT);
+                    robot.keyRelease(KeyEvent.VK_TAB);
+
+                } catch (AWTException e) {
+
+                    System.out.println("close window block exception");
+
+                    e.printStackTrace();
+                }
+            }
+            else if(flag_or_message.equalsIgnoreCase(COMMAND_ENTER)) {
+
+                try {
+                    System.out.println("close window block try");
+                    Robot robot = new Robot();
+                    robot.keyPress(KeyEvent.VK_ALT);
+                    robot.keyPress(KeyEvent.VK_F4);
+                    robot.keyRelease(KeyEvent.VK_ALT);
+                    robot.keyRelease(KeyEvent.VK_F4);
+
+                } catch (AWTException e) {
+
+                    System.out.println("close window block exception");
+
+                    e.printStackTrace();
+                }
+            }
+            else
             //else if (flag_block == 2)
             {
-                // clientSocket = serverSocket.accept();
-                // dataInputStream = new DataInputStream(clientSocket.getInputStream());
-                // String message = dataInputStream.readUTF();
+
+                System.out.println("else block");
 
                 String[] coordinate = flag_or_message.split(" ");
 

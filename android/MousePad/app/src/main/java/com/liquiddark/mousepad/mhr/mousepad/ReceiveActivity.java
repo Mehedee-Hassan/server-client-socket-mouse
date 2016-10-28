@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.liquiddark.mousepad.mhr.mousepad.constant.Constant;
@@ -38,6 +39,8 @@ public class ReceiveActivity extends Activity {
 
 
     private static final int MAX_CLICK_DURATION = 200;
+    private static String COMMAND_CLOSE_WINDOW = "7";
+
     private long startClickTime = Calendar.getInstance().getTimeInMillis();
 
     public static String ipTosend ="";
@@ -46,6 +49,8 @@ public class ReceiveActivity extends Activity {
     public static double saveX = 0;
     public static double saveY = 0;
 
+
+    Button closeWindowButton ;
     TextView coordinateTv,letsPlayTv;
     View MousePad;
     @Override
@@ -63,6 +68,10 @@ public class ReceiveActivity extends Activity {
     private void initMouspad() {
         final Intent receive = this.getIntent();
         ipTosend = receive.getStringExtra("_IP");
+
+        closeWindowButton = (Button) findViewById(R.id.closeWindowButton);
+
+
 
 
         MousePad =  (View) findViewById(R.id.mousePad);
@@ -93,6 +102,16 @@ public class ReceiveActivity extends Activity {
 
 
         IpToTheThread = ip;
+
+
+        closeWindowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String val = COMMAND_CLOSE_WINDOW;
+
+                (new Thread(new IpTest2(val))).start();
+            }
+        });
 
         MousePad.setOnTouchListener(new View.OnTouchListener() {
             @Override

@@ -31,6 +31,8 @@ public class MessageActivity extends Activity {
     public static List<String> _hostNameList;
     public static List<String> _ipList;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -97,17 +99,27 @@ public class MessageActivity extends Activity {
     protected void onRestart() {
         super.onRestart();
 
-        clientListAdapter.clear();
-        initClient();
+    //   _hostNameList.clear();
+    //   _ipList.clear();
+    //    clientListAdapter.clear();
+    //    clientListAdapter.notifyDataSetChanged();
+    //    initClient();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        clientListAdapter.clear();
-        Log.d(TAG, "on pause ip list count = " + clientListAdapter.getCount());
 
-        initClient();
+
+
+       _hostNameList.clear();
+        _ipList.clear();
+       clientListAdapter.clear();
+       clientListAdapter.notifyDataSetChanged();
+
+        Log.d(TAG, "on pause ip list count = " + clientListAdapter.getCount());
+//
+       initClient();
     }
 
     @Override
@@ -337,7 +349,7 @@ public class MessageActivity extends Activity {
         }
 
 
-        void test(String dstAddress) {
+        synchronized void test(String dstAddress) {
             Socket socket = null;
 
 
