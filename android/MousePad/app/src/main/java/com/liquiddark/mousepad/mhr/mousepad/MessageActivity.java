@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -28,9 +29,9 @@ public class MessageActivity extends Activity {
     static String TAG = "_MessageActivity";
     public  ArrayAdapter<String> clientListAdapter;
     ListView clientListView;
-    public static List<String> _hostNameList;
-    public static List<String> _ipList;
-
+    public  List<String> _hostNameList;
+    public  List<String> _ipList;
+    ProgressBar progressBarClientList ;
 
 
     @Override
@@ -43,10 +44,13 @@ public class MessageActivity extends Activity {
         {
 
             initClient();
+            _hostNameList = new ArrayList<>();
+            _ipList = new ArrayList<>();
+
 
             clientListAdapter = new ArrayAdapter<String>(this, R.layout.list_view_item1, _hostNameList);
 
-
+            progressBarClientList = (ProgressBar) findViewById(R.id.progressBarClientList);
             clientListView = (ListView) findViewById(R.id.clientListView);
             clientListView.setAdapter(clientListAdapter);
 
@@ -66,8 +70,8 @@ public class MessageActivity extends Activity {
 
     private void initClient() {
 
-        _hostNameList = new ArrayList<>();
-        _ipList = new ArrayList<>();
+
+
         try {
 
 
@@ -104,6 +108,9 @@ public class MessageActivity extends Activity {
     //    clientListAdapter.clear();
     //    clientListAdapter.notifyDataSetChanged();
     //    initClient();
+
+        initClient();
+        clientListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -112,14 +119,15 @@ public class MessageActivity extends Activity {
 
 
 
-       _hostNameList.clear();
-        _ipList.clear();
-       clientListAdapter.clear();
-       clientListAdapter.notifyDataSetChanged();
+      // _hostNameList.clear();
+      //  _ipList.clear();
+      // clientListAdapter.clear();
+       //clientListAdapter.notifyDataSetChanged();
 
         Log.d(TAG, "on pause ip list count = " + clientListAdapter.getCount());
-//
-       initClient();
+
+        initClient();
+        clientListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -134,6 +142,11 @@ public class MessageActivity extends Activity {
     class Client extends AsyncTask<Void, Void, Void> {
 
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBarClientList.setVisibility(View.VISIBLE);
+        }
 
         String TAG = "_MessageActivandroid.util.DisplayMetricsity";
         String dstAddress;
@@ -262,7 +275,7 @@ public class MessageActivity extends Activity {
                                 try {
                                     socket.close();
                                     // clientListAdapter.notifyDataSetChanged();
-                                    clientListAdapter.notifyDataSetChanged();
+                                    //clientListAdapter.notifyDataSetChanged();
 
                                 } catch (IOException e) {
 
@@ -282,7 +295,7 @@ public class MessageActivity extends Activity {
             } catch (Exception ex) {
 
             }
-            clientListAdapter.notifyDataSetChanged();
+           // clientListAdapter.notifyDataSetChanged();
 
         }
 
@@ -294,16 +307,18 @@ public class MessageActivity extends Activity {
             Log.d(TAG, "ip list size = " + _hostNameList.size());
 
 
-            clientListAdapter = new ArrayAdapter<String>(getApplicationContext() , R.layout.list_view_item1, _hostNameList);
-            clientListView = (ListView) findViewById(R.id.clientListView);
-            clientListView.setAdapter(clientListAdapter);
-            clientListAdapter.notifyDataSetChanged();
+//            clientListAdapter = new ArrayAdapter<String>(getApplicationContext() , R.layout.list_view_item1, _hostNameList);
+//            clientListView = (ListView) findViewById(R.id.clientListView);
+//            clientListView.setAdapter(clientListAdapter);
+//            clientListAdapter.notifyDataSetChanged();
 
 
             for (String a : _hostNameList) {
                 Log.d(TAG, " list element =" + a);
 
             }
+
+            progressBarClientList.setVisibility(View.GONE);
         }
 
 
@@ -351,7 +366,7 @@ public class MessageActivity extends Activity {
 
         synchronized void test(String dstAddress) {
             Socket socket = null;
-
+            boolean hasIp = false;
 
             //===
             try {
@@ -375,7 +390,14 @@ public class MessageActivity extends Activity {
 
                             Log.d(TAG, " try catch =" + address.toString() + " " + address.getHostName());
 
-                            _ipList.add(address.getHostAddress());
+
+                            if(!_ipList.contains(address.getHostAddress())) {
+                                _ipList.add(address.getHostAddress());
+
+                            }else
+                                hasIp = true;
+
+
 
                             DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
                             DOS.writeUTF(FLAG);
@@ -389,8 +411,8 @@ public class MessageActivity extends Activity {
 
                             Log.d(TAG, "server's host name = " + serverHostName);
 
-
-                            _hostNameList.add(serverHostName);
+                            if(!hasIp)
+                                _hostNameList.add(serverHostName);
 
 
                         } catch (Exception ex) {

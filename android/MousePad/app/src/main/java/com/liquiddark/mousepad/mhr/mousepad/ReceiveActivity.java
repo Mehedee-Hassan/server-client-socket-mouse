@@ -2,36 +2,24 @@ package com.liquiddark.mousepad.mhr.mousepad;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PathDashPathEffect;
-import android.os.AsyncTask;
-import android.support.annotation.ColorRes;
-import android.support.v4.widget.TextViewCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.MovementMethod;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.liquiddark.mousepad.mhr.mousepad.constant.Constant;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.regex.Pattern;
 
 public class ReceiveActivity extends Activity {
@@ -40,7 +28,13 @@ public class ReceiveActivity extends Activity {
 
     private static final int MAX_CLICK_DURATION = 200;
     private static String COMMAND_CLOSE_WINDOW = "7";
+    private static final String COMMAND_TAB_WINDOW = "8";
+    private static final String COMMAND_ENTER = "9";
+    private static final String COMMAND_SCROLL_VERTICAL_DOWN = "10";
+    private static final String COMMAND_SCROLL_VERTICAL_UP = "11";
 
+
+    int tempDistence = 0;
     private long startClickTime = Calendar.getInstance().getTimeInMillis();
 
     public static String ipTosend ="";
@@ -50,9 +44,13 @@ public class ReceiveActivity extends Activity {
     public static double saveY = 0;
 
 
-    Button closeWindowButton ;
+    public static int oldScrollDistance = 0;
+    public static int mouseMidPositionBottom = 0;
+    public static int mouseMidPositionTop = 0;
+
+    Button closeWindowButton,enterButton, changeWIndowButton;
     TextView coordinateTv,letsPlayTv;
-    View MousePad;
+    View MousePad,mouseScroll;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,10 +68,12 @@ public class ReceiveActivity extends Activity {
         ipTosend = receive.getStringExtra("_IP");
 
         closeWindowButton = (Button) findViewById(R.id.closeWindowButton);
+        enterButton = (Button) findViewById(R.id.enterButton);
 
 
 
 
+        mouseScroll = (View) findViewById(R.id.mouseScroll);
         MousePad =  (View) findViewById(R.id.mousePad);
         coordinateTv = (TextView) findViewById(R.id.coordinateTextView);
         letsPlayTv = (TextView) findViewById(R.id.lets_play_tv);
@@ -112,6 +112,57 @@ public class ReceiveActivity extends Activity {
                 (new Thread(new IpTest2(val))).start();
             }
         });
+
+        mouseMidPositionBottom = mouseScroll.getHeight();
+
+
+        mouseScroll.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+
+                if(event.getAction() == MotionEvent.ACTION_MOVE){
+                    tempDistence = (int) (mouseMidPositionBottom - event.getRawY());
+
+
+                    String val = "0 0 0";
+
+                    if(tempDistence > oldScrollDistance)
+                         val = COMMAND_SCROLL_VERTICAL_UP;
+                    else
+                    if(tempDistence < oldScrollDistance)
+                         val = COMMAND_SCROLL_VERTICAL_DOWN;
+
+                   // val = COMMAND_SCROLL_VERTICAL_DOWN;
+
+                    (new Thread(new IpTest2(val))).start();
+
+
+                    oldScrollDistance = tempDistence;
+                }else
+                if(event.getAction() == MotionEvent.ACTION_UP){
+
+                }
+
+                return true;
+            }
+
+
+        });
+
+        enterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String val = COMMAND_ENTER;
+
+                (new Thread(new IpTest2(val))).start();
+
+            }
+        });
+
+
+
+
 
         MousePad.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -182,6 +233,11 @@ public class ReceiveActivity extends Activity {
 
         });
 
+    }
+
+    int abs(int number){
+
+        return (number < 0 ? (-1*number):number);
     }
 }
 

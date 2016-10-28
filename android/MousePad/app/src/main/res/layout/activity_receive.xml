@@ -32,22 +32,6 @@
         android:textColor="@color/mouse_pointer"/>
 
     <Button
-        android:text="Tab"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/tabButton"
-        android:layout_alignParentEnd="true"  />
-
-    <Button
-        android:text="ENTER"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:id="@+id/enterButton"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/tabButton" />
-
-    <Button
         android:text="Close"
         android:layout_width="wrap_content"
         android:layout_height="42dp"
@@ -55,24 +39,22 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 
-    <View android:layout_height="10dp"
-        android:layout_width="150dp"
-        android:id="@+id/mouseScrollHorizontal"
-        android:background="@color/mouse_pointer"
-        android:layout_marginEnd="15dp"
-        android:foregroundGravity="center"
-
-        android:layout_marginBottom="35dp"
-        android:layout_above="@+id/tabButton"
-        android:layout_alignParentEnd="true" />
-
-    <View android:layout_height="250dp"
-        android:layout_width="10dp"
+    <View android:layout_height="180dp"
+        android:layout_width="20dp"
         android:id="@+id/mouseScroll"
         android:background="@color/mouse_pointer"
         android:foregroundGravity="center"
 
+        android:layout_marginTop="76dp"
         android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/mouseScrollHorizontal"
-        android:layout_marginTop="57dp" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="23dp" />
+
+    <Button
+        android:text="ENTER"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:id="@+id/enterButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

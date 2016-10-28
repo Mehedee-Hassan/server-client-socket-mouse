@@ -24,9 +24,12 @@ public class Server {
     private static int lasty = 0;
 
     public static int flag_block = -1;
-    private static String COMMAND_CLOSE_WINDOW = "7";
-    private static String COMMAND_TAB_WINDOW = "8";
-    private static String COMMAND_ENTER = "9";
+    private static final String COMMAND_CLOSE_WINDOW = "7";
+    private static final String COMMAND_TAB_WINDOW = "8";
+    private static final String COMMAND_ENTER = "9";
+    private static final String COMMAND_SCROLL_VERTICAL_DOWN = "10";
+    private static final String COMMAND_SCROLL_VERTICAL_UP = "11";
+
 
     public static void main(String [] args) throws IOException{
 
@@ -65,6 +68,9 @@ public class Server {
 
             }else if(flag_or_message.equalsIgnoreCase(COMMAND_CLOSE_WINDOW)) {
 
+
+
+
                 try {
                     System.out.println("close window block try");
                     Robot robot = new Robot();
@@ -86,6 +92,11 @@ public class Server {
                     System.out.println("close window block try");
                     Robot robot = new Robot();
                     robot.keyPress(KeyEvent.VK_ALT);
+                    try {
+                        robot.wait(300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     robot.keyPress(KeyEvent.VK_TAB);
                     robot.keyRelease(KeyEvent.VK_ALT);
                     robot.keyRelease(KeyEvent.VK_TAB);
@@ -102,10 +113,43 @@ public class Server {
                 try {
                     System.out.println("close window block try");
                     Robot robot = new Robot();
-                    robot.keyPress(KeyEvent.VK_ALT);
-                    robot.keyPress(KeyEvent.VK_F4);
-                    robot.keyRelease(KeyEvent.VK_ALT);
-                    robot.keyRelease(KeyEvent.VK_F4);
+                    robot.keyPress(KeyEvent.VK_ENTER);
+                    robot.keyRelease(KeyEvent.VK_ENTER);
+
+                } catch (AWTException e) {
+
+                    System.out.println("close window block exception");
+
+                    e.printStackTrace();
+
+
+
+                    
+                }
+            }
+            else if(flag_or_message.equalsIgnoreCase(COMMAND_SCROLL_VERTICAL_DOWN)) {
+
+
+
+                try {
+                    System.out.println("scroll down block");
+                    Robot robot = new Robot();
+                    robot.mouseWheel(1);
+
+
+                } catch (AWTException e) {
+
+                    System.out.println("close window block exception");
+
+                    e.printStackTrace();
+                }
+            }
+            else if(flag_or_message.equalsIgnoreCase(COMMAND_SCROLL_VERTICAL_UP)) {
+
+                try {
+                    System.out.println("close window block try");
+                    Robot robot = new Robot();
+                    robot.mouseWheel(-1);
 
                 } catch (AWTException e) {
 
