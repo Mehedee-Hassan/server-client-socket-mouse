@@ -29,10 +29,15 @@ public class Server {
     private static final String COMMAND_ENTER = "9";
     private static final String COMMAND_SCROLL_VERTICAL_DOWN = "10";
     private static final String COMMAND_SCROLL_VERTICAL_UP = "11";
+    private static final String COMMAND_ESC = "12";
+    private static final String COMMAND_MOUSE_LEFT_CLICK = "13";
+    private static final String COMMAND_MOUSE_RIGHT_CLICK = "14";
+    private static boolean mouseLongClick = false;
 
 
-    public static void main(String [] args) throws IOException{
+    public static void main(String [] args) throws IOException, AWTException {
 
+        Robot robot = new Robot();
 
         ServerSocket serverSocket = new ServerSocket(9000);
 
@@ -69,94 +74,83 @@ public class Server {
             }else if(flag_or_message.equalsIgnoreCase(COMMAND_CLOSE_WINDOW)) {
 
 
-
-
-                try {
                     System.out.println("close window block try");
-                    Robot robot = new Robot();
+                   // Robot robot = new Robot();
                     robot.keyPress(KeyEvent.VK_ALT);
                     robot.keyPress(KeyEvent.VK_F4);
                     robot.keyRelease(KeyEvent.VK_ALT);
                     robot.keyRelease(KeyEvent.VK_F4);
 
-                } catch (AWTException e) {
 
-                    System.out.println("close window block exception");
-
-                    e.printStackTrace();
-                }
             }
-            else if(flag_or_message.equalsIgnoreCase(COMMAND_TAB_WINDOW)) {
+            else if(flag_or_message.equalsIgnoreCase(COMMAND_MOUSE_LEFT_CLICK)) {
 
-                try {
+
+                // Robot robot = new Robot();
+                robot.mousePress( InputEvent.BUTTON1_MASK );
+                robot.mouseRelease( InputEvent.BUTTON1_MASK );
+
+            }
+            else if(flag_or_message.equalsIgnoreCase("15")) {
+
+
+                // Robot robot = new Robot();
+                robot.mousePress( InputEvent.BUTTON1_MASK );
+                mouseLongClick = true;
+            }
+            else if( flag_or_message.equalsIgnoreCase("16")) {
+
+
+            }
+            else if(flag_or_message.equalsIgnoreCase(COMMAND_MOUSE_RIGHT_CLICK)) {
+
+
+
+                   // Robot robot = new Robot();
+                    robot.mousePress( InputEvent.BUTTON3_MASK );
+                    robot.mouseRelease( InputEvent.BUTTON3_MASK );
+
+
+            }
+            else if(flag_or_message.equalsIgnoreCase(COMMAND_ESC)) {
+
+
                     System.out.println("close window block try");
-                    Robot robot = new Robot();
-                    robot.keyPress(KeyEvent.VK_ALT);
-                    try {
-                        robot.wait(300);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    robot.keyPress(KeyEvent.VK_TAB);
-                    robot.keyRelease(KeyEvent.VK_ALT);
-                    robot.keyRelease(KeyEvent.VK_TAB);
+                   // Robot robot = new Robot();
+                    robot.keyPress(KeyEvent.VK_ESCAPE);
+                    robot.keyRelease(KeyEvent.VK_ESCAPE);
 
-                } catch (AWTException e) {
 
-                    System.out.println("close window block exception");
-
-                    e.printStackTrace();
-                }
             }
             else if(flag_or_message.equalsIgnoreCase(COMMAND_ENTER)) {
 
-                try {
+
                     System.out.println("close window block try");
-                    Robot robot = new Robot();
+                  //  Robot robot = new Robot();
                     robot.keyPress(KeyEvent.VK_ENTER);
                     robot.keyRelease(KeyEvent.VK_ENTER);
 
-                } catch (AWTException e) {
-
-                    System.out.println("close window block exception");
-
-                    e.printStackTrace();
-
-
-
-                    
-                }
             }
             else if(flag_or_message.equalsIgnoreCase(COMMAND_SCROLL_VERTICAL_DOWN)) {
 
 
 
-                try {
+
                     System.out.println("scroll down block");
-                    Robot robot = new Robot();
+                   // Robot robot = new Robot();
                     robot.mouseWheel(1);
 
 
-                } catch (AWTException e) {
 
-                    System.out.println("close window block exception");
-
-                    e.printStackTrace();
-                }
             }
             else if(flag_or_message.equalsIgnoreCase(COMMAND_SCROLL_VERTICAL_UP)) {
 
-                try {
+
                     System.out.println("close window block try");
-                    Robot robot = new Robot();
+                 //   Robot robot = new Robot();
                     robot.mouseWheel(-1);
 
-                } catch (AWTException e) {
 
-                    System.out.println("close window block exception");
-
-                    e.printStackTrace();
-                }
             }
             else
             //else if (flag_block == 2)
@@ -200,8 +194,15 @@ public class Server {
 
             if(flag_i == Constant.Action.SHORT_TOUCH){
 
-                robot.mousePress( InputEvent.BUTTON1_MASK );
-                robot.mouseRelease( InputEvent.BUTTON1_MASK );
+
+                if(mouseLongClick){
+
+                    robot.mouseRelease( InputEvent.BUTTON1_MASK );
+                    mouseLongClick = false;
+                }else{
+                    robot.mousePress( InputEvent.BUTTON1_MASK );
+                    robot.mouseRelease( InputEvent.BUTTON1_MASK );
+                }
 
             }else{
                 robot.mouseMove((int)xf+currentX,(int)yf+currentY);
@@ -232,6 +233,7 @@ public class Server {
 
 
     }
+
 
     private static void sendHostNameToClient(String ip) throws UnknownHostException {
         String name =  getHostName();

@@ -2,6 +2,7 @@ package com.liquiddark.mousepad.mhr.mousepad;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -13,6 +14,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.liquiddark.mousepad.mhr.mousepad.adapter.Item;
+import com.liquiddark.mousepad.mhr.mousepad.adapter.PcListArrayAdapter;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -24,14 +29,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class MessageActivity extends Activity {
+public class PcListActivity extends Activity {
 
     static String TAG = "_MessageActivity";
+
     public  ArrayAdapter<String> clientListAdapter;
+
+
+    public PcListArrayAdapter pcListArrayAdapter;
+
+
     ListView clientListView;
-    public  List<String> _hostNameList;
-    public  List<String> _ipList;
+    public  ArrayList<String> _hostNameList;
+    public  ArrayList<String> _ipList;
     ProgressBar progressBarClientList ;
+
+    TextView tv;
+    Typeface CustomFontSegoePrint ;
 
 
     @Override
@@ -39,53 +53,63 @@ public class MessageActivity extends Activity {
 
         super.onCreate(savedInstanceState);
 
+        CustomFontSegoePrint = Typeface.createFromAsset(getAssets(), "fonts/Segoe_Print.ttf");
 
-        setContentView(R.layout.activity_main);
-        {
+
+        setContentView(R.layout.activity_pc_list);
+
+
+        tv = (TextView) findViewById(R.id.textView2);
+
+
+        tv.setTypeface(CustomFontSegoePrint,Typeface.BOLD);
 
             initClient();
             _hostNameList = new ArrayList<>();
             _ipList = new ArrayList<>();
 
 
-            clientListAdapter = new ArrayAdapter<String>(this, R.layout.list_view_item1, _hostNameList);
+        //    clientListAdapter = new ArrayAdapter<String>(this, R.layout.list_view_item1, _hostNameList);
+        pcListArrayAdapter = new PcListArrayAdapter(this,R.layout.list_view_custom_item,_hostNameList);
+
+
 
             progressBarClientList = (ProgressBar) findViewById(R.id.progressBarClientList);
             clientListView = (ListView) findViewById(R.id.clientListView);
-            clientListView.setAdapter(clientListAdapter);
+            clientListView.setAdapter(pcListArrayAdapter);
 
             clientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    Intent openMousePad = new Intent(MessageActivity.this, ReceiveActivity.class);
+                    Intent openMousePad = new Intent(PcListActivity.this, PadActivity.class);
                     openMousePad.putExtra("_IP", _ipList.get(position));
 
                     startActivity(openMousePad);
 
                 }
             });
-        }
+
+
+
     }
 
     private void initClient() {
 
 
 
+
         try {
-
-
 
         String ipAddress = getIp();
         Client client = new Client(ipAddress);
         client.execute();
-
-
-
-
         } catch (Exception ex) {
             Log.e(TAG, "on click button error == " + ex);
         }
+
+
+
     }
 
 
@@ -105,12 +129,12 @@ public class MessageActivity extends Activity {
 
     //   _hostNameList.clear();
     //   _ipList.clear();
-    //    clientListAdapter.clear();
-    //    clientListAdapter.notifyDataSetChanged();
+    //    pcListArrayAdapter.clear();
+    //    pcListArrayAdapter.notifyDataSetChanged();
     //    initClient();
 
         initClient();
-        clientListAdapter.notifyDataSetChanged();
+        pcListArrayAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -121,13 +145,13 @@ public class MessageActivity extends Activity {
 
       // _hostNameList.clear();
       //  _ipList.clear();
-      // clientListAdapter.clear();
-       //clientListAdapter.notifyDataSetChanged();
+      // pcListArrayAdapter.clear();
+       //pcListArrayAdapter.notifyDataSetChanged();
 
-        Log.d(TAG, "on pause ip list count = " + clientListAdapter.getCount());
+        Log.d(TAG, "on pause ip list count = " + pcListArrayAdapter.getCount());
 
         initClient();
-        clientListAdapter.notifyDataSetChanged();
+        pcListArrayAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -274,8 +298,8 @@ public class MessageActivity extends Activity {
                             if (socket != null) {
                                 try {
                                     socket.close();
-                                    // clientListAdapter.notifyDataSetChanged();
-                                    //clientListAdapter.notifyDataSetChanged();
+                                    // pcListArrayAdapter.notifyDataSetChanged();
+                                    //pcListArrayAdapter.notifyDataSetChanged();
 
                                 } catch (IOException e) {
 
@@ -295,7 +319,7 @@ public class MessageActivity extends Activity {
             } catch (Exception ex) {
 
             }
-           // clientListAdapter.notifyDataSetChanged();
+           // pcListArrayAdapter.notifyDataSetChanged();
 
         }
 
@@ -307,10 +331,10 @@ public class MessageActivity extends Activity {
             Log.d(TAG, "ip list size = " + _hostNameList.size());
 
 
-//            clientListAdapter = new ArrayAdapter<String>(getApplicationContext() , R.layout.list_view_item1, _hostNameList);
+//            pcListArrayAdapter = new ArrayAdapter<String>(getApplicationContext() , R.layout.list_view_item1, _hostNameList);
 //            clientListView = (ListView) findViewById(R.id.clientListView);
-//            clientListView.setAdapter(clientListAdapter);
-//            clientListAdapter.notifyDataSetChanged();
+//            clientListView.setAdapter(pcListArrayAdapter);
+//            pcListArrayAdapter.notifyDataSetChanged();
 
 
             for (String a : _hostNameList) {
@@ -423,7 +447,7 @@ public class MessageActivity extends Activity {
                             if (socket != null) {
                                 try {
                                     socket.close();
-                                   // clientListAdapter.notifyDataSetChanged();
+                                   // pcListArrayAdapter.notifyDataSetChanged();
 
                                 } catch (IOException e) {
 
