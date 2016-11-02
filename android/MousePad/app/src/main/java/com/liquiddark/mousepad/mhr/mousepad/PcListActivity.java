@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.media.Image;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -27,6 +28,8 @@ import android.widget.Toast;
 import com.liquiddark.mousepad.mhr.mousepad.adapter.Item;
 import com.liquiddark.mousepad.mhr.mousepad.adapter.PcListArrayAdapter;
 
+import org.w3c.dom.Text;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -47,6 +50,7 @@ public class PcListActivity extends Activity {
 
     public PcListArrayAdapter pcListArrayAdapter;
 
+    public static boolean REFRESH_BUTTON_CLICKED = false ;
 
     ListView clientListView;
     public  ArrayList<String> _hostNameList;
@@ -55,7 +59,7 @@ public class PcListActivity extends Activity {
 
 
     ImageView refreshImageView;
-    TextView tv;
+    TextView tv,listViewMessagetextView;
     Typeface CustomFontSegoePrint ;
 
 
@@ -88,10 +92,13 @@ public class PcListActivity extends Activity {
         setContentView(R.layout.activity_pc_list);
 
 
-        tv = (TextView) findViewById(R.id.textView2);
+        tv = (TextView) findViewById(R.id.listViewTitileTextView);
         refreshImageView = (ImageView) findViewById(R.id.refreshImageView);
 
         tv.setTypeface(CustomFontSegoePrint,Typeface.BOLD);
+        listViewMessagetextView = (TextView) findViewById(R.id.listViewMessagetextView);
+        listViewMessagetextView.setTypeface(CustomFontSegoePrint);
+        listViewMessagetextView.setTypeface(CustomFontSegoePrint,Typeface.BOLD);
 
         initClient();
 
@@ -110,6 +117,7 @@ public class PcListActivity extends Activity {
         clientListView = (ListView) findViewById(R.id.clientListView);
         clientListView.setAdapter(pcListArrayAdapter);
 
+
         clientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -126,11 +134,23 @@ public class PcListActivity extends Activity {
         refreshImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                REFRESH_BUTTON_CLICKED = true;
 
                 initClient();
 
             }
         });
+
+
+        listViewMessagetextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://bokadanob.wordpress.com/mousepad/"));
+                startActivity(browserIntent);
+            }
+        });
+
+
     }
     public static int tt  = 0;
 
@@ -149,7 +169,7 @@ public class PcListActivity extends Activity {
         } catch (Exception ex) {
             Log.e(TAG, "on click button error == " + ex +" "+(tt++));
 
-            Toast.makeText(this ,"Is your pc running mouse pad ?",Toast.LENGTH_LONG).show();
+            //Toast.makeText(this ,"Is your pc running mouse pad ?",Toast.LENGTH_LONG).show();
 
         }
 
@@ -180,8 +200,29 @@ public class PcListActivity extends Activity {
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
                 pcListArrayAdapter.notifyDataSetChanged();
+
+
+                new android.os.Handler().postDelayed(new Runnable(){
+                    @Override
+                    public void run() {
+                        if(_hostNameList.size() == 0){
+                            tv.setText("No device Found!!");
+                            listViewMessagetextView.setVisibility(View.VISIBLE);
+
+                        }else{
+                            tv.setText("Select your pc form the list");
+                            listViewMessagetextView.setVisibility(View.GONE);
+
+                        }
+                    }
+                }, 1000);
             }
         }, 2000);
+
+
+
+
+
 
     }
 
@@ -208,6 +249,19 @@ public class PcListActivity extends Activity {
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
                 pcListArrayAdapter.notifyDataSetChanged();
+
+
+
+                        if(_hostNameList.size() == 0){
+                            tv.setText("No device Found!!");
+                            listViewMessagetextView.setVisibility(View.VISIBLE);
+
+                        }else{
+                            tv.setText("Select your pc form the list");
+                            listViewMessagetextView.setVisibility(View.GONE);
+
+                        }
+
             }
         }, 2000);
     }
@@ -221,6 +275,7 @@ public class PcListActivity extends Activity {
 
 
     class Client extends AsyncTask<Void, Void, Void> {
+
 
 
         @Override
@@ -324,7 +379,7 @@ public class PcListActivity extends Activity {
                                     + " " + address.getCanonicalHostName()
                             );
 
-                            socket = new Socket(address, 9000);
+                            socket = new Socket(address, 1239);
 
 
                             Log.d(TAG, " try catch =" + address.toString() + " " + address.getHostName());
@@ -399,7 +454,36 @@ public class PcListActivity extends Activity {
 
             }
 
-            progressBarClientList.setVisibility(View.GONE);
+
+            new android.os.Handler().postDelayed(new Runnable(){
+                @Override
+                public void run() {
+                    progressBarClientList.setVisibility(View.GONE);
+
+
+                    new android.os.Handler().postDelayed(new Runnable(){
+                        @Override
+                        public void run() {
+                            if(REFRESH_BUTTON_CLICKED == true) {
+                                initClient();
+                                REFRESH_BUTTON_CLICKED = false;
+                            }
+                        }
+                    }, 1000);
+
+                }
+            }, 1000);
+
+                if(_hostNameList.size() == 0){
+                    tv.setText("No device Found!!");
+                    listViewMessagetextView.setVisibility(View.VISIBLE);
+
+                }else{
+                    tv.setText("Select your pc form the list");
+                    listViewMessagetextView.setVisibility(View.GONE);
+
+                }
+
         }
 
 
@@ -466,7 +550,7 @@ public class PcListActivity extends Activity {
                                     + " " + address.getCanonicalHostName()
                             );
 
-                            socket = new Socket(address, 9000);
+                            socket = new Socket(address, 1239);
 
 
                             Log.d(TAG, " try catch =" + address.toString() + " " + address.getHostName());

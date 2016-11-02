@@ -17,30 +17,49 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Connect to your pc"
-            android:id="@+id/textView2"
+            android:text="Select your pc form the list"
+            android:id="@+id/listViewTitileTextView"
             android:textColor="#424242"
             android:shadowColor="#f5f5f5"
             android:layout_marginTop="20dp"
             android:layout_marginStart="15dp"
             android:layout_marginBottom="10dp"
+            android:textAlignment="center"
 
         />
 
 
     <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+        android:layout_marginTop="10dp">
 
             <ProgressBar
-                style="?android:attr/progressBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/progressBarClientList"
                 android:layout_marginTop="70dp"
                 android:theme="@style/AppTheme.pinkAccent"
                 android:visibility="gone"
+                android:foregroundGravity="center"
+
                 />
+
+        <TextView
+            android:text=" Please press refresh icon\n\nand\nMake sure your pc wifi is enabled.\n"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:id="@+id/listViewMessagetextView"
+            android:visibility="gone"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:foregroundGravity="center"
+            android:layout_alignParentEnd="true"
+            android:textStyle="bold"
+            />
 
         <ListView
                 android:layout_width="match_parent"
