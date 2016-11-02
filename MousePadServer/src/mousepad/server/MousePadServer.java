@@ -2,21 +2,20 @@ package mousepad.server;
 
 import mousepad.server.constant.Constant;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.*;
 
 /**
  * Created by mhr on 10/21/16.
  */
-public class Server {
+public class MousePadServer {
     public static String FLAG = "_SEARCH";
     public static String N_FLAG = "_MOUSE";
     private static boolean firstTimeCoordinate = true;
@@ -36,6 +35,10 @@ public class Server {
 
 
     public static void main(String [] args) throws IOException, AWTException {
+
+
+        systemTrayRun();
+
 
         Robot robot = new Robot();
 
@@ -170,6 +173,60 @@ public class Server {
 
         }
     }
+
+    private static void systemTrayRun() {
+        System.out.println("system tray");
+
+
+        if (!SystemTray.isSupported()) {
+            System.out.println("SystemTray is not supported");
+            return;
+        }
+        final PopupMenu popup = new PopupMenu();
+        final TrayIcon trayIcon =
+                new TrayIcon(createImage("images/mouse_icon4.png", "tray icon"));
+        final SystemTray tray = SystemTray.getSystemTray();
+
+        MenuItem exitItem = new MenuItem("Exit");
+
+        exitItem.setActionCommand("_EXIT");
+        exitItem.addActionListener(new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                if(e.getActionCommand().equalsIgnoreCase("_EXIT")){
+                    System.exit(0);
+                }
+            }
+        });
+
+        popup.add(exitItem);
+
+        trayIcon.setPopupMenu(popup);
+        trayIcon.setToolTip("MousePad");
+
+        trayIcon.setImageAutoSize(true);
+
+        trayIcon.displayMessage("MousePad","MousePad is here", TrayIcon.MessageType.INFO);
+
+        try {
+            tray.add(trayIcon);
+        } catch (AWTException e) {
+            System.out.println("TrayIcon could not be added.");
+        }
+
+    }
+    protected static Image createImage(String path, String description) {
+        URL imageURL = MousePadServer.class.getResource(path);
+
+        System.out.println("image icon");
+
+        if (imageURL == null) {
+            System.err.println("Resource not found: " + path);
+            return null;
+        } else {
+            return (new ImageIcon(imageURL, description)).getImage();
+        }
+    }
+
     public static  int currentX = 0;
     public static  int currentY = 0;
 
