@@ -8,4 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.pinkAccent">
+        <item name="colorAccent">#F50057</item> <!-- Whatever color you want-->
+    </style>
 </resources>

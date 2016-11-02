@@ -1,20 +1,28 @@
 package com.liquiddark.mousepad.mhr.mousepad;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.liquiddark.mousepad.mhr.mousepad.adapter.Item;
 import com.liquiddark.mousepad.mhr.mousepad.adapter.PcListArrayAdapter;
@@ -27,6 +35,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
 import java.util.regex.Pattern;
 
 public class PcListActivity extends Activity {
@@ -44,6 +53,8 @@ public class PcListActivity extends Activity {
     public  ArrayList<String> _ipList;
     ProgressBar progressBarClientList ;
 
+
+    ImageView refreshImageView;
     TextView tv;
     Typeface CustomFontSegoePrint ;
 
@@ -53,6 +64,24 @@ public class PcListActivity extends Activity {
 
         super.onCreate(savedInstanceState);
 
+        initActivity();
+        enableWifi();
+
+    }
+
+
+
+    private void enableWifi() {
+        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        if(!wifiManager.isWifiEnabled()){
+            Toast.makeText(this,"Please enable wifi .. ",Toast.LENGTH_LONG).show();
+            this.startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS),0);
+        }
+    }
+
+
+
+    private void initActivity() {
         CustomFontSegoePrint = Typeface.createFromAsset(getAssets(), "fonts/Segoe_Print.ttf");
 
 
@@ -60,55 +89,69 @@ public class PcListActivity extends Activity {
 
 
         tv = (TextView) findViewById(R.id.textView2);
-
+        refreshImageView = (ImageView) findViewById(R.id.refreshImageView);
 
         tv.setTypeface(CustomFontSegoePrint,Typeface.BOLD);
 
-            initClient();
-            _hostNameList = new ArrayList<>();
-            _ipList = new ArrayList<>();
+        initClient();
+
+
+
+
+        _hostNameList = new ArrayList<>();
+        _ipList = new ArrayList<>();
 
 
         //    clientListAdapter = new ArrayAdapter<String>(this, R.layout.list_view_item1, _hostNameList);
         pcListArrayAdapter = new PcListArrayAdapter(this,R.layout.list_view_custom_item,_hostNameList);
 
 
+        progressBarClientList = (ProgressBar) findViewById(R.id.progressBarClientList);
+        clientListView = (ListView) findViewById(R.id.clientListView);
+        clientListView.setAdapter(pcListArrayAdapter);
 
-            progressBarClientList = (ProgressBar) findViewById(R.id.progressBarClientList);
-            clientListView = (ListView) findViewById(R.id.clientListView);
-            clientListView.setAdapter(pcListArrayAdapter);
+        clientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            clientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent openMousePad = new Intent(PcListActivity.this, PadActivity.class);
+                openMousePad.putExtra("_IP", _ipList.get(position));
 
-                    Intent openMousePad = new Intent(PcListActivity.this, PadActivity.class);
-                    openMousePad.putExtra("_IP", _ipList.get(position));
+                startActivity(openMousePad);
 
-                    startActivity(openMousePad);
-
-                }
-            });
-
+            }
+        });
 
 
+        refreshImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                initClient();
+
+            }
+        });
     }
+    public static int tt  = 0;
 
     private void initClient() {
 
 
-
-
         try {
+
+            Log.e(TAG, "on click button error == "+tt++  );
 
         String ipAddress = getIp();
         Client client = new Client(ipAddress);
         client.execute();
+
+
         } catch (Exception ex) {
-            Log.e(TAG, "on click button error == " + ex);
+            Log.e(TAG, "on click button error == " + ex +" "+(tt++));
+
+            Toast.makeText(this ,"Is your pc running mouse pad ?",Toast.LENGTH_LONG).show();
+
         }
-
-
 
     }
 
@@ -127,37 +170,51 @@ public class PcListActivity extends Activity {
     protected void onRestart() {
         super.onRestart();
 
-    //   _hostNameList.clear();
-    //   _ipList.clear();
-    //    pcListArrayAdapter.clear();
-    //    pcListArrayAdapter.notifyDataSetChanged();
-    //    initClient();
 
         initClient();
-        pcListArrayAdapter.notifyDataSetChanged();
+        enableWifi();
+
+
+        new android.os.Handler().postDelayed(new Runnable(){
+            @Override
+            public void run() {
+                /* Create an Intent that will start the Menu-Activity. */
+                pcListArrayAdapter.notifyDataSetChanged();
+            }
+        }, 2000);
+
     }
 
+
+    @SuppressLint("NewApi")
     @Override
     protected void onResume() {
         super.onResume();
 
 
+        if (Build.VERSION.SDK_INT < 16) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
 
-      // _hostNameList.clear();
-      //  _ipList.clear();
-      // pcListArrayAdapter.clear();
-       //pcListArrayAdapter.notifyDataSetChanged();
 
         Log.d(TAG, "on pause ip list count = " + pcListArrayAdapter.getCount());
 
         initClient();
-        pcListArrayAdapter.notifyDataSetChanged();
+        enableWifi();
+
+        new android.os.Handler().postDelayed(new Runnable(){
+            @Override
+            public void run() {
+                /* Create an Intent that will start the Menu-Activity. */
+                pcListArrayAdapter.notifyDataSetChanged();
+            }
+        }, 2000);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
     }
 
 

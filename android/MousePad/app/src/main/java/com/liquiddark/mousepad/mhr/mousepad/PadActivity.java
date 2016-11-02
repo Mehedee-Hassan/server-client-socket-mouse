@@ -3,13 +3,17 @@ package com.liquiddark.mousepad.mhr.mousepad;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
@@ -17,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.liquiddark.mousepad.mhr.mousepad.constant.Constant;
 
@@ -77,6 +82,16 @@ public class PadActivity extends Activity {
          vibration = (Vibrator) getApplication().getSystemService(Context.VIBRATOR_SERVICE);
 
 
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT < 16) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
 
     }
 
@@ -92,9 +107,18 @@ public class PadActivity extends Activity {
         mouseLeftRightButtonEvent();
 
 
+        enableWifi();
 
 
+    }
 
+    private void enableWifi() {
+        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        if(!wifiManager.isWifiEnabled()){
+            Toast.makeText(this,"Please enable wifi .. ",Toast.LENGTH_SHORT).show();
+            this.startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS),0);
+            finish();
+        }
     }
 
 
