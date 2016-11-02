@@ -297,7 +297,7 @@ public class MousePadServer {
 
         Socket socket = null;
         try {
-            socket = new Socket(ip, 9000);
+            socket = new Socket(ip, 1239);
 
             DataOutputStream DOS = null;
             DOS = new DataOutputStream(socket.getOutputStream());
