@@ -37,9 +37,19 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:textAlignment="textStart"
-        android:textStyle="bold"
-
+        android:textStyle="bold|italic"
+        android:textColor="#000000"
         />
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/hand_click4"
+        android:id="@+id/imageView4"
+        android:layout_weight="1"
+
+        android:layout_gravity="center"
+        android:layout_marginRight="5dp"/>
 
 
 </LinearLayout>

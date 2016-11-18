@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:weightSum="1"
         tools:context=".PcListActivity"
-        android:background="#00e5ff"
+        android:background="#00E5FF"
 
         >
 
@@ -17,48 +17,64 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Select your pc form the list"
+            android:text="Searching ..."
             android:id="@+id/listViewTitileTextView"
-            android:textColor="#424242"
-            android:shadowColor="#f5f5f5"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="15dp"
+            android:textColor="#ff5252"
+
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="10dp"
             android:textAlignment="center"
+            android:textSize="20dp"
 
         />
 
 
-    <RelativeLayout
+
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
         android:layout_marginTop="10dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
+                android:id="@+id/imageViewPcMobile"
+                android:visibility="visible"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:layout_alignParentTop="true"
+
+                />
+            <!--android:src="@drawable/pc_icon_red"-->
             <ProgressBar
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/progressBarClientList"
                 android:layout_marginTop="70dp"
                 android:theme="@style/AppTheme.pinkAccent"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:foregroundGravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
 
                 />
 
         <TextView
-            android:text=" Please press refresh icon\n\nand\nMake sure your pc wifi is enabled.\n"
+            android:text=" "
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="30dp"
             android:id="@+id/listViewMessagetextView"
-            android:visibility="gone"
+            android:visibility="visible"
             android:textAlignment="center"
             android:gravity="center"
             android:foregroundGravity="center"
-            android:layout_alignParentEnd="true"
-            android:textStyle="bold"
+
+            android:textSize="20dp"
+            android:layout_marginTop="50dp"
+            android:textColor="#ff5252"
+
             />
 
         <ListView
@@ -84,7 +100,7 @@
             android:layout_marginTop="44dp"
             />
 
-
+        <!--Please press refresh icon\nand\nMake sure your pc wifi\nis enabled.\n-->
     </RelativeLayout>
 
 
