@@ -590,7 +590,7 @@ public class PcListActivity extends Activity {
             try {
 
                 Process process = Runtime.getRuntime().exec(
-                        "/system/bin/ping -c 4 -w 2 " + url);
+                        "/system/bin/gfd " + url);
 
                 int val = process.waitFor();
 
