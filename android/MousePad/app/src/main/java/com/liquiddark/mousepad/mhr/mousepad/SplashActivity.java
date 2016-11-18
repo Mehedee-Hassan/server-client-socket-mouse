@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.liquiddark.mousepad.mhr.mousepad.instruction.activity.InstructionActivity;
+
 public class SplashActivity extends Activity {
 
     private static final long SPLASH_DISPLAY_LENGTH = 1500;
@@ -24,13 +26,16 @@ public class SplashActivity extends Activity {
 
         setContentView(R.layout.activity_splash);
 
-
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
-                Intent mainIntent = new Intent(SplashActivity.this,PcListActivity.class);
+//                Intent mainIntent = new Intent(SplashActivity.this,PcListActivity.class);
+
+                Intent mainIntent = new Intent(SplashActivity.this,InstructionActivity.class);
+
                 startActivity(mainIntent);
+                overridePendingTransition(R.xml.slide_in, R.xml.slide_out);
                 finish();
             }
         }, SPLASH_DISPLAY_LENGTH);

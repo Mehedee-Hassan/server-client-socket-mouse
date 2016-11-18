@@ -93,6 +93,30 @@ public class PadActivity extends Activity {
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
 
+
+        InetAddress address = null;
+        try {
+//            address = InetAddress.getByAddress(this.IpToTheThread);
+//
+//            if (!ping(address.getHostAddress()))
+//            {
+//                Toast.makeText(this,"Disconnected from the pc",Toast.LENGTH_LONG).show();
+//                startActivity(new Intent(this,PcListActivity.class));
+//
+//            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
     }
 
     private void initMouspad() {
@@ -246,6 +270,42 @@ public class PadActivity extends Activity {
 
 
         });
+    }
+
+
+    public boolean  ping(String url) {
+
+        try {
+
+            Process process = Runtime.getRuntime().exec(
+                    "/system/bin/ping -c 1 -W 2 " + url);
+
+            int val = process.waitFor();
+
+
+            //Log.d(TAG+" check", "check&&&& =" + url+"| "+process.getInputStream().toString() );
+
+
+            if(val == 0)
+            {
+                process.destroy();
+
+                return true;
+            }
+            else{
+                return false;
+            }
+
+
+
+
+        } catch (IOException e) {
+            // body.append("Error\n");
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private void enterButtonEvent() {
@@ -460,13 +520,15 @@ class IpTest2 implements Runnable{
 
             {
                 InetAddress address = InetAddress.getByAddress(ipAddress);
-                if (address.isReachable(1500)) {
+                //if (address.isReachable(1500))
+              //  if(ping(address.getHostAddress()))
+                {
 
 
 
                     try {
 
-                        socket = new Socket(address, 9000);
+                        socket = new Socket(address, 1239);
 
                         DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
                         DOS.writeUTF(val);
@@ -478,13 +540,16 @@ class IpTest2 implements Runnable{
 
 
 
-                } else if (!address.getHostAddress().equals(address.getHostName())) {
+                }
+                //else if (!address.getHostAddress().equals(address.getHostName())) {
 
-
-                } else {
 
                 }
-            }
+            //else
+                {
+
+                }
+
         }catch (Exception ex){
 
         } finally {
@@ -500,5 +565,41 @@ class IpTest2 implements Runnable{
         }
     }
 
+
+
+    public boolean  ping(String url) {
+
+        try {
+
+            Process process = Runtime.getRuntime().exec(
+                    "/system/bin/ping -c 1 -W 2 " + url);
+
+            int val = process.waitFor();
+
+
+            //Log.d(TAG+" check", "check&&&& =" + url+"| "+process.getInputStream().toString() );
+
+
+            if(val == 0)
+            {
+                process.destroy();
+
+                return true;
+            }
+            else{
+                return false;
+            }
+
+
+
+
+        } catch (IOException e) {
+            // body.append("Error\n");
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }

@@ -28,8 +28,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InstructionActivity" />
-        <activity android:name=".InstructionActivity2"></activity>
+        <activity android:name=".instruction.activity.InstructionActivity" />
+        <activity android:name=".instruction.activity.InstructionActivity2" />
+        <activity android:name=".instruction.activity.InstructionActivity3" />
+        <activity android:name=".instruction.activity.InstructionActivity4"></activity>
     </application>
 
 </manifest>

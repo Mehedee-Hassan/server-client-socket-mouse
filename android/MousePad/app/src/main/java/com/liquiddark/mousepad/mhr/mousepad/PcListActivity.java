@@ -4,15 +4,19 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
@@ -25,20 +29,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.liquiddark.mousepad.mhr.mousepad.adapter.Item;
 import com.liquiddark.mousepad.mhr.mousepad.adapter.PcListArrayAdapter;
-
-import org.w3c.dom.Text;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Handler;
 import java.util.regex.Pattern;
 
 public class PcListActivity extends Activity {
@@ -58,8 +59,8 @@ public class PcListActivity extends Activity {
     ProgressBar progressBarClientList ;
 
 
-    ImageView refreshImageView;
-    TextView tv,listViewMessagetextView;
+    ImageView refreshImageView,imageViewPcMobile;
+    TextView tvConnectionStatus,listViewMessagetextView;
     Typeface CustomFontSegoePrint ;
 
 
@@ -92,10 +93,18 @@ public class PcListActivity extends Activity {
         setContentView(R.layout.activity_pc_list);
 
 
-        tv = (TextView) findViewById(R.id.listViewTitileTextView);
-        refreshImageView = (ImageView) findViewById(R.id.refreshImageView);
+        tvConnectionStatus = (TextView) findViewById(R.id.listViewTitileTextView);
+        //tvConnectionStatus.setPaintFlags(tvConnectionStatus.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        tv.setTypeface(CustomFontSegoePrint,Typeface.BOLD);
+        refreshImageView = (ImageView) findViewById(R.id.refreshImageView);
+        imageViewPcMobile = (ImageView) findViewById(R.id.imageViewPcMobile);
+
+        imageViewPcMobile.setBackgroundResource(R.drawable.connecting_to_pc);
+        AnimationDrawable  connectiongAnimation = (AnimationDrawable) imageViewPcMobile.getBackground();
+        connectiongAnimation.start();
+
+
+        tvConnectionStatus.setTypeface(CustomFontSegoePrint,Typeface.BOLD);
         listViewMessagetextView = (TextView) findViewById(R.id.listViewMessagetextView);
         listViewMessagetextView.setTypeface(CustomFontSegoePrint);
         listViewMessagetextView.setTypeface(CustomFontSegoePrint,Typeface.BOLD);
@@ -135,7 +144,12 @@ public class PcListActivity extends Activity {
             @Override
             public void onClick(View v) {
                 REFRESH_BUTTON_CLICKED = true;
+                _hostNameList.clear();
+                _ipList.clear();
 
+                MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.refresh);
+//                mp.setVolume(0.2f,0.2f);
+                mp.start();
                 initClient();
 
             }
@@ -206,18 +220,21 @@ public class PcListActivity extends Activity {
                     @Override
                     public void run() {
                         if(_hostNameList.size() == 0){
-                            tv.setText("No device Found!!");
+//                            tvConnectionStatus.setText("couldn't find pc!!");
+                            tvConnectionStatus.setText("Searching ...");
                             listViewMessagetextView.setVisibility(View.VISIBLE);
-
+                            imageViewPcMobile.setVisibility(View.VISIBLE);
                         }else{
-                            tv.setText("Select your pc form the list");
+                            tvConnectionStatus.setText("Coose your pc");
                             listViewMessagetextView.setVisibility(View.GONE);
+                            imageViewPcMobile.setVisibility(View.GONE);
+
 
                         }
                     }
-                }, 1000);
+                }, 100);
             }
-        }, 2000);
+        }, 10);
 
 
 
@@ -227,7 +244,21 @@ public class PcListActivity extends Activity {
     }
 
 
-    @SuppressLint("NewApi")
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        new android.os.Handler().postDelayed(new Runnable(){
+            @Override
+            public void run() {
+                initClient();
+//                pcListArrayAdapter.notifyDataSetChanged();
+
+            }
+        }, 1000);
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -239,36 +270,36 @@ public class PcListActivity extends Activity {
         }
 
 
-        Log.d(TAG, "on pause ip list count = " + pcListArrayAdapter.getCount());
+
+     //   _hostNameList.clear();
+     //   _ipList.clear();
+        pcListArrayAdapter.notifyDataSetChanged();
+
+
+
 
         initClient();
-        enableWifi();
 
         new android.os.Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                /* Create an Intent that will start the Menu-Activity. */
-                pcListArrayAdapter.notifyDataSetChanged();
-
-
-
-                        if(_hostNameList.size() == 0){
-                            tv.setText("No device Found!!");
-                            listViewMessagetextView.setVisibility(View.VISIBLE);
-
-                        }else{
-                            tv.setText("Select your pc form the list");
-                            listViewMessagetextView.setVisibility(View.GONE);
-
-                        }
+             //   initClient();
+//                pcListArrayAdapter.notifyDataSetChanged();
 
             }
-        }, 2000);
+        }, 5000);
+
+        enableWifi();
+
+        Log.d("_i8i "+TAG, "on pause ip list count = " + pcListArrayAdapter.getCount());
+
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
     }
 
 
@@ -376,8 +407,7 @@ public class PcListActivity extends Activity {
                         try {
 
                             Log.d(TAG, "doInBackground: address =" + address + " " + address.getHostName() + " " + address.getHostAddress()
-                                    + " " + address.getCanonicalHostName()
-                            );
+                                    + " " + address.getCanonicalHostName());
 
                             socket = new Socket(address, 1239);
 
@@ -407,6 +437,9 @@ public class PcListActivity extends Activity {
 
 
                         } finally {
+
+                            Log.d("_i8i 2"+TAG, "on pause ip list count = " + pcListArrayAdapter.getCount());
+
                             if (socket != null) {
                                 try {
                                     socket.close();
@@ -465,7 +498,7 @@ public class PcListActivity extends Activity {
                         @Override
                         public void run() {
                             if(REFRESH_BUTTON_CLICKED == true) {
-                                initClient();
+                               // initClient();
                                 REFRESH_BUTTON_CLICKED = false;
                             }
                         }
@@ -475,12 +508,17 @@ public class PcListActivity extends Activity {
             }, 1000);
 
                 if(_hostNameList.size() == 0){
-                    tv.setText("No device Found!!");
+                   // tvConnectionStatus.setText("couldn't find pc!!");
+                    tvConnectionStatus.setText("Searching ...");
                     listViewMessagetextView.setVisibility(View.VISIBLE);
+                    imageViewPcMobile.setVisibility(View.VISIBLE);
+
 
                 }else{
-                    tv.setText("Select your pc form the list");
+                    tvConnectionStatus.setText("Choose your pc");
                     listViewMessagetextView.setVisibility(View.GONE);
+                    imageViewPcMobile.setVisibility(View.GONE);
+
 
                 }
 
@@ -515,6 +553,9 @@ public class PcListActivity extends Activity {
 
         }
 
+
+
+
         private String getHostAddress() {
             InetAddress addr = null;
             try {
@@ -529,6 +570,69 @@ public class PcListActivity extends Activity {
         }
 
 
+        public boolean pingHost(String host,Socket socket) {
+            try  {
+
+                socket = new Socket(host,1239);
+                //socket.connect(new InetSocketAddress(host, 1239), 2000);
+              //  socket.close();
+
+                Log.d("ip","connected");
+                return true;
+            } catch (IOException e) {
+
+                return false; // Either timeout or unreachable or failed DNS lookup.
+            }
+        }
+
+        boolean  ping(String url) {
+            String str = "";
+            try {
+
+                Process process = Runtime.getRuntime().exec(
+                        "/system/bin/ping -c 4 -w 2 " + url);
+
+                int val = process.waitFor();
+
+
+                Log.d(TAG+" check", "check&&&& =" + url+"| "+process.getInputStream().toString() );
+
+
+                if(val == 0)
+                {
+//                    process.destroy();
+                    return true;
+                }
+                else{
+                    return false;
+                }
+
+
+
+
+            } catch (IOException e) {
+                // body.append("Error\n");
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+
+        public boolean isReachable(String ip){
+
+
+            try(Socket socket = new Socket()){
+                socket.connect(new InetSocketAddress(ip, 1239), 2000);
+                return true;
+            }catch(Exception ex){
+
+                return false;
+            }
+
+        }
+
         synchronized void test(String dstAddress) {
             Socket socket = null;
             boolean hasIp = false;
@@ -538,29 +642,34 @@ public class PcListActivity extends Activity {
 
 
                 {
+
+
                     InetAddress address = InetAddress.getByAddress(ipAddress);
 
+                    Log.d(TAG, "__address =" + address + " " + address.getHostName() + " |" + address.getHostAddress()
+                            + "| "
+                    );
 
-                    if (address.isReachable(1500)) {
+                    //if (pingHost(address.getHostAddress(),socket))
+
+                    if(ping(address.getHostAddress()))
+///                    if(address.isReachable(1500))
+                    {
 
 
                         try {
 
-                            Log.d(TAG, "doInBackground: address =" + address + " " + address.getHostName() + " " + address.getHostAddress()
-                                    + " " + address.getCanonicalHostName()
+                            Log.d(TAG, "doInBackground: address =" + address + " " + address.getHostName() + " |" + address.getHostAddress()
+                                    + "| " + address.getCanonicalHostName()
                             );
 
+                            if(socket==null)
                             socket = new Socket(address, 1239);
 
 
                             Log.d(TAG, " try catch =" + address.toString() + " " + address.getHostName());
 
 
-                            if(!_ipList.contains(address.getHostAddress())) {
-                                _ipList.add(address.getHostAddress());
-
-                            }else
-                                hasIp = true;
 
 
 
@@ -574,21 +683,62 @@ public class PcListActivity extends Activity {
                             serverHostName
                                     = dataInputStream.readUTF();
 
-                            Log.d(TAG, "server's host name = " + serverHostName);
+                            Log.d(TAG, "server's host name 2 = " + serverHostName);
 
-                            if(!hasIp)
+
+
+
+                            if(!_ipList.contains(address.getHostAddress())) {
+                                _ipList.add(address.getHostAddress());
+                            }
+                            if(!_hostNameList.contains(serverHostName)){
                                 _hostNameList.add(serverHostName);
+                            }
+
+
+
+                            new Handler(Looper.getMainLooper()).post(new Runnable() { // Tried new Handler(Looper.myLopper()) also
+                                @Override
+                                public void run() {
+                                    pcListArrayAdapter.notifyDataSetChanged();
+                                    progressBarClientList.setVisibility(View.GONE);
+                                    if(pcListArrayAdapter.getCount()!=0){
+                                        imageViewPcMobile.setVisibility(View.GONE);
+                                        tvConnectionStatus.setText("Choose your pc");
+
+                                        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.found_mess);
+                                        mp.setVolume(0.3f,0.3f);
+                                        mp.start();
+
+                                    }else {
+                                        tvConnectionStatus.setText("couldn't find your pc");
+                                    }
+                                }
+                            });
 
 
                         } catch (Exception ex) {
-                            Log.d(TAG, "exception ");
+                            Log.d(TAG, " exception "+ ex.getMessage());
 
 
                         } finally {
+
+
                             if (socket != null) {
                                 try {
-                                    socket.close();
-                                   // pcListArrayAdapter.notifyDataSetChanged();
+
+                                   socket.close();
+
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() { // Tried new Handler(Looper.myLopper()) also
+                                        @Override
+                                        public void run() {
+                                            pcListArrayAdapter.notifyDataSetChanged();
+                                            progressBarClientList.setVisibility(View.GONE);
+                                            if(pcListArrayAdapter.getCount()!=0){
+                                                imageViewPcMobile.setVisibility(View.GONE);
+                                            }
+                                        }
+                                    });
 
                                 } catch (IOException e) {
 
