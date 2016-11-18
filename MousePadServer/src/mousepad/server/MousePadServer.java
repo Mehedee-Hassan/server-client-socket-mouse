@@ -2,6 +2,7 @@ package mousepad.server;
 
 import mousepad.server.constant.Constant;
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +17,7 @@ import java.net.*;
  * Created by mhr on 10/21/16.
  */
 public class MousePadServer {
-    public static String FLAG = "_SEARCH";
+    public static String FLAG_SEARCH = "_SEARCH";
     public static String N_FLAG = "_MOUSE";
     private static boolean firstTimeCoordinate = true;
     private static int lastx = 0;
@@ -40,139 +41,152 @@ public class MousePadServer {
         systemTrayRun();
 
 
-        Robot robot = new Robot();
-
-        ServerSocket serverSocket = new ServerSocket(9000);
-
-
-
-        while (true) {
-
-            Socket clientSocket = null;
-            clientSocket = serverSocket.accept();
+        final Robot robot = new Robot();
+        Socket clientSocket = null;
+         ServerSocket serverSocket = new ServerSocket(1239);
 
 
-            DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
+        while (true)
+        {
 
 
-            if(serverSocket.isClosed() || serverSocket == null)
-                serverSocket = new ServerSocket(9000); // some times after a long time data pass exception occur
 
-            String flag_or_message = dataInputStream.readUTF();
-
-
-            System.out.println("flag_or_message_read="+flag_or_message);
+            String flag_or_message;
+            try {
 
 
-            if (flag_or_message.equalsIgnoreCase(FLAG)) {
-                //flag_block = 1;
-
-                //if (flag_block == 1)
-                System.out.println("search ="+flag_or_message);
-
-                DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
-                outToClient.writeUTF(getHostName());
+                clientSocket = serverSocket.accept();
 
 
-            }else if(flag_or_message.equalsIgnoreCase(COMMAND_CLOSE_WINDOW)) {
+                DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
 
 
-                    System.out.println("close window block try");
-                   // Robot robot = new Robot();
-                    robot.keyPress(KeyEvent.VK_ALT);
-                    robot.keyPress(KeyEvent.VK_F4);
-                    robot.keyRelease(KeyEvent.VK_ALT);
-                    robot.keyRelease(KeyEvent.VK_F4);
+            if (serverSocket.isClosed() || serverSocket == null)
+                serverSocket = new ServerSocket(1239);
 
 
+                //if(dataInputStream.available() > 0 &&( flag_or_message = dataInputStream.readUTF())!=null)
+                {
+
+
+
+
+                     flag_or_message = dataInputStream.readUTF();
+
+
+                    System.out.println("\nflag_or_message_read=" + flag_or_message);
+
+
+                    if (flag_or_message.equalsIgnoreCase(FLAG_SEARCH)) {
+                        //flag_block = 1;
+
+                        //if (flag_block == 1)
+                        System.out.println("search =" + flag_or_message);
+
+                        DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
+                        outToClient.writeUTF(getHostName());
+                        outToClient.writeUTF(getHostName());
+                        outToClient.writeUTF(getHostName());
+
+
+                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_CLOSE_WINDOW)) {
+
+
+                        System.out.println("close window block try");
+                        // Robot robot = new Robot();
+                        robot.keyPress(KeyEvent.VK_ALT);
+                        robot.keyPress(KeyEvent.VK_F4);
+                        robot.keyRelease(KeyEvent.VK_ALT);
+                        robot.keyRelease(KeyEvent.VK_F4);
+
+
+                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_MOUSE_LEFT_CLICK)) {
+
+
+                        // Robot robot = new Robot();
+                        robot.mousePress(InputEvent.BUTTON1_MASK);
+                        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+
+                    } else if (flag_or_message.equalsIgnoreCase("15")) {
+
+
+                        // Robot robot = new Robot();
+                        robot.mousePress(InputEvent.BUTTON1_MASK);
+                        mouseLongClick = true;
+                    } else if (flag_or_message.equalsIgnoreCase("16")) {
+
+
+                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_MOUSE_RIGHT_CLICK)) {
+
+
+                        // Robot robot = new Robot();
+                        robot.mousePress(InputEvent.BUTTON3_MASK);
+                        robot.mouseRelease(InputEvent.BUTTON3_MASK);
+
+
+                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_ESC)) {
+
+
+                        System.out.println("close window block try");
+                        // Robot robot = new Robot();
+                        robot.keyPress(KeyEvent.VK_ESCAPE);
+                        robot.keyRelease(KeyEvent.VK_ESCAPE);
+
+
+                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_ENTER)) {
+
+
+                        System.out.println("close window block try");
+                        //  Robot robot = new Robot();
+                        robot.keyPress(KeyEvent.VK_ENTER);
+                        robot.keyRelease(KeyEvent.VK_ENTER);
+
+                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_SCROLL_VERTICAL_DOWN)) {
+
+
+                        System.out.println("scroll down block");
+                        // Robot robot = new Robot();
+                        robot.mouseWheel(1);
+
+
+                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_SCROLL_VERTICAL_UP)) {
+
+
+                        System.out.println("close window block try");
+                        //   Robot robot = new Robot();
+                        robot.mouseWheel(-1);
+
+
+                    } else
+                    //else if (flag_block == 2)
+                    {
+
+                        System.out.println("else block");
+
+                        String[] coordinate = flag_or_message.split(" ");
+
+                        System.out.println(coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
+
+                        setMousePosition(coordinate[0], coordinate[1], coordinate[2]);
+
+
+                    }
+
+                }
             }
-            else if(flag_or_message.equalsIgnoreCase(COMMAND_MOUSE_LEFT_CLICK)) {
-
-
-                // Robot robot = new Robot();
-                robot.mousePress( InputEvent.BUTTON1_MASK );
-                robot.mouseRelease( InputEvent.BUTTON1_MASK );
-
-            }
-            else if(flag_or_message.equalsIgnoreCase("15")) {
-
-
-                // Robot robot = new Robot();
-                robot.mousePress( InputEvent.BUTTON1_MASK );
-                mouseLongClick = true;
-            }
-            else if( flag_or_message.equalsIgnoreCase("16")) {
-
-
-            }
-            else if(flag_or_message.equalsIgnoreCase(COMMAND_MOUSE_RIGHT_CLICK)) {
-
-
-
-                   // Robot robot = new Robot();
-                    robot.mousePress( InputEvent.BUTTON3_MASK );
-                    robot.mouseRelease( InputEvent.BUTTON3_MASK );
-
-
-            }
-            else if(flag_or_message.equalsIgnoreCase(COMMAND_ESC)) {
-
-
-                    System.out.println("close window block try");
-                   // Robot robot = new Robot();
-                    robot.keyPress(KeyEvent.VK_ESCAPE);
-                    robot.keyRelease(KeyEvent.VK_ESCAPE);
-
-
-            }
-            else if(flag_or_message.equalsIgnoreCase(COMMAND_ENTER)) {
-
-
-                    System.out.println("close window block try");
-                  //  Robot robot = new Robot();
-                    robot.keyPress(KeyEvent.VK_ENTER);
-                    robot.keyRelease(KeyEvent.VK_ENTER);
-
-            }
-            else if(flag_or_message.equalsIgnoreCase(COMMAND_SCROLL_VERTICAL_DOWN)) {
-
-
-
-
-                    System.out.println("scroll down block");
-                   // Robot robot = new Robot();
-                    robot.mouseWheel(1);
-
-
-
-            }
-            else if(flag_or_message.equalsIgnoreCase(COMMAND_SCROLL_VERTICAL_UP)) {
-
-
-                    System.out.println("close window block try");
-                 //   Robot robot = new Robot();
-                    robot.mouseWheel(-1);
-
-
-            }
-            else
-            //else if (flag_block == 2)
-            {
-
-                System.out.println("else block");
-
-                String[] coordinate = flag_or_message.split(" ");
-
-                System.out.println(coordinate[0]+" "+coordinate[1]+" "+coordinate[2]);
-
-                setMousePosition(coordinate[0],coordinate[1],coordinate[2]);
-
-
+            catch(Exception ex){
+                    ex.printStackTrace();
+//                System.out.print("Exception= "+ex.getMessage());
             }
 
 
         }
-    }
+
+
+     }
+
+
+
 
     private static void systemTrayRun() {
         System.out.println("system tray");
@@ -184,12 +198,15 @@ public class MousePadServer {
         }
         final PopupMenu popup = new PopupMenu();
         final TrayIcon trayIcon =
-                new TrayIcon(createImage("images/mouse_icon4.png", "tray icon"));
+                new TrayIcon(createImage("images/mouse_circle10.png", "tray icon"));
         final SystemTray tray = SystemTray.getSystemTray();
 
         MenuItem exitItem = new MenuItem("Exit");
+        MenuItem aboutItem = new MenuItem("About");
 
         exitItem.setActionCommand("_EXIT");
+        aboutItem.setActionCommand("_ABOUT");
+
         exitItem.addActionListener(new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 if(e.getActionCommand().equalsIgnoreCase("_EXIT")){
@@ -197,11 +214,36 @@ public class MousePadServer {
                 }
             }
         });
+        aboutItem.addActionListener(new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
 
+                if(e.getActionCommand().equalsIgnoreCase("_ABOUT")){
+                    JOptionPane.showMessageDialog(null, "MousePad is an open source software" +
+                            "\n\nApologizing for bad performance :( " +
+                            "\n\nContact developer,\nmehedeehassan@outlook.com");
+
+                }
+            }
+        });
+
+        popup.add(aboutItem);
         popup.add(exitItem);
 
         trayIcon.setPopupMenu(popup);
         trayIcon.setToolTip("MousePad");
+
+        trayIcon.setActionCommand("_MENU");
+
+        trayIcon.addActionListener(new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                if(e.getActionCommand().equalsIgnoreCase("_MENU")){
+
+                    JOptionPane.showMessageDialog(null, "MousePad is Running");
+
+
+                }
+            }
+        });
 
         trayIcon.setImageAutoSize(true);
 
@@ -274,8 +316,8 @@ public class MousePadServer {
                 System.out.println("UP");
                 //firstTimeCoordinate = true;
 
-                 //currentX = (int)MouseInfo.getPointerInfo().getLocation().getX();
-                 //currentY = (int)MouseInfo.getPointerInfo().getLocation().getY();
+                //currentX = (int)MouseInfo.getPointerInfo().getLocation().getX();
+                //currentY = (int)MouseInfo.getPointerInfo().getLocation().getY();
 
                 lastx = (int)xf;
                 lasty = (int)yf;
