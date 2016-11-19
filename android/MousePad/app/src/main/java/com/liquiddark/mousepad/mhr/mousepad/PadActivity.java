@@ -3,9 +3,12 @@ package com.liquiddark.mousepad.mhr.mousepad;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,7 +38,7 @@ import java.util.regex.Pattern;
 
 public class PadActivity extends Activity {
 
-
+    private Context thisContext ;
 
     private static final int MAX_CLICK_DURATION = 200;
     private static String COMMAND_CLOSE_WINDOW = "7";
@@ -77,7 +80,7 @@ public class PadActivity extends Activity {
         setContentView(R.layout.activity_mouse_pad);
 
         initMouspad();
-
+        thisContext  = this;
 
          vibration = (Vibrator) getApplication().getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -154,7 +157,7 @@ public class PadActivity extends Activity {
             public void onClick(View v) {
                 String val = COMMAND_LEFT_CLICK;
 
-                (new Thread(new IpTest2(val))).start();
+                (new Thread(new IpTest2(val,thisContext))).start();
             }
         });
 
@@ -167,7 +170,7 @@ public class PadActivity extends Activity {
 
                 String val = COMMAND_LONG_CLICK;
                 Log.d("mouse_button_click", "onLongClick: ");
-                (new Thread(new IpTest2(val))).start();
+                (new Thread(new IpTest2(val,thisContext))).start();
 
 
                 return true;
@@ -179,7 +182,7 @@ public class PadActivity extends Activity {
                 String val = COMMAND_RIGHT_CLICK;
 
 
-                (new Thread(new IpTest2(val))).start();
+                (new Thread(new IpTest2(val,thisContext))).start();
             }
         });
     }
@@ -202,7 +205,7 @@ public class PadActivity extends Activity {
 
                         String val = COMMAND_LONG_CLICK;
                         Log.d("mouse_button_click", "onLongClick: ");
-                        (new Thread(new IpTest2(val))).start();
+                        (new Thread(new IpTest2(val,thisContext))).start();
 
                 return true;
             }
@@ -241,7 +244,7 @@ public class PadActivity extends Activity {
                         action = Constant.Action.SHORT_TOUCH;
                     }
 
-                    (new Thread(new IpTest2("16"))).start();
+                    (new Thread(new IpTest2("16",thisContext))).start();
 
 
                 }else if(action == MotionEvent.ACTION_HOVER_MOVE){
@@ -263,7 +266,7 @@ public class PadActivity extends Activity {
 
                 String val = action+" "+ coordinateTemp;
 
-                (new Thread(new IpTest2(val))).start();
+                (new Thread(new IpTest2(val,thisContext))).start();
 
                 return true;
             }
@@ -278,7 +281,7 @@ public class PadActivity extends Activity {
         try {
 
             Process process = Runtime.getRuntime().exec(
-                    "/system/bin/ping -c 1 -W 2 " + url);
+                    "/system/bin/ping -c 1 " + url);
 
             int val = process.waitFor();
 
@@ -314,7 +317,7 @@ public class PadActivity extends Activity {
             public void onClick(View v) {
                 String val = COMMAND_ENTER;
 
-                (new Thread(new IpTest2(val))).start();
+                (new Thread(new IpTest2(val,thisContext))).start();
 
             }
         });
@@ -343,7 +346,7 @@ public class PadActivity extends Activity {
 
                    // val = COMMAND_SCROLL_VERTICAL_DOWN;
 
-                    (new Thread(new IpTest2(val))).start();
+                    (new Thread(new IpTest2(val,thisContext))).start();
 
 
 
@@ -368,7 +371,7 @@ public class PadActivity extends Activity {
             public void onClick(View v) {
                 String val = COMMAND_ESCAPE;
 
-                (new Thread(new IpTest2(val))).start();
+                (new Thread(new IpTest2(val,thisContext))).start();
             }
         });
     }
@@ -379,7 +382,7 @@ public class PadActivity extends Activity {
             public void onClick(View v) {
                 String val = COMMAND_CLOSE_WINDOW;
 
-                (new Thread(new IpTest2(val))).start();
+                (new Thread(new IpTest2(val,thisContext))).start();
             }
         });
     }
@@ -477,13 +480,14 @@ class IpTest2 implements Runnable{
     String TAG = "IpTest";
     byte[] ipAddress ;
 
-
+    private Context padActContext ;
     public IpTest2(){
 
     }
-    public IpTest2(String val){
+    public IpTest2(String val,Context context){
         this.val = val;
         ipAddress = PadActivity.IpToTheThread;
+        padActContext = context;
     }
 
 
@@ -534,6 +538,16 @@ class IpTest2 implements Runnable{
                         DOS.writeUTF(val);
 
                     } catch(Exception ex){
+
+                        if(!ping(address.getHostAddress())){
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    padActContext.startActivity(new Intent(padActContext,PcListActivity.class));
+                                }
+                            });
+                        }
+
                         Log.d(TAG ,"exception ");
                     }
 
@@ -572,7 +586,7 @@ class IpTest2 implements Runnable{
         try {
 
             Process process = Runtime.getRuntime().exec(
-                    "/system/bin/ping -c 1 -W 2 " + url);
+                    "/system/bin/ping -c 1 " + url);
 
             int val = process.waitFor();
 

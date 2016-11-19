@@ -41,12 +41,11 @@
 
     <Button
         android:text=""
-        android:background="@drawable/close"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
+        android:background="@drawable/close2"
+        android:layout_width="130dp"
+        android:layout_height="40dp"
         android:id="@+id/closeWindowButton"
         android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/coordinateTextView"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="10dp"
 

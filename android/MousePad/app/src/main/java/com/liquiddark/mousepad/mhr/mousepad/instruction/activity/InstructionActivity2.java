@@ -48,8 +48,26 @@ public class InstructionActivity2 extends Activity {
             }
         });
 
+        ImageView imageViewBackButton2 =(ImageView) findViewById(R.id.imageViewBackButton2);
+
+        imageViewBackButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent mainIntent = new Intent(InstructionActivity2.this,InstructionActivity.class);
+                startActivity(mainIntent);
+                overridePendingTransition(R.xml.slide_in2,R.xml.slide_out2);
+
+            }
+        });
 
 
+    }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
     }
 }

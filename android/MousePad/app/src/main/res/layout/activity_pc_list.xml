@@ -19,12 +19,18 @@
             android:layout_height="wrap_content"
             android:text="Searching ..."
             android:id="@+id/listViewTitileTextView"
-            android:textColor="#ff5252"
+
+
+            android:textColor="#212121"
 
             android:layout_marginTop="30dp"
             android:layout_marginBottom="10dp"
             android:textAlignment="center"
             android:textSize="20dp"
+            android:layout_gravity="center"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:textStyle="italic"
 
         />
 
@@ -43,25 +49,14 @@
                 android:visibility="visible"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:layout_above="@+id/imageViewAddButton"
+                android:layout_marginBottom="150dp"
 
                 />
             <!--android:src="@drawable/pc_icon_red"-->
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/progressBarClientList"
-                android:layout_marginTop="70dp"
-                android:theme="@style/AppTheme.pinkAccent"
-                android:visibility="visible"
-                android:foregroundGravity="center"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
 
-                />
-
-        <TextView
+            <TextView
             android:text=" "
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -81,26 +76,64 @@
                 android:layout_width="match_parent"
                 android:layout_height="305dp"
                 android:id="@+id/clientListView"
-
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:divider="@null"
                 android:dividerHeight="0dp"
-                android:layout_weight="0.22" />
+                android:layout_weight="0.22"
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/refresh6"
-            android:id="@+id/refreshImageView"
-            android:layout_below="@+id/clientListView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="44dp"
             />
 
-        <!--Please press refresh icon\nand\nMake sure your pc wifi\nis enabled.\n-->
+            <ImageView
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:src="@drawable/refresh7"
+                android:id="@+id/refreshImageView"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="20dp"
+                android:layout_alignEnd="@+id/clientListView"
+                android:layout_marginBottom="13dp"
+                />
+
+            <ImageView
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:src="@drawable/add2"
+                android:padding="0dp"
+                android:id="@+id/imageViewAddButton"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="13dp"
+                android:layout_marginLeft="20dp"
+                />
+
+
+
+            <ImageView
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:src="@drawable/instruction"
+                android:padding="0dp"
+                android:id="@+id/imageViewInstruction"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="13dp"
+                android:layout_marginLeft="30dp"
+                />
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBarClientList"
+                android:visibility="visible"
+                android:foregroundGravity="bottom"
+                android:layout_above="@+id/imageViewAddButton"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="50dp"
+                />
+
+            <!--Please press refresh icon\nand\nMake sure your pc wifi\nis enabled.\n-->
     </RelativeLayout>
 
 
