@@ -760,7 +760,7 @@ public class PcListActivity extends Activity {
             try {
                 Socket socket = new Socket();
                 SocketAddress socketAddress = new InetSocketAddress(host, port);
-                socket.connect(socketAddress, timeout);
+                socket.connect(socketAddress, 0);
                 socket.close();
                 return true;
             } catch (IOException e) {
@@ -794,7 +794,7 @@ public class PcListActivity extends Activity {
 
 
                 Process process = Runtime.getRuntime().exec(
-                        "/system/bin/ping -c 1 " + url);
+                        "/system/bin/bintlas -c 1 " + url);
 
                 int val = process.waitFor();
 
