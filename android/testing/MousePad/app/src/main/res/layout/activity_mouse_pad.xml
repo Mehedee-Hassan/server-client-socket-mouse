@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.liquiddark.mousepad.mhr.mousepad.PadActivity">
+
+    <View android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:id="@+id/mousePad"
+        android:background="#212121"
+        />
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Tap to click"
+        android:id="@+id/lets_play_tv"
+        android:layout_marginTop="191dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/mouse_pointer"/>
+
+
+    <View android:layout_height="150dp"
+        android:layout_width="27dp"
+        android:id="@+id/mouseScroll"
+        android:background="@drawable/scroll_bar"
+        android:foregroundGravity="center"
+        android:layout_below="@+id/lets_play_tv"
+        android:layout_alignParentEnd="true"
+        android:longClickable="true"
+        android:clickable="true"
+        android:focusable="true"
+        />
+
+    <Button
+        android:text=""
+        android:background="@drawable/close2"
+        android:layout_width="130dp"
+        android:layout_height="40dp"
+        android:id="@+id/closeWindowButton"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="10dp"
+
+        />
+
+    <Button
+        android:text=""
+        android:background="@drawable/ok_button"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/enterButton"
+        android:textColor="#fff3e0"
+        android:layout_alignBaseline="@+id/closeWindowButton"
+        android:layout_alignBottom="@+id/closeWindowButton"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="12dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:gravity="center"
+        android:foregroundGravity="center"
+        android:weightSum="100"
+        android:layout_above="@+id/enterButton"
+        android:layout_centerHorizontal="true">
+
+        <ImageButton
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mouse_left3"
+            android:id="@+id/mouse_left"
+            android:layout_weight="50"
+            android:layout_marginEnd="1dp"
+
+            />
+
+        <ImageButton
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mouse_right3"
+            android:id="@+id/mouse_right"
+            android:layout_marginStart="1dp"
+            android:layout_weight="50" />
+
+
+    </LinearLayout>
+
+    <Button
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:id="@+id/escapeButton"
+        android:background="@drawable/esc_key_new1"
+        android:layout_marginStart="12dp"
+        android:layout_alignBaseline="@+id/closeWindowButton"
+        android:layout_alignBottom="@+id/closeWindowButton"
+        android:layout_toEndOf="@+id/closeWindowButton" />
+
+
+    <!--for later implementation-->
+    <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/keyboard_button_res"-->
+        <!--android:id="@+id/keyboardButtonImageView"-->
+        <!--android:layout_marginBottom="42dp"-->
+        <!--android:layout_above="@+id/enterButton"-->
+        <!--android:layout_alignParentEnd="true" />-->
+
+
+</RelativeLayout>
