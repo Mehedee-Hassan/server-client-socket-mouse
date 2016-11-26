@@ -176,7 +176,7 @@ public class MousePadServer {
             }
             catch(Exception ex){
                     ex.printStackTrace();
-//                System.out.print("Exception= "+ex.getMessage());
+                   System.out.print("Exception= "+ex.getMessage());
             }
 
 
