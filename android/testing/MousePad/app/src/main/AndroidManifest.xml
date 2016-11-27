@@ -11,8 +11,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/mousepad_icon4"
@@ -28,14 +26,16 @@
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="com.android.launcher.action.MOUSE_PAD_SPLASH_ACT_STAR_989"/>
+                <action android:name="com.android.launcher.action.MOUSE_PAD_SPLASH_ACT_STAR_989" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".instruction.activity.InstructionActivity" />
         <activity android:name=".instruction.activity.InstructionActivity2" />
         <activity android:name=".instruction.activity.InstructionActivity3" />
-        <activity android:name=".instruction.activity.InstructionActivity4"></activity>
+        <activity android:name=".instruction.activity.InstructionActivity4" />
+        <activity android:name=".keyboard.KeyboardActivity"></activity>
     </application>
 
 </manifest>

@@ -3,26 +3,31 @@ package com.liquiddark.mousepad.mhr.mousepad;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.media.Image;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Vibrator;
-import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,7 +75,12 @@ public class PadActivity extends Activity {
     ImageButton mouseLeftButton,mouseRightButton;
     TextView letsPlayTv;
     View MousePad,mouseScroll;
-    ImageView keyboardButtonImageView;
+    ImageView keyboardButtonImageView,openKeyboardIv;
+    private RelativeLayout keyboardShowlayout,mousePadLayout;
+    private ImageView clearButton;
+    private ImageView backButtonKeyboard;
+    private EditText keyboardEventGetET2;
+    private ImageView copyButton,cutButton,pestButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +129,12 @@ public class PadActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        //finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         finish();
     }
 
@@ -132,6 +148,137 @@ public class PadActivity extends Activity {
         enterButtonEvent();
         mousePadEvent();
         mouseLeftRightButtonEvent();
+
+
+
+
+        keyboardEventGetET2.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_DEL){
+
+                    (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
+
+                }
+
+
+                return false;
+
+
+            }
+
+
+
+        });
+
+        keyboardEventGetET2.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+
+                    (new Thread(new IpTest2(COMMAND_ENTER,thisContext))).start();
+
+
+                    handled = true;
+                }
+                return handledj;
+            }
+        });
+
+
+        openKeyboardIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //startActivity(new Intent(PadActivity.this, KeyboardActivity.class));
+
+                keyboardShowlayout.setVisibility(View.VISIBLE);
+                mousePadLayout.setVisibility(View.GONE);
+
+                keyboardEventGetET2.requestFocus();
+
+        //        InputMethodManager imm = (InputMethodManager)   getSystemService(PadActivity.this.INPUT_METHOD_SERVICE);
+        //        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                InputMethodManager imm = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                if(imm != null){
+                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                }
+
+            }
+        });
+
+
+
+
+        backButtonKeyboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                keyboardShowlayout.setVisibility(View.GONE);
+                mousePadLayout.setVisibility(View.VISIBLE);
+          //      InputMethodManager imm = (InputMethodManager)   getSystemService(PadActivity.this.INPUT_METHOD_SERVICE);
+          //      imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                InputMethodManager imm = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+
+
+                if(imm != null){
+                   imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                }else {
+                         imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+                }
+
+            }
+        });
+
+
+
+
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                keyboardEventGetET2.setText("");
+            }
+        });
+
+
+        copyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast toast = Toast.makeText(PadActivity.this,"copy",Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 0);
+                toast.show();
+
+                (new Thread(new IpTest2(Constant.Action.COMMAND_COPY,thisContext))).start();
+            }
+        });
+
+        pestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast toast = Toast.makeText(PadActivity.this,"pest",Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 0);
+                toast.show();
+
+                (new Thread(new IpTest2(Constant.Action.COMMAND_PEST,thisContext))).start();
+
+            }
+        });
+
+        cutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast toast = Toast.makeText(PadActivity.this,"cut",Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 0);
+                toast.show();
+
+                (new Thread(new IpTest2(Constant.Action.COMMAND_CUT,thisContext))).start();
+
+            }
+        });
+
 
 
         enableWifi();
@@ -408,18 +555,13 @@ public class PadActivity extends Activity {
         final Intent receive = this.getIntent();
         ipTosend = receive.getStringExtra("_IP");
 
-        closeWindowButton = (Button) findViewById(R.id.closeWindowButton);
-        enterButton = (Button) findViewById(R.id.enterButton);
-        escapeButton  = (Button) findViewById(R.id.escapeButton);
+        initComponents();
 
-        mouseRightButton = (ImageButton) findViewById(R.id.mouse_right);
-        mouseLeftButton = (ImageButton) findViewById(R.id.mouse_left);
 
-        //keyboardButtonImageView = (ImageView) findViewById(R.id.keyboardButtonImageView);
 
-        mouseScroll = (View) findViewById(R.id.mouseScroll);
-        MousePad =  (View) findViewById(R.id.mousePad);
-        letsPlayTv = (TextView) findViewById(R.id.lets_play_tv);
+
+
+
 
         Animation textAlpha = new AlphaAnimation(1.0f ,0.0f);
 
@@ -459,11 +601,77 @@ public class PadActivity extends Activity {
 
     }
 
+    private void initComponents() {
+        closeWindowButton = (Button) findViewById(R.id.closeWindowButton);
+        enterButton = (Button) findViewById(R.id.enterButton);
+        escapeButton  = (Button) findViewById(R.id.escapeButton);
+
+        mouseRightButton = (ImageButton) findViewById(R.id.mouse_right);
+        mouseLeftButton = (ImageButton) findViewById(R.id.mouse_left);
+
+        //keyboardButtonImageView = (ImageView) findViewById(R.id.keyboardButtonImageView);
+
+        mouseScroll = (View) findViewById(R.id.mouseScroll);
+        MousePad =  (View) findViewById(R.id.mousePad);
+        letsPlayTv = (TextView) findViewById(R.id.lets_play_tv);
+
+
+        keyboardShowlayout = (RelativeLayout) findViewById(R.id.keyboardShowlayout);
+        mousePadLayout = (RelativeLayout) findViewById(R.id.mousePadLayout);
+
+        clearButton = (ImageView) findViewById(R.id.clearETbutton);
+        backButtonKeyboard = (ImageView) findViewById(R.id.backButtonKeyboard);
+        openKeyboardIv= (ImageView ) findViewById(R.id.openKeyboardIv);
+
+
+
+        keyboardEventGetET2 = (EditText) findViewById(R.id.keyboardEventGetET2);
+        keyboardEventGetET2.addTextChangedListener(textWatcher);
+
+
+
+
+
+        copyButton = (ImageView) findViewById(R.id.copyButton);
+        cutButton = (ImageView) findViewById(R.id.cutButton);
+        pestButton = (ImageView) findViewById(R.id.pestButton);
+
+    }
+
     int abs(int number){
 
         return (number < 0 ? (-1*number):number);
     }
 
+
+    TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            CharSequence newString = "";
+            if(start+count > 0) {
+
+                newString = s.subSequence(start + count - 1, start + count);
+
+                if(count != before)
+                (new Thread(new IpTest2("22 "+newString.toString(),thisContext))).start();
+            }
+
+            Log.d("_LL",""+newString+" "+count+" "+before+" "+start);
+
+            // Log.d("_LL",""+s);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 
 }
 
