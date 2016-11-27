@@ -248,7 +248,32 @@ int socketManagement()
 			robot.pressESC();
 		}
 
-	
+		else if (splitV[0] == COMMAND_COPY) {
+			robot.copyCommand();
+		}
+
+		else if (splitV[0] == COMMAND_CUT) {
+			robot.cutCommand();
+		}
+
+
+
+		else if (splitV[0] == COMMAND_PEST) {
+			robot.pestCommand();
+		}
+
+		else if (splitV[0] == TYPE_KEY_ALPHSBET) {
+
+			if (splitV.size() > 1)
+				robot.keyboard(splitV[1]);
+		}
+		else if (splitV[0] == TYPE_KEY_DELETE) {
+			
+			robot.keyTypeDelete();
+		}
+
+		
+
 
 
 		}

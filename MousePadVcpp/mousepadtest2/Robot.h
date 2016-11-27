@@ -1,6 +1,7 @@
 
 #include<windows.h>
-
+#include<string>
+#include<cstdio>
 #pragma once
 
 
@@ -31,7 +32,9 @@ public:
 	void mouseRightClick();
 	void mouseScroll(int);
 	void mouseLeftCLickUp();
+	
 
+	void keyboard(std::string s);
 
 	void AltKeyDown();
 	void AltKeyUp();
@@ -49,7 +52,7 @@ public:
 	void cutCommand();
 	void pestCommand();
 
-
+	void keyTypeDelete();
 
 };
 

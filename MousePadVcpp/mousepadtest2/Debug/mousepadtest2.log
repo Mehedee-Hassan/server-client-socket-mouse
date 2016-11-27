@@ -1,7 +1,23 @@
-﻿Build started 27-Nov-16 12:45:12 AM.
+﻿Build started 27-Nov-16 6:18:50 AM.
      1>Project "D:\programming\_project\server-client-socket-mouse\MousePadVcpp\mousepadtest2\mousepadtest2.vcxproj" on node 2 (Build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(381,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (mousepadtest2.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-     1>Link:
+     1>ClCompile:
+         G:\ProgramFiles\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>d:\programming\_project\server-client-socket-mouse\mousepadvcpp\mousepadtest2\utility.h(126): warning C4101: 'e' : unreferenced local variable
+     1>d:\programming\_project\server-client-socket-mouse\mousepadvcpp\mousepadtest2\utility.h(148): warning C4101: 'e' : unreferenced local variable
+     1>d:\programming\_project\server-client-socket-mouse\mousepadvcpp\mousepadtest2\main.cpp(110): warning C4800: 'Robot *' : forcing value to bool 'true' or 'false' (performance warning)
+     1>d:\programming\_project\server-client-socket-mouse\mousepadvcpp\mousepadtest2\main.cpp(166): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>d:\programming\_project\server-client-socket-mouse\mousepadvcpp\mousepadtest2\main.cpp(167): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>d:\programming\_project\server-client-socket-mouse\mousepadvcpp\mousepadtest2\main.cpp(168): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>d:\programming\_project\server-client-socket-mouse\mousepadvcpp\mousepadtest2\main.cpp(195): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>d:\programming\_project\server-client-socket-mouse\mousepadvcpp\mousepadtest2\main.cpp(196): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>d:\programming\_project\server-client-socket-mouse\mousepadvcpp\mousepadtest2\main.cpp(197): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>d:\programming\_project\server-client-socket-mouse\mousepadvcpp\mousepadtest2\main.cpp(111): warning C4101: 'len' : unreferenced local variable
+     1>d:\programming\_project\server-client-socket-mouse\mousepadvcpp\mousepadtest2\main.cpp(324): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>d:\programming\_project\server-client-socket-mouse\mousepadvcpp\mousepadtest2\main.cpp(325): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>d:\programming\_project\server-client-socket-mouse\mousepadvcpp\mousepadtest2\main.cpp(327): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+       Link:
          G:\ProgramFiles\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\programming\_project\server-client-socket-mouse\MousePadVcpp\Debug\MousePadVcpp.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\programming\_project\server-client-socket-mouse\MousePadVcpp\Debug\MousePadVcpp.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\programming\_project\server-client-socket-mouse\MousePadVcpp\Debug\MousePadVcpp.lib" /MACHINE:X86 Debug\main.obj
          Debug\Robot.obj
          mousepadtest2.vcxproj -> D:\programming\_project\server-client-socket-mouse\MousePadVcpp\Debug\MousePadVcpp.exe
@@ -9,4 +25,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.20
+Time Elapsed 00:00:01.28

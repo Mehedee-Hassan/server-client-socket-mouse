@@ -32,7 +32,12 @@ const string COMMAND_MOUSE_MOVE				= "3";
  const string COMMAND_MOUSE_LEFT_CLICKHOLD  = "15";
  const string COMMAND_MOUSE_PAD_SHORT_CLICK	= "5";
  const string COMMAND_MOUSE_PAD_UP			= "16";
- const string FLAG_SEARCH				    = "18";
+ const string FLAG_SEARCH = "18";
+ const string COMMAND_COPY = "19";
+ const string COMMAND_PEST = "20";
+ const string COMMAND_CUT = "21";
+ const string TYPE_KEY_ALPHSBET = "22";
+ const string TYPE_KEY_DELETE = "23";
  
 
 

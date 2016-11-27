@@ -206,6 +206,8 @@ void Robot::AltKeyDown(){
 		SendInput(1, &ip, sizeof(INPUT));
 }
 
+
+
 void Robot::AltKeyUp(){
 
 	INPUT ip;
@@ -238,6 +240,9 @@ void Robot::F4KeyDown(){
 
 }
 
+
+
+
 void Robot::F4KeyUp(){
 
 	INPUT ip;
@@ -268,6 +273,8 @@ void Robot::AltF4(){
 
 
 }
+
+
 
 
 void Robot::pressEnter(){
@@ -422,6 +429,58 @@ void Robot::pestCommand(){
 
 	// Release the "Enter" key
 	ip.ki.wVk = VK_CONTROL;
+	ip.ki.dwFlags = KEYEVENTF_KEYUP;
+	SendInput(1, &ip, sizeof(INPUT));
+}
+
+
+
+void Robot::keyboard(string  line){
+
+
+
+	memset(&keyboardInput, 0, sizeof(keyboardInput));
+	string str = line;
+
+	int len = str.length();
+
+	
+
+	for (int i = 0; i < len; i++){
+		memset(&keyboardInput, 0, sizeof(keyboardInput));
+
+		keyboardInput.type = INPUT_KEYBOARD;
+		keyboardInput.ki.wVk = 0;
+		keyboardInput.ki.dwFlags = KEYEVENTF_UNICODE;
+		keyboardInput.ki.wScan = str[i];
+
+
+
+		SendInput(1, &keyboardInput, sizeof(INPUT)); // 3rd param is size of an INPUT structure
+
+		keyboardInput.ki.dwFlags = KEYEVENTF_KEYUP;
+		SendInput(1, &keyboardInput, sizeof(INPUT));
+	}
+}
+
+
+
+void Robot::keyTypeDelete(){
+	INPUT ip;
+	ip.type = INPUT_KEYBOARD;
+	ip.ki.wScan = 0;
+	ip.ki.time = 0;
+	ip.ki.dwExtraInfo = 0;
+
+
+	// Press the "Enter" key
+	ip.ki.wVk = VK_BACK;
+	ip.ki.dwFlags = 0; // 0 for key press
+	SendInput(1, &ip, sizeof(INPUT));
+
+
+	// Release the "Enter" key
+	ip.ki.wVk = VK_BACK;
 	ip.ki.dwFlags = KEYEVENTF_KEYUP;
 	SendInput(1, &ip, sizeof(INPUT));
 }
