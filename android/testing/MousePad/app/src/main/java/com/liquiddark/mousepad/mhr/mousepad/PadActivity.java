@@ -160,9 +160,26 @@ public class PadActivity extends Activity {
                     (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
 
                 }
+                if (event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    switch (keyCode)
+                    {
+                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                        case KeyEvent.KEYCODE_ENTER:
+                            (new Thread(new IpTest2(COMMAND_ENTER,thisContext))).start();
+
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+
+
 
 
                 return false;
+
+
 
 
             }
@@ -181,8 +198,9 @@ public class PadActivity extends Activity {
 
 
                     handled = true;
+
                 }
-                return handledj;
+                return handled;
             }
         });
 

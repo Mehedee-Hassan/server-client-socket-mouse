@@ -217,7 +217,8 @@ public class PcListActivity extends Activity {
                         @Override
                         public void run() {
                             refreshed_wait = true;
-
+                            _hostNameList.clear();
+                            _ipList.clear();
                         }
                     }, 1000);
                 }

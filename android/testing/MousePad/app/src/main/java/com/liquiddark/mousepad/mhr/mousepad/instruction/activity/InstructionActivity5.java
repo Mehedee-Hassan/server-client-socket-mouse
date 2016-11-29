@@ -3,20 +3,15 @@ package com.liquiddark.mousepad.mhr.mousepad.instruction.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.liquiddark.mousepad.mhr.mousepad.PcListActivity;
 import com.liquiddark.mousepad.mhr.mousepad.R;
 
-public class InstructionActivity4 extends Activity {
+public class InstructionActivity5 extends Activity {
 
 
 
@@ -35,15 +30,11 @@ public class InstructionActivity4 extends Activity {
         imageViewdoesntwork = (ImageView) findViewById(R.id.imageViewdoesntwork);
 
 
-        CustomFontSegoePrint = Typeface.createFromAsset(getAssets(), "fonts/Segoe_Print.ttf");
-        textViewInstruction4.setTypeface(CustomFontSegoePrint);
-
-
         imageViewdoesntwork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent mainIntent = new Intent(InstructionActivity4.this,InstructionActivity5.class);
+                Intent mainIntent = new Intent(InstructionActivity5.this,InstructionActivity3.class);
                 startActivity(mainIntent);
                 overridePendingTransition(R.xml.slide_in, R.xml.slide_out);
 
@@ -56,7 +47,7 @@ public class InstructionActivity4 extends Activity {
             @Override
             public void onClick(View v) {
 
-                Intent mainIntent = new Intent(InstructionActivity4.this,PcListActivity.class);
+                Intent mainIntent = new Intent(InstructionActivity5.this,PcListActivity.class);
                 startActivity(mainIntent);
                 overridePendingTransition(R.xml.slide_in2,R.xml.slide_out2);
 
