@@ -17,7 +17,7 @@ public class Client {
            BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 
 
-           Socket clientSocket = new Socket("localhost", 1239);
+           Socket clientSocket = new Socket("192.168.1.104", 1239);
 
            DataOutputStream DOS = new DataOutputStream(clientSocket.getOutputStream());
            //DOS.writeUTF(FLAG);

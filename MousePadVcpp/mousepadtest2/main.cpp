@@ -19,7 +19,7 @@ char recvbuf[DEFAULT_BUFLEN];
 
 #pragma execution_character_set("utf-8")
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
-
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 
 
 
@@ -33,7 +33,7 @@ void performAction(vector<string>, SOCKET,Robot & robot);
 
 
 int main(){
-
+	
 
 
 	// fill it out for keyboard key presses...
