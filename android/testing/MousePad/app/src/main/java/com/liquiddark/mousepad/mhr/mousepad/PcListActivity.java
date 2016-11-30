@@ -32,8 +32,8 @@ import android.widget.Toast;
 
 import com.liquiddark.mousepad.mhr.mousepad.adapter.PcListArrayAdapter;
 import com.liquiddark.mousepad.mhr.mousepad.instruction.activity.InstructionActivity;
+import com.liquiddark.mousepad.mhr.mousepad.instruction.activity.InstructionActivity4;
 
-import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -61,16 +61,17 @@ public class PcListActivity extends Activity {
     ProgressBar progressBarClientList ;
 
 
-    ImageView refreshImageView,imageViewPcMobile;
+    ImageView refreshImageView,imageViewPcMobile,helpkeyImageView;
     TextView tvConnectionStatus,listViewMessagetextView;
     Typeface CustomFontSegoePrint ;
-
+    ImageView imageViewInstruction;
 
     EditText edtitTextForDialog;
 
     private static boolean refreshed_wait = true;
     private static int numberOfTimePingCalled = 0;
     private static boolean addManualIpFlag = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,17 +105,7 @@ public class PcListActivity extends Activity {
         setContentView(R.layout.activity_pc_list);
 
 
-        tvConnectionStatus = (TextView) findViewById(R.id.listViewTitileTextView);
-        //tvConnectionStatus.setPaintFlags(tvConnectionStatus.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-
-        refreshImageView = (ImageView) findViewById(R.id.refreshImageView);
-        imageViewPcMobile = (ImageView) findViewById(R.id.imageViewPcMobile);
-
-        imageViewPcMobile.setBackgroundResource(R.drawable.connecting_to_pc);
-        connectiongAnimation = (AnimationDrawable) imageViewPcMobile.getBackground();
-        connectiongAnimation.start();
-
-        ImageView imageViewInstruction = (ImageView) findViewById(R.id.imageViewInstruction);
+        initControls();
 
 
 
@@ -128,10 +119,13 @@ public class PcListActivity extends Activity {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         //connectiongAnimation.addFrame(getResources().getDrawable(R.drawable.connecting_to_pc5,getApplicationContext().getTheme()), 300);
                         tvConnectionStatus.setText("Unable to find pc..");
+                        helpkeyImageView.setVisibility(View.VISIBLE);
+
 
                     } else {
                         //connectiongAnimation.addFrame(getResources().getDrawable(R.drawable.connecting_to_pc5), 300);
                         tvConnectionStatus.setText("Unable to find pc..");
+                        helpkeyImageView.setVisibility(View.VISIBLE);
 
                     }
 
@@ -141,28 +135,26 @@ public class PcListActivity extends Activity {
 
 
 
-        tvConnectionStatus.setTypeface(CustomFontSegoePrint,Typeface.BOLD);
-        listViewMessagetextView = (TextView) findViewById(R.id.listViewMessagetextView);
-        listViewMessagetextView.setTypeface(CustomFontSegoePrint);
-        listViewMessagetextView.setTypeface(CustomFontSegoePrint,Typeface.BOLD);
-
-
-
-
-
-        _hostNameList = new ArrayList<>();
-        _ipList = new ArrayList<>();
-
-
         //    clientListAdapter = new ArrayAdapter<String>(this, R.layout.list_view_item1, _hostNameList);
-        pcListArrayAdapter = new PcListArrayAdapter(this,R.layout.list_view_custom_item,_hostNameList);
 
 
-        progressBarClientList = (ProgressBar) findViewById(R.id.progressBarClientList);
-        clientListView = (ListView) findViewById(R.id.clientListView);
-        clientListView.setAdapter(pcListArrayAdapter);
+
+        clientListViewEvent();
+        refreshButton();
+        helpkeyButton();
+       // rootPcListLayoutVIewEvent();
 
 
+
+
+
+
+
+
+    }
+
+
+    private void clientListViewEvent() {
         clientListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -175,10 +167,6 @@ public class PcListActivity extends Activity {
             }
         });
 
-
-        refreshButton();
-
-
         listViewMessagetextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,16 +175,58 @@ public class PcListActivity extends Activity {
             }
         });
 
+    }
 
+    private void initControls() {
+
+        _hostNameList = new ArrayList<>();
+        _ipList = new ArrayList<>();
+
+        tvConnectionStatus = (TextView) findViewById(R.id.listViewTitileTextView);
+        //tvConnectionStatus.setPaintFlags(tvConnectionStatus.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+
+        refreshImageView = (ImageView) findViewById(R.id.refreshImageView);
+        imageViewPcMobile = (ImageView) findViewById(R.id.imageViewPcMobile);
+        helpkeyImageView = (ImageView) findViewById(R.id.helpkey);
+        imageViewPcMobile.setBackgroundResource(R.drawable.connecting_to_pc);
+        connectiongAnimation = (AnimationDrawable) imageViewPcMobile.getBackground();
+        connectiongAnimation.start();
+        imageViewInstruction = (ImageView) findViewById(R.id.imageViewInstruction);
+
+        tvConnectionStatus.setTypeface(CustomFontSegoePrint,Typeface.BOLD);
+        listViewMessagetextView = (TextView) findViewById(R.id.listViewMessagetextView);
+        listViewMessagetextView.setTypeface(CustomFontSegoePrint);
+        listViewMessagetextView.setTypeface(CustomFontSegoePrint,Typeface.BOLD);
+
+        pcListArrayAdapter = new PcListArrayAdapter(this,R.layout.list_view_custom_item,_hostNameList);
+
+
+        progressBarClientList = (ProgressBar) findViewById(R.id.progressBarClientList);
+        clientListView = (ListView) findViewById(R.id.clientListView);
+
+        clientListView.setAdapter(pcListArrayAdapter);
         ImageView imageViewAddButton = (ImageView) findViewById(R.id.imageViewAddButton);
 
 
         addManualIpButton(imageViewAddButton);
         showInstructionButton(imageViewInstruction);
-
-
     }
 
+
+    
+    private void helpkeyButton(){
+        helpkeyImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(PcListActivity.this, InstructionActivity4.class));
+                overridePendingTransition(R.xml.slide_in, R.xml.slide_out);
+
+                helpkeyImageView.setVisibility(View.GONE);
+            }
+        });
+    }
 
 
     private void refreshButton() {
@@ -206,6 +236,9 @@ public class PcListActivity extends Activity {
                 REFRESH_BUTTON_CLICKED = true;
                // _hostNameList.clear();
                // _ipList.clear();
+
+                helpkeyImageView.setVisibility(View.GONE);
+
 
                 MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.refresh);
 //                mp.setVolume(0.2f,0.2f);

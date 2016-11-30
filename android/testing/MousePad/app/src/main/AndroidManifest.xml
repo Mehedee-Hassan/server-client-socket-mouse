@@ -17,13 +17,13 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PcListActivity">
+        <activity android:name="com.liquiddark.mousepad.mhr.com.liquiddark.mousepad.PcListActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".PadActivity" />
-        <activity android:name=".SplashActivity">
+        <activity android:name="com.liquiddark.mousepad.mhr.com.liquiddark.mousepad.PadActivity" />
+        <activity android:name="com.liquiddark.mousepad.mhr.com.liquiddark.mousepad.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="com.android.launcher.action.MOUSE_PAD_SPLASH_ACT_STAR_989" />
@@ -31,11 +31,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".instruction.activity.InstructionActivity" />
-        <activity android:name=".instruction.activity.InstructionActivity2" />
-        <activity android:name=".instruction.activity.InstructionActivity3" />
-        <activity android:name=".instruction.activity.InstructionActivity4" />
-        <activity android:name=".keyboard.KeyboardActivity"></activity>
+        <activity android:name="com.liquiddark.mousepad.mhr.com.liquiddark.mousepad.instruction.activity.InstructionActivity" />
+        <activity android:name="com.liquiddark.mousepad.mhr.com.liquiddark.mousepad.instruction.activity.InstructionActivity2" />
+        <activity android:name="com.liquiddark.mousepad.mhr.com.liquiddark.mousepad.instruction.activity.InstructionActivity3" />
+        <activity android:name="com.liquiddark.mousepad.mhr.com.liquiddark.mousepad.instruction.activity.InstructionActivity4" />
+        <activity android:name="com.liquiddark.mousepad.mhr.com.liquiddark.mousepad.instruction.activity.InstructionActivity5" />
+        <activity android:name="com.liquiddark.mousepad.mhr.com.liquiddark.mousepad.instruction.activity.InstructionActivity6" />
+        <activity android:name="com.liquiddark.mousepad.mhr.com.liquiddark.mousepad.instruction.activity.InstructionActivity7" />
+        <activity android:name="com.liquiddark.mousepad.mhr.com.liquiddark.mousepad.keyboard.KeyboardActivity"></activity>
     </application>
 
 </manifest>

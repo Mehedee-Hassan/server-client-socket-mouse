@@ -1,8 +1,6 @@
 package com.liquiddark.mousepad.mhr.mousepad.keyboard;
 
 import android.app.Activity;
-import android.media.Image;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;

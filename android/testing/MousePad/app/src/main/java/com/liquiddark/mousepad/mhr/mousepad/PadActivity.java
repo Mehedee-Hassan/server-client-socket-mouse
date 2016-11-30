@@ -3,7 +3,6 @@ package com.liquiddark.mousepad.mhr.mousepad;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +17,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -57,6 +57,8 @@ public class PadActivity extends Activity {
     private static final String     COMMAND_LONG_CLICK = "15";
     Vibrator vibration;
 
+    private static boolean _isKeyBoardShown;
+
     int tempDistence = 0;
     private long startClickTime = Calendar.getInstance().getTimeInMillis();
 
@@ -81,6 +83,8 @@ public class PadActivity extends Activity {
     private ImageView backButtonKeyboard;
     private EditText keyboardEventGetET2;
     private ImageView copyButton,cutButton,pestButton;
+    private RelativeLayout rootPcListLayoutVIew;
+    private static boolean _isBackPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +99,37 @@ public class PadActivity extends Activity {
          vibration = (Vibrator) getApplication().getSystemService(Context.VIBRATOR_SERVICE);
 
 
+
+        rootPcListLayoutVIewEvent();
     }
+
+
+
+
+
+    private void rootPcListLayoutVIewEvent() {
+
+        rootPcListLayoutVIew.getViewTreeObserver().addOnGlobalFocusChangeListener(new ViewTreeObserver.OnGlobalFocusChangeListener() {
+            @Override
+            public void onGlobalFocusChanged(View oldFocus, View newFocus) {
+
+                int difference = rootPcListLayoutVIew.getRootView().getHeight() - mousePadLayout.getHeight() ;
+                Log.d("_LL"," clicked here "+difference);
+
+
+                if(difference > 30){
+                    _isKeyBoardShown = true;
+                }
+                else{
+                    _isKeyBoardShown = false;
+
+                }
+
+            }
+        });
+    }
+
+
 
 
     @Override
@@ -200,6 +234,7 @@ public class PadActivity extends Activity {
                     handled = true;
 
                 }
+
                 return handled;
             }
         });
@@ -215,13 +250,12 @@ public class PadActivity extends Activity {
 
                 keyboardEventGetET2.requestFocus();
 
-        //        InputMethodManager imm = (InputMethodManager)   getSystemService(PadActivity.this.INPUT_METHOD_SERVICE);
-        //        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
                 InputMethodManager imm = (InputMethodManager)
                         getSystemService(Context.INPUT_METHOD_SERVICE);
-                if(imm != null){
-                    imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-                }
+
+                imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+
 
             }
         });
@@ -229,26 +263,13 @@ public class PadActivity extends Activity {
 
 
 
-        backButtonKeyboard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                keyboardShowlayout.setVisibility(View.GONE);
-                mousePadLayout.setVisibility(View.VISIBLE);
-          //      InputMethodManager imm = (InputMethodManager)   getSystemService(PadActivity.this.INPUT_METHOD_SERVICE);
-          //      imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                InputMethodManager imm = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
-
-
-                if(imm != null){
-                   imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
-                }else {
-                         imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
-
-                }
-
-            }
-        });
+//        backButtonKeyboard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                goBackToPad();
+//
+//            }
+//        });
 
 
 
@@ -555,18 +576,6 @@ public class PadActivity extends Activity {
 
 
 
-//       keyboardButtonImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                InputMethodManager imm = (InputMethodManager)   getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-//
-//            }
-//        });
-
-
-
     }
 
     private void initActivity() {
@@ -620,6 +629,9 @@ public class PadActivity extends Activity {
     }
 
     private void initComponents() {
+
+        rootPcListLayoutVIew = (RelativeLayout) findViewById(R.id.rootPcListLayoutVIew);
+
         closeWindowButton = (Button) findViewById(R.id.closeWindowButton);
         enterButton = (Button) findViewById(R.id.enterButton);
         escapeButton  = (Button) findViewById(R.id.escapeButton);
@@ -638,7 +650,7 @@ public class PadActivity extends Activity {
         mousePadLayout = (RelativeLayout) findViewById(R.id.mousePadLayout);
 
         clearButton = (ImageView) findViewById(R.id.clearETbutton);
-        backButtonKeyboard = (ImageView) findViewById(R.id.backButtonKeyboard);
+      //  backButtonKeyboard = (ImageView) findViewById(R.id.backButtonKeyboard);
         openKeyboardIv= (ImageView ) findViewById(R.id.openKeyboardIv);
 
 
@@ -691,6 +703,48 @@ public class PadActivity extends Activity {
         }
     };
 
+
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            hideFrontKeyboardView();
+
+
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        hideFrontKeyboardView();
+
+
+    }
+
+
+    private void hideFrontKeyboardView(){
+        keyboardShowlayout.setVisibility(View.GONE);
+        mousePadLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void goBackToPad() {
+        hideFrontKeyboardView();
+
+        InputMethodManager imm = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+
+        Log.d("_LL"," value = "+_isBackPressed);
+
+        if(!_isBackPressed && imm!=null){
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+    }
 }
 
 

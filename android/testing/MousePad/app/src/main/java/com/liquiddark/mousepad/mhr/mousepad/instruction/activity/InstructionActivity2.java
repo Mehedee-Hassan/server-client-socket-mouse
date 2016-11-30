@@ -3,13 +3,11 @@ package com.liquiddark.mousepad.mhr.mousepad.instruction.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.liquiddark.mousepad.mhr.mousepad.PcListActivity;
 import com.liquiddark.mousepad.mhr.mousepad.R;
 
 public class InstructionActivity2 extends Activity {

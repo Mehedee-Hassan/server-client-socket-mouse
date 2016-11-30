@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_splash"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EC407A"
+    android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+    tools:context="com.liquiddark.mousepad.mhr.mousepad.SplashActivity">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/add_ip"
+        android:id="@+id/iplistImageview5"
+        android:minHeight="50dp"
+        android:layout_weight="4.33"
+        android:layout_marginBottom="46dp"
+        android:layout_above="@+id/imageViewBackButton6"
+        android:layout_alignParentStart="true" />
+
+
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="49dp"
+        android:src="@drawable/back_key"
+        android:id="@+id/imageViewBackButton6"
+        android:padding="0dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="18dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="29dp" />
+
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ok_key"
+        android:id="@+id/imageViewDoneButton6"
+        android:padding="0dp"
+        android:layout_marginRight="18dp"
+        android:layout_below="@+id/iplistImageview5"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="18dp" />
+
+    <TextView
+        android:text="touch\nadd button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewInstruction6"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textSize="20dp"
+
+        android:layout_marginTop="44dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+    <!--downloadtopc-->
+
+</RelativeLayout>

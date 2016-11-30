@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_splash"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EC407A"
+    android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+    tools:context="com.liquiddark.mousepad.mhr.mousepad.SplashActivity">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/screenshot2"
+        android:id="@+id/iplistImageview5"
+        android:minHeight="50dp"
+        android:layout_weight="4.33"
+        android:layout_marginBottom="46dp"
+        android:layout_above="@+id/imageViewBackButton7"
+        android:layout_alignParentStart="true" />
+
+
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="49dp"
+        android:src="@drawable/back_key"
+        android:id="@+id/imageViewBackButton7"
+        android:padding="0dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="18dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="29dp" />
+
+
+    <TextView
+        android:text="input each ip\nat a time \n&amp; add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewInstruction7"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textSize="20dp"
+
+        android:layout_marginTop="34dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="49dp"
+        android:src="@drawable/done_key_new6"
+        android:id="@+id/imageViewDoneButton7"
+        android:padding="0dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginEnd="23dp"
+        android:layout_below="@+id/iplistImageview5"
+        android:layout_alignParentEnd="true" />
+    <!--downloadtopc-->
+
+</RelativeLayout>

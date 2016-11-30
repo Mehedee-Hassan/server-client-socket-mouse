@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.liquiddark.mousepad.mhr.mousepad.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by User on 10/31/2016.
