@@ -88,7 +88,7 @@ public class PadActivity extends Activity {
 
     private static int __numberOfTimeBaackPressed = 0;
     private static boolean __backspaceIsNotPressed =false;
-
+    private static int __oldCount = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +139,8 @@ public class PadActivity extends Activity {
     @Override
     protected void onResume() {
 
-        __numberOfTimeBaackPressed = 0;
+        pauseResumeInit();
+
         super.onResume();
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -168,9 +169,15 @@ public class PadActivity extends Activity {
 
     @Override
     protected void onPause() {
-        __numberOfTimeBaackPressed = 0;
+        pauseResumeInit();
+
         super.onPause();
         //finish();
+    }
+
+    private void pauseResumeInit() {
+        __numberOfTimeBaackPressed = 0;
+        __oldCount = -1;
     }
 
     @Override
@@ -189,9 +196,8 @@ public class PadActivity extends Activity {
         enterButtonEvent();
         mousePadEvent();
         mouseLeftRightButtonEvent();
+        pauseResumeInit();
 
-
-        __numberOfTimeBaackPressed = 0;
 
         keyboardEventGetET2.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -208,16 +214,30 @@ public class PadActivity extends Activity {
 
                 if (event.getAction() == KeyEvent.ACTION_DOWN)
                 {
+
+                    if(keyCode == KeyEvent.KEYCODE_DEL){
+
+
+                        if( event.getAction() == KeyEvent.ACTION_DOWN){
+                          //  __backspaceIsNotPressed = true;
+
+                            if(keyboardEventGetET2.getText().toString().isEmpty())
+                                (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
+
+                        }
+                        if( event.getAction() == KeyEvent.ACTION_UP){
+                         //   __backspaceIsNotPressed = false;
+                        }
+
+                    }else {
+                        //   __backspaceIsNotPressed = false;
+
+                    }
+
+
                     switch (keyCode)
                     {
-                        case  KeyEvent.KEYCODE_DEL:
-
-                            __backspaceIsNotPressed = true;
-                            (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
-
-                            break;
-
-                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                       case KeyEvent.KEYCODE_DPAD_CENTER:
                         case KeyEvent.KEYCODE_ENTER:
                             (new Thread(new IpTest2(COMMAND_ENTER,thisContext))).start();
 
@@ -228,16 +248,12 @@ public class PadActivity extends Activity {
                     }
                 }
 
-                if(keyCode == KeyEvent.KEYCODE_DEL ) {
-                    if( event.getAction() == KeyEvent.ACTION_UP){
-                        __backspaceIsNotPressed = false;
-                    }
-                }
 
 
-                Log.d("_LL"," back space = "+__backspaceIsNotPressed);
 
-                return true;
+              //  Log.d("_LL"," back space = "+__backspaceIsNotPressed);
+
+                return false;
 
 
 
@@ -699,7 +715,7 @@ public class PadActivity extends Activity {
         return (number < 0 ? (-1*number):number);
     }
 
-
+    static boolean passedAll = false;
     TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -710,15 +726,101 @@ public class PadActivity extends Activity {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
 
             CharSequence newString = "";
-            if(start+count > 0 && !__backspaceIsNotPressed) {
+            int pos = start + count - 1;
+            boolean passMeThrough = false;
+            char temp = 0 ;
 
-                newString = s.subSequence(start + count - 1, start + count);
+            Log.d("_LL","got u = "+temp);
+
+            if(before!=0 && count<__oldCount)
+            {
+                __oldCount = count;
+                (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
+            }else
+            if(count!=0){
+            if(pos>=0) {
+                __oldCount = count;
+
+                temp = s.charAt(pos);
+                Log.d("_LL","got u2 = "+temp+" "+start+" "+before+" "+count);
 
                 if(count != before)
-                (new Thread(new IpTest2("22 "+newString.toString(),thisContext))).start();
+                (new Thread(new IpTest2("22 " + temp, thisContext))).start();
+
+            }
+            }else {
+                __oldCount = count;
+                (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
             }
 
-            Log.d("_LL",""+newString+" "+count+" "+before+" "+start);
+//        //    if(count == 0) __oldCount = -1;
+//
+//            if(temp == ' ') {
+//                Log.d("_LL","got u2.1 = "+temp);
+//
+//                __oldCount = -1;
+//            }
+//            else
+//            if((int)temp>'Z' && (int)temp<'A'&& (int)temp<'a' && (int)temp >'z' )
+//            {
+//                passMeThrough = true;
+//            }
+//
+//            Log.d("_LL","got u3 = "+(int)temp+" old ct ="+__oldCount+" count ="+count+" passme ="+passMeThrough);
+//
+//            if(((__oldCount<=count && count !=0 )|| passMeThrough)) {
+//                Log.d("_LL","got u4 = "+temp);
+//
+//                __oldCount = count;
+//                if(!(__oldCount == -1 && count >1))
+//
+//                    Log.d("_LL","got u5 = "+temp);
+//
+//                if (start + count > 0
+//
+//                        && !__backspaceIsNotPressed) {
+//                    Log.d("_LL","got u6 = "+temp);
+//
+//
+//                    //newString = s.subSequence(start + count - 1, start + count);
+//
+//                    passedAll = true;
+//
+//                    if (count != before) {
+//                        Log.d("_LL","sending = "+temp+" "+__oldCount+" "+count+" "+before+" "+start);
+//
+//                           __backspaceIsNotPressed = false;
+//
+//                        (new Thread(new IpTest2("22 " + (char)temp, thisContext))).start();
+//
+//
+//                    }
+//                }
+//                else{
+//                    passedAll = false;
+//                }
+//            }else{
+//                passedAll =false;
+//            }
+//
+//
+//
+//
+//            if(temp == ' '||temp ==0) {
+//                __oldCount = -1;
+//
+//            }
+//
+//            if(passedAll == false)
+//            if((!keyboardEventGetET2.getText().toString().isEmpty()))
+//            if(temp != ' ' && before!=count){
+//
+//                Log.d("_LL",""+temp+" "+__oldCount);
+//
+//                (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
+//            }
+//
+//            Log.d("_LL",""+temp+" "+__oldCount+" "+count+" "+before+" "+start);
 
             // Log.d("_LL",""+s);
         }

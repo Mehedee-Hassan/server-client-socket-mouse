@@ -71,6 +71,7 @@ public class PcListActivity extends Activity {
     private static boolean refreshed_wait = true;
     private static int numberOfTimePingCalled = 0;
     private static boolean addManualIpFlag = false;
+    private boolean calledOnOnCreate;
 
 
     @Override
@@ -81,6 +82,7 @@ public class PcListActivity extends Activity {
         initActivity();
         enableWifi();
         mpFound = MediaPlayer.create(getApplicationContext(), R.raw.found_mess);
+        mpFound.setVolume(0.2f,0.2f);
 
 
     }
@@ -108,6 +110,8 @@ public class PcListActivity extends Activity {
         initControls();
 
 
+        initClient();
+        calledOnOnCreate = true;
 
 
 
@@ -440,10 +444,12 @@ public class PcListActivity extends Activity {
     protected void onStart() {
         super.onStart();
 
+        if(!calledOnOnCreate) {
+            onStartPerformed = true;
+            initClient();
+        }
 
-        onStartPerformed = true;
-        initClient();
-
+        calledOnOnCreate =false;
 
         Log.d("_i8i "+TAG, "on start ip list count = " + pcListArrayAdapter.getCount());
 
