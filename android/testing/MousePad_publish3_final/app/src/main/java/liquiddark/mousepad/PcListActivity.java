@@ -69,6 +69,7 @@ public class PcListActivity extends Activity {
     EditText edtitTextForDialog;
 
     private static boolean refreshed_wait = true;
+    private static boolean pcnotfound_wait = true;
     private static int numberOfTimePingCalled = 0;
     private static boolean addManualIpFlag = false;
     private boolean calledOnOnCreate;
@@ -82,7 +83,7 @@ public class PcListActivity extends Activity {
         initActivity();
         enableWifi();
         mpFound = MediaPlayer.create(getApplicationContext(), R.raw.found_mess);
-        mpFound.setVolume(0.2f,0.2f);
+
 
 
     }
@@ -103,6 +104,7 @@ public class PcListActivity extends Activity {
     private void initActivity() {
         CustomFontSegoePrint = Typeface.createFromAsset(getAssets(), "fonts/Segoe_Print.ttf");
         refreshed_wait = true;
+        pcnotfound_wait = true;
 
         setContentView(R.layout.activity_pc_list);
 
@@ -114,29 +116,7 @@ public class PcListActivity extends Activity {
         calledOnOnCreate = true;
 
 
-
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                if(pcListArrayAdapter.getCount() ==0)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        //connectiongAnimation.addFrame(getResources().getDrawable(R.drawable.connecting_to_pc5,getApplicationContext().getTheme()), 300);
-                        tvConnectionStatus.setText("Unable to find pc..");
-                        helpkeyImageView.setVisibility(View.VISIBLE);
-
-
-                    } else {
-                        //connectiongAnimation.addFrame(getResources().getDrawable(R.drawable.connecting_to_pc5), 300);
-                        tvConnectionStatus.setText("Unable to find pc..");
-                        helpkeyImageView.setVisibility(View.VISIBLE);
-
-                    }
-
-
-                }
-            }, 20000);
-
+        pcCouldnotFound();
 
 
         //    clientListAdapter = new ArrayAdapter<String>(this, R.layout.list_view_item1, _hostNameList);
@@ -155,6 +135,29 @@ public class PcListActivity extends Activity {
 
 
 
+    }
+
+    private void pcCouldnotFound() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+            if(pcListArrayAdapter.getCount() ==0)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    //connectiongAnimation.addFrame(getResources().getDrawable(R.drawable.connecting_to_pc5,getApplicationContext().getTheme()), 300);
+                    tvConnectionStatus.setText("Unable to find pc..");
+                    helpkeyImageView.setVisibility(View.VISIBLE);
+
+
+                } else {
+                    //connectiongAnimation.addFrame(getResources().getDrawable(R.drawable.connecting_to_pc5), 300);
+                    tvConnectionStatus.setText("Unable to find pc..");
+                    helpkeyImageView.setVisibility(View.VISIBLE);
+
+                }
+
+
+            }
+        }, 20000);
     }
 
 
@@ -238,10 +241,9 @@ public class PcListActivity extends Activity {
             @Override
             public void onClick(View v) {
                 REFRESH_BUTTON_CLICKED = true;
-               // _hostNameList.clear();
-               // _ipList.clear();
 
-                helpkeyImageView.setVisibility(View.GONE);
+
+                helpkeyImageView.setVisibility(View.VISIBLE);
 
 
                 MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.refresh);
@@ -254,19 +256,39 @@ public class PcListActivity extends Activity {
                         @Override
                         public void run() {
                             refreshed_wait = true;
-                            _hostNameList.clear();
-                            _ipList.clear();
+                            //_hostNameList.clear();
+                            //_ipList.clear();
                         }
-                    }, 1000);
+                    }, 800);
                 }
 
 
                 if(refreshed_wait == true) {
+                    _hostNameList.clear();
+                    _ipList.clear();
+                    pcListArrayAdapter.notifyDataSetChanged();
+
                     initClient();
                     refreshed_wait=false;
                 }else{
                     Toast.makeText(getApplicationContext(),"Searching...",Toast.LENGTH_SHORT).show();
                 }
+
+//                if(pcnotfound_wait == false) {
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            pcnotfound_wait = true;
+//                            refreshed_wait = true;
+//                        }
+//                    }, 20000);
+//                }
+//
+//
+//                if(pcnotfound_wait == true) {
+//                        pcCouldnotFound();
+//                    pcnotfound_wait=false;
+//                }
 
             }
         });
@@ -280,6 +302,8 @@ public class PcListActivity extends Activity {
                 Intent intent = new Intent(PcListActivity.this, InstructionActivity.class);
                 intent.putExtra("__FROM_ACTIVITY","PC_LIST_ACTIVITY");
                 startActivity(intent);
+                overridePendingTransition(R.xml.slide_in, R.xml.slide_out);
+
 
 
             }
@@ -975,6 +999,8 @@ public class PcListActivity extends Activity {
 
                                         mpFound.setVolume(0.1f,0.1f);
                                         mpFound.start();
+
+                                        helpkeyImageView.setVisibility(View.GONE);
 
 
                                     }else {

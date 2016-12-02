@@ -53,7 +53,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
                 android:layout_above="@+id/imageViewAddButton"
-                android:layout_marginBottom="150dp"
+                android:layout_marginBottom="210dp"
 
                 />
             <!--android:src="@drawable/pc_icon_red"-->
@@ -124,16 +124,6 @@
                 android:layout_marginBottom="13dp"
                 android:layout_marginLeft="30dp"
                 />
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/progressBarClientList"
-                android:visibility="visible"
-                android:foregroundGravity="bottom"
-                android:layout_above="@+id/imageViewAddButton"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="50dp"
-                />
 
             <ImageView
                 android:layout_width="100dp"
@@ -141,9 +131,19 @@
                 android:visibility="gone"
                 android:src="@drawable/help_key"
                 android:id="@+id/helpkey"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="13dp"
                 android:layout_above="@+id/imageViewInstruction"
                 android:layout_centerHorizontal="true" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBarClientList"
+                android:visibility="visible"
+                android:foregroundGravity="bottom"
+                android:layout_above="@+id/helpkey"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="18dp" />
 
             <!--Please press refresh icon\nand\nMake sure your pc wifi\nis enabled.\n-->
     </RelativeLayout>
