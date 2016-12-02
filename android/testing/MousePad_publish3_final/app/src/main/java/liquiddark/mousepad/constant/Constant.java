@@ -3,6 +3,8 @@ package liquiddark.mousepad.constant;
 public class Constant{
 
 
+    public static final int GLOBAL_PORT_NUMBER = 1239;
+
     public static class Action{
         public static final String COMMAND_COPY = "19";
         public static final String COMMAND_PEST = "20";
