@@ -49,7 +49,7 @@ public class SplashActivity extends Activity {
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putBoolean("__APP_FIRST_TIME_STARTED",true);
                     editor.apply();
-                //    ShortcutIcon();
+                    ShortcutIcon();
 
                 }else {
                     mainIntent= new Intent(SplashActivity.this,PcListActivity.class);
