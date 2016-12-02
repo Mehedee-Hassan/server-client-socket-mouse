@@ -90,6 +90,8 @@ public class PadActivity extends Activity {
     private static boolean __backspaceIsNotPressed =false;
     private static int __oldCount = -1;
 
+
+    IpTest2 ipTest2test;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +105,7 @@ public class PadActivity extends Activity {
          vibration = (Vibrator) getApplication().getSystemService(Context.VIBRATOR_SERVICE);
 
 
-
+        ipTest2test = new IpTest2("",this);
         rootPcListLayoutVIewEvent();
     }
 
@@ -481,7 +483,7 @@ public class PadActivity extends Activity {
                     saveY = event.getY();
                 }
                 else
-                    coordinateTemp= String.format("%.2f %.2f" ,(event.getX()-saveX), (event.getY()-saveY));
+                    coordinateTemp= String.format("%.0f %.0f" ,(event.getX()-saveX), (event.getY()-saveY));
 
                 if(action == MotionEvent.ACTION_MOVE){
                     action =3;
@@ -493,7 +495,9 @@ public class PadActivity extends Activity {
 
                 String val = action+" "+ coordinateTemp;
 
-                (new Thread(new IpTest2(val,thisContext))).start();
+                Thread t = new Thread(new IpTest2(val,thisContext));
+                t.start();
+
 
                 return true;
             }
@@ -662,7 +666,7 @@ public class PadActivity extends Activity {
         MousePad.setLongClickable(true);
         MousePad.setClickable(true);
         MousePad.setFocusable(true);
-        
+
 
         Log.d("mouse_button_click", "onLongClick: "+MousePad.isLongClickable()+" "+MousePad.isClickable());
 
@@ -735,7 +739,8 @@ public class PadActivity extends Activity {
             if(before!=0 && count<__oldCount)
             {
                 __oldCount = count;
-                (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
+                if(!keyboardEventGetET2.getText().toString().isEmpty())
+                    (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
             }else
             if(count!=0){
             if(pos>=0) {
@@ -750,7 +755,9 @@ public class PadActivity extends Activity {
             }
             }else {
                 __oldCount = count;
-                (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
+
+                if(!keyboardEventGetET2.getText().toString().isEmpty())
+                    (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
             }
 
 //        //    if(count == 0) __oldCount = -1;
@@ -925,7 +932,7 @@ class IpTest2 implements Runnable{
 
     @Override
     public void run() {
-        test(getHostAddress());
+        test();
     }
 
     private String getHostAddress() {
@@ -943,7 +950,7 @@ class IpTest2 implements Runnable{
 
 
 
-    void test(String dstAddress){
+    synchronized void test(){
         Socket socket = null;
 
 
