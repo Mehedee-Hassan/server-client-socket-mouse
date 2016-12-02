@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -58,7 +59,39 @@ public class InstructionActivity5 extends Activity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
 
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            startActivity(new Intent(InstructionActivity5.this, InstructionActivity4.class));
+            overridePendingTransition(R.xml.slide_in2, R.xml.slide_out2);
+            finish();
+            return true;
+//            return super.onKeyDown(keyCode, event);
+
+        }
+        return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        startActivity(new Intent(InstructionActivity5.this, InstructionActivity4.class));
+        overridePendingTransition(R.xml.slide_in2,R.xml.slide_out2);
+
+
+        finish();
+        //    super.onBackPressed();
+
+
+    }
 
 
 
