@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import liquiddark.mousepad.constant.Constant;
+import liquiddark.mousepad.socket.Connection;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -65,8 +66,10 @@ public class PadActivity extends Activity {
     public static String ipTosend ="";
     public static byte[] IpToTheThread;
 
-    public static double saveX = 0;
-    public static double saveY = 0;
+    public  int saveX = 0;
+    public  int saveY = 0;
+    public  int tmpX = 0;
+    public  int tmpY = 0;
 
 
     public static int oldScrollDistance = 0;
@@ -92,6 +95,10 @@ public class PadActivity extends Activity {
 
 
     IpTest2 ipTest2test;
+
+    Connection connection;
+    Socket socket;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,11 +109,17 @@ public class PadActivity extends Activity {
         initMouspad();
         thisContext  = this;
 
-         vibration = (Vibrator) getApplication().getSystemService(Context.VIBRATOR_SERVICE);
+        vibration = (Vibrator) getApplication().getSystemService(Context.VIBRATOR_SERVICE);
 
 
         ipTest2test = new IpTest2("",this);
         rootPcListLayoutVIewEvent();
+
+
+        connection = new Connection();
+
+
+
     }
 
 
@@ -180,6 +193,9 @@ public class PadActivity extends Activity {
     private void pauseResumeInit() {
         __numberOfTimeBaackPressed = 0;
         __oldCount = -1;
+        saveX = 0;
+        saveY = 0;
+
     }
 
     @Override
@@ -199,125 +215,21 @@ public class PadActivity extends Activity {
         mousePadEvent();
         mouseLeftRightButtonEvent();
         pauseResumeInit();
+        keyboardEventGetET2Event();
+        openKeyboardIvEvent();
 
-
-        keyboardEventGetET2.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-
-                Log.d("_LL"," = "+keyCode);
+        clearCpyPstCt();
 
 
 
-                if(keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_UP){
-                    __backspaceIsNotPressed = false;
-                }
-
-
-                if (event.getAction() == KeyEvent.ACTION_DOWN)
-                {
-
-                    if(keyCode == KeyEvent.KEYCODE_DEL){
-
-
-                        if( event.getAction() == KeyEvent.ACTION_DOWN){
-                          //  __backspaceIsNotPressed = true;
-
-                            if(keyboardEventGetET2.getText().toString().isEmpty())
-                                (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
-
-                        }
-                        if( event.getAction() == KeyEvent.ACTION_UP){
-                         //   __backspaceIsNotPressed = false;
-                        }
-
-                    }else {
-                        //   __backspaceIsNotPressed = false;
-
-                    }
-
-
-                    switch (keyCode)
-                    {
-                       case KeyEvent.KEYCODE_DPAD_CENTER:
-                        case KeyEvent.KEYCODE_ENTER:
-                            (new Thread(new IpTest2(COMMAND_ENTER,thisContext))).start();
-
-                            return true;
-
-                        default:
-                            break;
-                    }
-                }
+        enableWifi();
 
 
 
 
-              //  Log.d("_LL"," back space = "+__backspaceIsNotPressed);
+    }
 
-                return false;
-
-
-
-
-            }
-
-
-
-        });
-
-        keyboardEventGetET2.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
-
-                    (new Thread(new IpTest2(COMMAND_ENTER,thisContext))).start();
-
-
-                    handled = true;
-
-                }
-
-                return handled;
-            }
-        });
-
-
-        openKeyboardIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //startActivity(new Intent(PadActivity.this, KeyboardActivity.class));
-
-                keyboardShowlayout.setVisibility(View.VISIBLE);
-                mousePadLayout.setVisibility(View.GONE);
-
-                keyboardEventGetET2.requestFocus();
-
-
-                InputMethodManager imm = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-
-
-            }
-        });
-
-
-
-
-//        backButtonKeyboard.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                goBackToPad();
-//
-//            }
-//        });
-
-
-
-
+    private void clearCpyPstCt() {
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -361,12 +273,112 @@ public class PadActivity extends Activity {
 
             }
         });
+    }
+
+    private void openKeyboardIvEvent() {
+        openKeyboardIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //startActivity(new Intent(PadActivity.this, KeyboardActivity.class));
+
+                keyboardShowlayout.setVisibility(View.VISIBLE);
+                mousePadLayout.setVisibility(View.GONE);
+
+                keyboardEventGetET2.requestFocus();
+
+
+                InputMethodManager imm = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+
+
+            }
+        });
+    }
+
+    private void keyboardEventGetET2Event() {
+        keyboardEventGetET2.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                Log.d("_LL"," = "+keyCode);
 
 
 
-        enableWifi();
+                if(keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_UP){
+                    __backspaceIsNotPressed = false;
+                }
 
 
+                if (event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+
+                    if(keyCode == KeyEvent.KEYCODE_DEL){
+
+
+                        if( event.getAction() == KeyEvent.ACTION_DOWN){
+                            //  __backspaceIsNotPressed = true;
+
+                            if(keyboardEventGetET2.getText().toString().isEmpty())
+                                (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
+
+                        }
+                        if( event.getAction() == KeyEvent.ACTION_UP){
+                            //   __backspaceIsNotPressed = false;
+                        }
+
+                    }else {
+                        //   __backspaceIsNotPressed = false;
+
+                    }
+
+
+                    switch (keyCode)
+                    {
+                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                        case KeyEvent.KEYCODE_ENTER:
+                            (new Thread(new IpTest2(COMMAND_ENTER,thisContext))).start();
+
+                            return true;
+
+                        default:
+                            break;
+                    }
+                }
+
+
+
+
+                //  Log.d("_LL"," back space = "+__backspaceIsNotPressed);
+
+                return false;
+
+
+
+
+            }
+
+
+
+        });
+
+        keyboardEventGetET2.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+
+                    (new Thread(new IpTest2(COMMAND_ENTER,thisContext))).start();
+
+
+                    handled = true;
+
+                }
+
+                return handled;
+            }
+        });
     }
 
     private void enableWifi() {
@@ -433,9 +445,9 @@ public class PadActivity extends Activity {
             @Override
             public boolean onLongClick(View v) {
 
-                        String val = COMMAND_LONG_CLICK;
-                        Log.d("mouse_button_click", "onLongClick: ");
-                        (new Thread(new IpTest2(val,thisContext))).start();
+                String val = COMMAND_LONG_CLICK;
+                Log.d("mouse_button_click", "onLongClick: ");
+                (new Thread(new IpTest2(val,thisContext))).start();
 
                 return true;
             }
@@ -448,15 +460,17 @@ public class PadActivity extends Activity {
 
 
                 int action = event.getAction();
-
+                int tempAction = 3;
 
                 String coordinateTemp = "";
 
+
+
                 if(action == MotionEvent.ACTION_DOWN){
-                    action = 1;
+                    tempAction = 1;
                     coordinateTemp= 0 + " "+ 0;
-                    saveX = event.getX();
-                    saveY = event.getY();
+                   // saveX = event.getX();
+                   // saveY = event.getY();
 
 
                     startClickTime = Calendar.getInstance().getTimeInMillis();
@@ -464,39 +478,66 @@ public class PadActivity extends Activity {
                 }
                 else if(action == MotionEvent.ACTION_UP){
 
-                    action = 2;
+                    tempAction = 16;
                     coordinateTemp= 0 + " "+ 0;
-                    saveX = event.getX();
-                    saveY = event.getY();
+                   // saveX = event.getX();
+                   // saveY = event.getY();
 
 
                     if( Calendar.getInstance().getTimeInMillis()- startClickTime < MAX_CLICK_DURATION ){
-                        action = Constant.Action.SHORT_TOUCH;
+                        tempAction = Constant.Action.SHORT_TOUCH;
                     }
 
-                    (new Thread(new IpTest2("16",thisContext))).start();
+                  //  (new Thread(new IpTest2("16",thisContext))).start();
 
 
                 }else if(action == MotionEvent.ACTION_HOVER_MOVE){
                     coordinateTemp= 0 + " "+ 0;
-                    saveX = event.getX();
-                    saveY = event.getY();
+                    //saveX = event.getX();
+                    //saveY = event.getY();
                 }
                 else
-                    coordinateTemp= String.format("%.0f %.0f" ,(event.getX()-saveX), (event.getY()-saveY));
-
                 if(action == MotionEvent.ACTION_MOVE){
-                    action =3;
-                    saveX = event.getX();
-                    saveY = event.getY();
+                    tempAction =3;
+                    //saveX = event.getX();
+                    //saveY = event.getY();
+                    Log.d("_LL","move--");
+
+
+
 
                 }
 
 
-                String val = action+" "+ coordinateTemp;
 
+                tmpX = (int)event.getX();
+                tmpY = (int)event.getY();
+
+                String val = tempAction+" "+ (tmpX-saveX)+" "+ (tmpY-saveY);
                 Thread t = new Thread(new IpTest2(val,thisContext));
                 t.start();
+
+//                try {
+//                    t.join();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+
+//                coordinateTemp= String.format("%.0f %.0f" ,(tmpX-saveX), (tmpY-saveY));
+
+
+
+
+                //after calculation save for later use
+                //saving current
+                saveX = tmpX;
+                saveY = tmpY;
+
+
+
+                Log.d("__LL",""+val);
+
+
 
 
                 return true;
@@ -507,40 +548,7 @@ public class PadActivity extends Activity {
     }
 
 
-    public boolean  ping(String url) {
 
-        try {
-
-            Process process = Runtime.getRuntime().exec(
-                    "/system/bin/ping -c 1 " + url);
-
-            int val = process.waitFor();
-
-
-            //Log.d(TAG+" check", "check&&&& =" + url+"| "+process.getInputStream().toString() );
-
-
-            if(val == 0)
-            {
-                process.destroy();
-
-                return true;
-            }
-            else{
-                return false;
-            }
-
-
-
-
-        } catch (IOException e) {
-            // body.append("Error\n");
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     private void enterButtonEvent() {
         enterButton.setOnClickListener(new View.OnClickListener() {
@@ -570,12 +578,12 @@ public class PadActivity extends Activity {
                     String val = "0 0 0";
 
                     if(tempDistence > oldScrollDistance)
-                         val = COMMAND_SCROLL_VERTICAL_UP;
+                        val = COMMAND_SCROLL_VERTICAL_UP;
                     else
                     if(tempDistence < oldScrollDistance)
-                         val = COMMAND_SCROLL_VERTICAL_DOWN;
+                        val = COMMAND_SCROLL_VERTICAL_DOWN;
 
-                   // val = COMMAND_SCROLL_VERTICAL_DOWN;
+                    // val = COMMAND_SCROLL_VERTICAL_DOWN;
 
                     (new Thread(new IpTest2(val,thisContext))).start();
 
@@ -618,23 +626,13 @@ public class PadActivity extends Activity {
         });
     }
 
-    private void laterImplementation() {
 
-
-
-    }
 
     private void initActivity() {
         final Intent receive = this.getIntent();
         ipTosend = receive.getStringExtra("_IP");
 
         initComponents();
-
-
-
-
-
-
 
         Animation textAlpha = new AlphaAnimation(1.0f ,0.0f);
 
@@ -643,6 +641,31 @@ public class PadActivity extends Activity {
         letsPlayTv.startAnimation(textAlpha);
 
 
+        ipToSednExtraction();
+
+
+        Log.d("mouse_button_click", "onLongClick: "+MousePad.isLongClickable()+" "+MousePad.isClickable());
+
+        MousePad.setLongClickable(true);
+        MousePad.setClickable(true);
+        MousePad.setFocusable(true);
+
+
+        Log.d("mouse_button_click", "onLongClick: "+MousePad.isLongClickable()+" "+MousePad.isClickable());
+
+
+
+
+//        (new Thread(connection)).start();
+
+//        boolean testFlag = connection.initialize(IpToTheThread,this);
+
+//        if(testFlag){}
+
+
+    }
+
+    private void ipToSednExtraction() {
         String[] temp = ipTosend.split(Pattern.quote("."));
         byte[] ip = new byte[4];
 
@@ -659,19 +682,6 @@ public class PadActivity extends Activity {
         ip[3] &=  0xFF;
 
         IpToTheThread = ip;
-
-
-        Log.d("mouse_button_click", "onLongClick: "+MousePad.isLongClickable()+" "+MousePad.isClickable());
-
-        MousePad.setLongClickable(true);
-        MousePad.setClickable(true);
-        MousePad.setFocusable(true);
-
-
-        Log.d("mouse_button_click", "onLongClick: "+MousePad.isLongClickable()+" "+MousePad.isClickable());
-
-
-
     }
 
     private void initComponents() {
@@ -696,7 +706,7 @@ public class PadActivity extends Activity {
         mousePadLayout = (RelativeLayout) findViewById(R.id.mousePadLayout);
 
         clearButton = (ImageView) findViewById(R.id.clearETbutton);
-      //  backButtonKeyboard = (ImageView) findViewById(R.id.backButtonKeyboard);
+        //  backButtonKeyboard = (ImageView) findViewById(R.id.backButtonKeyboard);
         openKeyboardIv= (ImageView ) findViewById(R.id.openKeyboardIv);
 
 
@@ -743,16 +753,16 @@ public class PadActivity extends Activity {
                     (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
             }else
             if(count!=0){
-            if(pos>=0) {
-                __oldCount = count;
+                if(pos>=0) {
+                    __oldCount = count;
 
-                temp = s.charAt(pos);
-                Log.d("_LL","got u2 = "+temp+" "+start+" "+before+" "+count);
+                    temp = s.charAt(pos);
+                    Log.d("_LL","got u2 = "+temp+" "+start+" "+before+" "+count);
 
-                if(count != before)
-                (new Thread(new IpTest2("22 " + temp, thisContext))).start();
+                    if(count != before)
+                        (new Thread(new IpTest2("22 " + temp, thisContext))).start();
 
-            }
+                }
             }else {
                 __oldCount = count;
 
@@ -858,15 +868,15 @@ public class PadActivity extends Activity {
             Toast.makeText(this,"exit pad?!!",Toast.LENGTH_SHORT).show();
 
 
-             return true;
+            return true;
 
         }
-return false;
+        return false;
     }
 
     @Override
     public void onBackPressed() {
-       //
+        //
         hideFrontKeyboardView();
         startActivity(new Intent(PadActivity.this ,PcListActivity.class));
         overridePendingTransition(R.xml.slide_in2,R.xml.slide_out2);
@@ -903,6 +913,23 @@ return false;
             imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
     }
+
+
+    private void writeToPort(String val){
+
+        DataOutputStream DOS = null;
+        try {
+            DOS = new DataOutputStream(socket.getOutputStream());
+            DOS.write(val.getBytes());
+            DOS.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
 }
 
 
@@ -914,7 +941,7 @@ class IpTest2 implements Runnable{
     String val;
     String TAG = "IpTest";
     byte[] ipAddress ;
-    Socket passedSocket;
+
 
     private Context padActContext ;
     public IpTest2(){
@@ -962,7 +989,7 @@ class IpTest2 implements Runnable{
             {
                 InetAddress address = InetAddress.getByAddress(ipAddress);
                 //if (address.isReachable(1500))
-              //  if(ping(address.getHostAddress()))
+                //  if(ping(address.getHostAddress()))
                 {
 
 
@@ -973,16 +1000,19 @@ class IpTest2 implements Runnable{
 
                         DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
                         DOS.write(val.getBytes());
-                        DOS.flush();
+                        // DOS.flush();
 
 
                     } catch(Exception ex){
 
-                        if(!ping(address.getHostAddress())){
+                        if(true){
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
+
+                                    Toast.makeText(padActContext,"Connection closed",Toast.LENGTH_SHORT).show();
                                     padActContext.startActivity(new Intent(padActContext,PcListActivity.class));
+
                                 }
                             });
                         }
@@ -992,16 +1022,16 @@ class IpTest2 implements Runnable{
 
 
 
-
+                    //Thread.sleep(10);
                 }
                 //else if (!address.getHostAddress().equals(address.getHostName())) {
 
 
-                }
+            }
             //else
-                {
+            {
 
-                }
+            }
 
         }catch (Exception ex){
 

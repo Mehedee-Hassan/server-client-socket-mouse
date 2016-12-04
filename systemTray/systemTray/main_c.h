@@ -10,8 +10,12 @@
 #include "Robot.h"
 #include "utility.h"
 #include <string>
+#include <thread>
+#include <mutex>
+#include <chrono>
 
-#define DEFAULT_BUFLEN 50
+
+#define DEFAULT_BUFLEN 17
 #define TCP_PORT 1239
 
 int recvbuflen = DEFAULT_BUFLEN;
@@ -26,6 +30,7 @@ using namespace std;
 
 
 
+std::mutex g_lock;
 
 string __ipLIst;
 string myPcName;
@@ -34,7 +39,7 @@ string myPcName;
 int socketManagement();
 void performAction(vector<string>, SOCKET, Robot & robot);
 
-
+int mouseUpCalled = 1;
 
 int main3(){
 
@@ -46,7 +51,7 @@ int main3(){
 
 	//	char* text = "h a l a r p u t";
 
-
+	mouseUpCalled = 1;
 
 	socketManagement();
 
@@ -101,6 +106,8 @@ void printIPs(){
 
 }
 
+void dummy(int a){}
+
 int socketManagement()
 {
 	WSADATA wsa;
@@ -132,7 +139,7 @@ int socketManagement()
 	server.sin_port = htons(TCP_PORT);
 
 	//Bind
-	if (bind(s, (struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR)
+	if (::bind(s, (struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR)
 	{
 		printf("Bind failed with error code : %d", WSAGetLastError());
 		exit(EXIT_FAILURE);
@@ -164,33 +171,44 @@ int socketManagement()
 	);*/
 
 	//printIPs();
+	int lenVect;
+	vector<string> splitV;
+	
 
+	
+
+	int i = 0;
+	string tmpString = "";
 	while ((new_socket = accept(s, (struct sockaddr *)&client, &c)) != INVALID_SOCKET)
 	{
-		puts("Connection accepted");
+		//puts("Connection accepted");
 
-		int len;
+		//g_lock.lock();
 
 
 		memset(recvbuf, 0, sizeof recvbuf);
+		
 
 
-		recv(new_socket, recvbuf, 50, NULL);
+		recv(new_socket, recvbuf, recvbuflen, NULL);
+
+		//puts(recvbuf);
 
 
-		puts(recvbuf);
+		splitV = splitString(recvbuf, ' ');
 
 
 
-		vector<string> splitV = splitString(recvbuf, ' ');
-
-		len = splitV.size();
+		
 
 
-		cout << "\n----------" << endl;
+		lenVect = splitV.size();
 
-		for (int i = 0; i < len; i++)
-			cout << splitV[i] << endl;
+
+		//cout << "\n----------" << endl;
+
+		//for (int i = 0; i < len; i++)
+			////cout << splitV[i] << endl;
 
 
 		//
@@ -198,12 +216,15 @@ int socketManagement()
 
 
 		//Reply to the client
-		message = "mehedee\n";
+		//message = "mehedee\n";
 
 
-		if (splitV.size() > 0){
-			cout << splitV[0] << "=====" << endl;
+		if (lenVect > 0){
+			//cout << splitV[0] << "=====" << endl;
 
+
+			string testDe = " " + splitV[0] + " " +"\n";
+			OutputDebugString(testDe.c_str());
 
 
 			//int Flag = -1;
@@ -213,21 +234,19 @@ int socketManagement()
 			//performAction(splitV,new_socket, robot);
 
 
-			if (splitV[0] == COMMAND_MOUSE_MOVE) {
-
-				int x = stof(splitV[1]);
-				int y = stof(splitV[2]);
-				robot.mouseMoveTo(x, y);
-
-
+			if (splitV[0] == COMMAND_MOUSE_PAD_TOUCH_D){
+				mouseUpCalled = 1;
 			}
-			else
+
+
+			
+			
 
 			if (splitV[0] == FLAG_SEARCH){
 				char hostname[100];
 				gethostname(hostname, 100);
 
-				cout << "message added  " << hostname << endl;
+				//cout << "message added  " << hostname << endl;
 				int hostnameLen = strlen(hostname);
 
 
@@ -237,19 +256,19 @@ int socketManagement()
 
 
 
-				cout << "message added 2 |" << hostname[hostnameLen] << endl;
+				//cout << "message added 2 |" << hostname[hostnameLen] << endl;
 
 
 
 				send(new_socket, hostname, hostnameLen + 2, 0);
 
 			}
-			else if (splitV[0] == COMMAND_MOUSE_MOVE) {
+			/*else if (splitV[0] == COMMAND_MOUSE_MOVE) {
 				int x = stof(splitV[1]);
 				int y = stof(splitV[2]);
 				robot.mouseMoveTo(x, y);
 
-			}
+			}*/
 
 			else if (splitV[0] == COMMAND_MOUSE_LEFT_CLICK) {
 				robot.mouseLeftCLick(false);
@@ -274,6 +293,8 @@ int socketManagement()
 					robot.mouseLeftCLickUp();
 
 				}
+
+				mouseUpCalled = 2;
 
 			}
 			else if (splitV[0] == COMMAND_CLOSE_WINDOW) {
@@ -317,12 +338,36 @@ int socketManagement()
 
 			else if (splitV[0] == TYPE_KEY_ALPHSBET) {
 
-				if (splitV.size() > 1)
+				if (splitV.size() > 1){
+					
+					std::string aa = " " + splitV[1] + " " + std::to_string(splitV.size()) + " \n";
+
+
+					OutputDebugString(aa.c_str());
+					
+
 					robot.keyboard(splitV[1]);
+				}
 			}
 			else if (splitV[0] == TYPE_KEY_DELETE) {
 
 				robot.keyTypeDelete();
+			}
+			
+
+
+			if (splitV[0] == COMMAND_MOUSE_MOVE &&mouseUpCalled==1) {
+
+			
+				
+				int x = stoi(splitV[1]);
+				int y = stoi(splitV[2]);
+				robot.mouseMoveTo(x, y);
+
+				//thread tw1 = robot.callMoveTo(x,y);
+				//tw1.join();
+
+
 			}
 
 
@@ -330,7 +375,12 @@ int socketManagement()
 
 
 		}
+		//g_lock.unlock();
+
+
+
 	}
+
 
 	if (new_socket == INVALID_SOCKET)
 	{
@@ -342,6 +392,8 @@ int socketManagement()
 	WSACleanup();
 
 	return 0;
+
+//	_endthread();
 }
 
 
@@ -355,7 +407,7 @@ void performAction(vector<string>  splitV, SOCKET new_socket, Robot &robot){
 		char hostname[100];
 		gethostname(hostname, 100);
 
-		cout << "message added  " << hostname << endl;
+		//cout << "message added  " << hostname << endl;
 		int hostnameLen = strlen(hostname);
 
 
@@ -365,7 +417,7 @@ void performAction(vector<string>  splitV, SOCKET new_socket, Robot &robot){
 
 
 
-		cout << "message added 2 |" << hostname[hostnameLen] << endl;
+		//cout << "message added 2 |" << hostname[hostnameLen] << endl;
 
 
 

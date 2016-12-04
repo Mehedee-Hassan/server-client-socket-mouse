@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_splash"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EC407A"
+    android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+    tools:context="com.liquiddark.mousepad.mhr.mousepad.SplashActivity">
+
+
+    <TextView
+        android:text="Go\n\n https://bokadanob.wordpress.com/mousepad/"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewInstruction2"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textSize="20dp"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="50dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:src="@drawable/gotoweb2"
+            android:layout_marginTop="36dp"
+            android:id="@+id/imageView5"
+            android:layout_below="@+id/textViewInstruction2"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+
+             />
+
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="49dp"
+        android:src="@drawable/done_key_new6"
+        android:id="@+id/imageViewDoneButton2"
+        android:padding="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="18dp"
+        />
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="49dp"
+        android:src="@drawable/back_key"
+        android:id="@+id/imageViewBackButton2"
+        android:padding="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="18dp"
+        />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/first_instruction_ind2"
+        android:layout_above="@+id/imageViewDoneButton2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="26dp"
+        android:id="@+id/imageView3" />
+
+
+    <!--downloadtopc-->
+
+</RelativeLayout>

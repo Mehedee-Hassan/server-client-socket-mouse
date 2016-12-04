@@ -94,6 +94,13 @@
     <Image Include="..\..\..\..\..\Downloads\Untitled-2.png (1).ico" />
     <Image Include="D:\mouse_circle3.bmp" />
     <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small.ico" />
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small11.ico" />
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small12.ico" />
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small13.ico" />
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small14.ico" />
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small14.png" />
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small16.ico" />
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small17.ico" />
     <Image Include="image\mouse_circle4.bmp" />
     <Image Include="image\mouse_circle5.bmp" />
     <Image Include="image\mouse_circle6.bmp" />

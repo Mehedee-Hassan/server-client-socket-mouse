@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class MousePadServer {
                 clientSocket = serverSocket.accept();
 
 
-                DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
+                DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
 
 
             if (serverSocket.isClosed() || serverSocket == null)

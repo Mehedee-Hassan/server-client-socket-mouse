@@ -32,12 +32,13 @@ public class Server {
             clientSentence = inFromClient.readLine();
 
 
-            System.out.println("Received: " + clientSentence);
+            System.out.println("Received: " + clientSentence+"\n");
 
-            capitalizedSentence = clientSentence.toUpperCase() + '\n';
+//            capitalizedSentence = clientSentence.toUpperCase() + '\n';
 
-            outToClient.writeBytes(capitalizedSentence);
+//            outToClient.writeBytes(capitalizedSentence);
         }
     }
+
 
 }

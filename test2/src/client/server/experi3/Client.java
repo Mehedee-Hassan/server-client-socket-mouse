@@ -10,41 +10,43 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
 
-       try {
+        try {
 
-           String sentence;
-           String modifiedSentence;
-           BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-
-
-           Socket clientSocket = new Socket("192.168.1.104", 1239);
-
-           DataOutputStream DOS = new DataOutputStream(clientSocket.getOutputStream());
-           //DOS.writeUTF(FLAG);
-
-           DOS.write(("18" +
-                   " asdfsadf").getBytes());
+            String sentence;
+            String modifiedSentence;
+            BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 
 
+            Socket clientSocket = new Socket("192.168.1.103", 1239);
 
-           DOS.flush();
+            DataOutputStream DOS = new DataOutputStream(clientSocket.getOutputStream());
+            //DOS.writeUTF(FLAG);
 
-           System.out.println(" flashued ");
+
+            for(int i = 10 ; i <15 ; i++)
+            DOS.write((i +
+                    " asdfsadf|  ").getBytes());
 
 
 
-           DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
-           modifiedSentence = dataInputStream.readLine();
+            DOS.flush();
+
+            System.out.println(" flashued ");
 
 
-          // System.out.println("FROM SERVER: " + dataInputStream.readUTF());
+
+          //  DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
+           // modifiedSentence = dataInputStream.readLine();
 
 
-           System.out.println(" message = "+modifiedSentence);
+            // System.out.println("FROM SERVER: " + dataInputStream.readUTF());
 
-           clientSocket.close();
-       }catch (Exception ex){
+
+          //  System.out.println(" message = "+modifiedSentence);
+
+            clientSocket.close();
+        }catch (Exception ex){
             System.out.print("error = "+ex.getMessage());
-       }
+        }
     }
 }

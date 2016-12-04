@@ -52,6 +52,30 @@
     <Image Include="D:\mouse_circle3.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\..\..\..\Downloads\mouse_red_small2.png.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small12.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small11.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small13.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small14.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small14.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small16.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D:\programming\_project\server-client-socket-mouse\ui\mouse_red_small17.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
     <Image Include="image\mouse_circle4.bmp">
       <Filter>Resource Files</Filter>
     </Image>
@@ -59,9 +83,6 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="image\mouse_circle6.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\..\..\..\..\Downloads\mouse_red_small2.png.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

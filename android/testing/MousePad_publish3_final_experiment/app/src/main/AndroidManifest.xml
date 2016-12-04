@@ -1,0 +1,39 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="liquiddark.mousepad">
+
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/mousepad_icon4"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name="liquiddark.mousepad.PcListActivity">
+        </activity>
+        <activity android:name=".PadActivity" />
+        <activity android:name=".SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.InstructionActivity" />
+        <activity android:name=".activity.InstructionActivity2" />
+        <activity android:name=".activity.InstructionActivity3" />
+        <activity android:name=".activity.InstructionActivity4" />
+        <activity android:name=".activity.InstructionActivity5" />
+        <activity android:name=".activity.InstructionActivity6" />
+        <activity android:name=".activity.InstructionActivity7" />
+        <activity android:name=".keyboard.KeyboardActivity"></activity>
+    </application>
+
+</manifest>

@@ -12,7 +12,6 @@
 
 
 
-
 #define ID_TRAY_APP_ICON    1001
 #define ID_TRAY_EXIT        1002
 #define WM_SYSICON          (WM_USER + 1)
@@ -40,10 +39,7 @@ void InitNotifyIconData();
 
 
 
-
-
-
-
+void uiThread();
 
 unsigned int __stdcall mythread(void*){
 
@@ -51,6 +47,8 @@ unsigned int __stdcall mythread(void*){
 
 	return 0;
 }
+
+
 
 
 int WINAPI WinMain(HINSTANCE hThisInstance,
@@ -77,8 +75,8 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 
 
 	/* Use default icon and mouse-pointer */
-	wincl.hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON2));
-	wincl.hIconSm = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON2));
+	wincl.hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON6));
+	wincl.hIconSm = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON5));
 	wincl.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wincl.lpszMenuName = NULL;                 /* No menu */
 	wincl.cbClsExtra = 0;                      /* No extra bytes after the window class */
@@ -115,40 +113,45 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 	
 	bool first = 1;
 
+
+
+
+	HANDLE myhandleA = (HANDLE)_beginthreadex(0, 0, &mythread, (void*)0, 0, 0);
+
+	//WaitForSingleObject(myhandleA, INFINITE);
+	//CloseHandle(myhandleA);
+
+
+//	std::thread t = std::thread(main3);
 	
+	//t.detach();
+
+	first = false;
 
 
 	/* Run the message loop. It will run until GetMessage() returns 0 */
+
 	while (GetMessage(&messages, NULL, 0, 0))
 	{
 		/* Translate virtual-key messages into character messages */
-		TranslateMessage(&messages);
+		//TranslateMessage(&messages);
 		/* Send message to WindowProcedure */
-		DispatchMessage(&messages);
-	
 		
-		if (first){
-			HANDLE myhandleA = (HANDLE)_beginthreadex(0, 0, &mythread, (void*)0, 0, 0);
 
-			//WaitForSingleObject(myhandleA, INFINITE);
-			//CloseHandle(myhandleA);
+			DispatchMessage(&messages);
 
 
-			//std::thread t = std::thread(main3);
-			
-
-			first = false;
-		}
 
 	}
-
-
-
-
 	return messages.wParam;
 
 }
 
+
+void uiThread(){
+
+
+}
 
 
 /*  This function is called by the Windows function DispatchMessage()  */
@@ -253,7 +256,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 						   }
 						   if (clicked == ID_TRAY_TASK)
 						   {
-							   char *t = "MousePad\nAn opne source software\nAologizing for bad performance :(\n\nDeveloper :\n mehedee.hassan@outlook.com";
+							   char *t = "MousePad\nAn opne source software\nApologizing for bad performance :(\n\nDeveloper:\nmehedee.hassan@outlook.com";
 							   MessageBox(NULL, t, "Software Info", NULL);
 						   }
 						   if (clicked == ID_TRAY_MY_IP)
@@ -329,12 +332,12 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		rect.left = 215;
 		rect.top = 5;
 
-		if (myPcName != "")
-			myPcName = "Hi,Your PC: " + myPcName;
+		//if (myPcName == "")
+		std::string txt2 = "Hi,Your PC: " + myPcName;
 
 		
 
-		DrawTextA(hdc3, myPcName.c_str(), myPcName.length(), &rect, DT_LEFT);
+		DrawTextA(hdc3, txt2.c_str(), txt2.length(), &rect, DT_LEFT);
 		DeleteDC(hdc3);
 
 
@@ -441,7 +444,7 @@ void InitNotifyIconData()
 	nid.uFlags = NIF_INFO | NIF_ICON | NIF_MESSAGE | NIF_TIP;
 	nid.uTimeout = 1; // In milliseconds. Min value is 10 seconds, max is 30 seconds. If outside of range, it automatically takes closest limit 
 	nid.dwInfoFlags = NIIF_INFO;
-	nid.hIcon = (HICON)LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON3));
+	nid.hIcon = (HICON)LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON5));
 	nid.uTimeout = 1;
 
 	nid.uCallbackMessage = WM_SYSICON;
