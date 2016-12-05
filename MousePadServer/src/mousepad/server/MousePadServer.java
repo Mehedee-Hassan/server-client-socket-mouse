@@ -1,5 +1,6 @@
 package mousepad.server;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import mousepad.server.constant.Constant;
 
 
@@ -18,21 +19,14 @@ import java.net.*;
  * Created by mhr on 10/21/16.
  */
 public class MousePadServer {
-    public static String FLAG_SEARCH = "18";
+
     public static String N_FLAG = "_MOUSE";
     private static boolean firstTimeCoordinate = true;
     private static int lastx = 0;
     private static int lasty = 0;
 
     public static int flag_block = -1;
-    private static final String COMMAND_CLOSE_WINDOW = "7";
-    private static final String COMMAND_TAB_WINDOW = "8";
-    private static final String COMMAND_ENTER = "9";
-    private static final String COMMAND_SCROLL_VERTICAL_DOWN = "10";
-    private static final String COMMAND_SCROLL_VERTICAL_UP = "11";
-    private static final String COMMAND_ESC = "12";
-    private static final String COMMAND_MOUSE_LEFT_CLICK = "13";
-    private static final String COMMAND_MOUSE_RIGHT_CLICK = "14";
+
     private static boolean mouseLongClick = false;
 
 
@@ -44,7 +38,11 @@ public class MousePadServer {
 
         final Robot robot = new Robot();
         Socket clientSocket = null;
-         ServerSocket serverSocket = new ServerSocket(1239);
+        ServerSocket serverSocket = new ServerSocket(1239);
+
+        Utilities utilities  = new Utilities();
+        Commands runCommands = new Commands(utilities.MY_HOST_NAME);
+
 
 
         while (true)
@@ -72,60 +70,44 @@ public class MousePadServer {
 
 
 
-                     flag_or_message = dataInputStream.readUTF();
+                    flag_or_message = dataInputStream.readUTF();
 
 
                     System.out.println("\nflag_or_message_read=" + flag_or_message);
 
 
-                    if (flag_or_message.equalsIgnoreCase(FLAG_SEARCH)) {
-                        //flag_block = 1;
+                    if (flag_or_message.equalsIgnoreCase(Constant.Action.FLAG_SEARCH)) {
 
-                        //if (flag_block == 1)
                         System.out.println("search =" + flag_or_message);
+                        runCommands.searchedForServer(clientSocket);
 
-                        DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
-                        outToClient.writeUTF(getHostName());
-                        outToClient.writeUTF(getHostName());
-                        outToClient.writeUTF(getHostName());
-
-
-                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_CLOSE_WINDOW)) {
+                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_CLOSE_WINDOW)) {
 
 
                         System.out.println("close window block try");
-                        // Robot robot = new Robot();
-                        robot.keyPress(KeyEvent.VK_ALT);
-                        robot.keyPress(KeyEvent.VK_F4);
-                        robot.keyRelease(KeyEvent.VK_ALT);
-                        robot.keyRelease(KeyEvent.VK_F4);
+                        runCommands.closeWindow(robot);
 
 
-                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_MOUSE_LEFT_CLICK)) {
+                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_MOUSE_LEFT_CLICK)) {
 
+                        runCommands.mouseLeftClick(robot);
 
-                        // Robot robot = new Robot();
-                        robot.mousePress(InputEvent.BUTTON1_MASK);
-                        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_CLICK_AND_HOLD)) {
 
-                    } else if (flag_or_message.equalsIgnoreCase("15")) {
-
-
-                        // Robot robot = new Robot();
                         robot.mousePress(InputEvent.BUTTON1_MASK);
                         mouseLongClick = true;
-                    } else if (flag_or_message.equalsIgnoreCase("16")) {
+
+                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_FINGURE_UP)) {
 
 
-                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_MOUSE_RIGHT_CLICK)) {
+                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_MOUSE_RIGHT_CLICK)) {
 
 
-                        // Robot robot = new Robot();
                         robot.mousePress(InputEvent.BUTTON3_MASK);
                         robot.mouseRelease(InputEvent.BUTTON3_MASK);
 
 
-                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_ESC)) {
+                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_ESC)) {
 
 
                         System.out.println("close window block try");
@@ -134,7 +116,7 @@ public class MousePadServer {
                         robot.keyRelease(KeyEvent.VK_ESCAPE);
 
 
-                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_ENTER)) {
+                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_ENTER)) {
 
 
                         System.out.println("close window block try");
@@ -142,7 +124,7 @@ public class MousePadServer {
                         robot.keyPress(KeyEvent.VK_ENTER);
                         robot.keyRelease(KeyEvent.VK_ENTER);
 
-                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_SCROLL_VERTICAL_DOWN)) {
+                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_SCROLL_VERTICAL_DOWN)) {
 
 
                         System.out.println("scroll down block");
@@ -150,7 +132,7 @@ public class MousePadServer {
                         robot.mouseWheel(1);
 
 
-                    } else if (flag_or_message.equalsIgnoreCase(COMMAND_SCROLL_VERTICAL_UP)) {
+                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_SCROLL_VERTICAL_UP)) {
 
 
                         System.out.println("close window block try");
@@ -159,7 +141,7 @@ public class MousePadServer {
 
 
                     } else
-                    //else if (flag_block == 2)
+
                     {
 
                         System.out.println("else block");
@@ -300,8 +282,8 @@ public class MousePadServer {
                     robot.mouseRelease( InputEvent.BUTTON1_MASK );
                     mouseLongClick = false;
                 }else{
-                    robot.mousePress( InputEvent.BUTTON1_MASK );
-                    robot.mouseRelease( InputEvent.BUTTON1_MASK );
+                    robot.mousePress(InputEvent.BUTTON1_MASK);
+                    robot.mouseRelease(InputEvent.BUTTON1_MASK);
                 }
 
             }else{
