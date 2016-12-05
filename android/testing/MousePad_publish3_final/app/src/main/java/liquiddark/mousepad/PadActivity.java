@@ -40,6 +40,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.regex.Pattern;
 
 public class PadActivity extends Activity {
@@ -96,8 +98,11 @@ public class PadActivity extends Activity {
 
     IpTest2 ipTest2test;
 
-    Connection connection;
-    Socket socket;
+    private Connection connection;
+    private Socket socket;
+    private Queue<String> eventQueue;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +122,6 @@ public class PadActivity extends Activity {
 
 
         connection = new Connection();
-
 
 
     }
@@ -195,6 +199,7 @@ public class PadActivity extends Activity {
         __oldCount = -1;
         saveX = 0;
         saveY = 0;
+        eventQueue = new LinkedList();
 
     }
 
