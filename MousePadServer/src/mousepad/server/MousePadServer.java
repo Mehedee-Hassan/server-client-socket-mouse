@@ -18,7 +18,7 @@ import java.net.*;
  * Created by mhr on 10/21/16.
  */
 public class MousePadServer {
-    public static String FLAG_SEARCH = "_SEARCH";
+    public static String FLAG_SEARCH = "18";
     public static String N_FLAG = "_MOUSE";
     private static boolean firstTimeCoordinate = true;
     private static int lastx = 0;
