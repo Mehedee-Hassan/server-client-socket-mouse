@@ -100,6 +100,55 @@ vector<string> splitString(char * message, char delimiter){
 
 
 
+
+vector<string> splitString2(char * message, char delimiter){
+
+
+	int len = strlen(message);
+
+	vector <string> returnVector;
+
+	string tmpString = "";
+	int j = 0;
+
+	for (int i = 0; i < len; i++){
+
+		// cout<<message[i]<<" ";
+
+
+
+		if (message[i + 1] == '\0'){
+
+			tmpString += message[i];
+			//cout << test << endl;
+
+			returnVector.push_back(tmpString);
+			tmpString = "";
+			j++;
+		}
+		else
+		if (message[i] != delimiter){
+			tmpString += message[i];
+		}
+		else{
+
+			//cout << test << endl;
+			returnVector.push_back(tmpString);
+			tmpString = "";
+			j++;
+		}
+
+	}
+
+
+
+
+
+	return returnVector;
+}
+
+
+
 string* splitStringStrArray(char * message, char delimiter){
 
 

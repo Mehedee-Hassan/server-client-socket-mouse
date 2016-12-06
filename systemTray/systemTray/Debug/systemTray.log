@@ -1,4 +1,4 @@
-﻿Build started 06-Dec-16 6:00:11 AM.
+﻿Build started 07-Dec-16 3:30:20 AM.
      1>Project "D:\programming\_project\server-client-socket-mouse\systemTray\systemTray\systemTray.vcxproj" on node 2 (Build target(s)).
      1>Link:
          systemTray.vcxproj -> D:\programming\_project\server-client-socket-mouse\systemTray\Debug\systemTray.exe
@@ -6,4 +6,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.04
+Time Elapsed 00:00:00.03

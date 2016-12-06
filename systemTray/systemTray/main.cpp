@@ -10,7 +10,7 @@
 #include <process.h>
 #include<thread>
 
-
+#include <eh.h>
 
 #define ID_TRAY_APP_ICON    1001
 #define ID_TRAY_EXIT        1002
@@ -115,7 +115,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 
 
 
-
+	
 	//HANDLE myhandleA = (HANDLE)_beginthreadex(0, 0, &mythread, (void*)0, 0, 0);
 
 	//WaitForSingleObject(myhandleA, INFINITE);
@@ -123,8 +123,8 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 
 
 	std::thread t = std::thread(main3);
-	
 	t.detach();
+	
 
 	first = false;
 
