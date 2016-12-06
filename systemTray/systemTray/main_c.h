@@ -192,106 +192,116 @@ int socketManagement()
 	string tmpString = "";
 
 
-	while ((new_socket = accept(s, (struct sockaddr *)&client, &c)) != INVALID_SOCKET)
+	//while ((new_socket = accept(s, (struct sockaddr *)&client, &c)) != INVALID_SOCKET)
+	while (true)
 	{
+
+		new_socket = accept(s, (struct sockaddr *)&client, &c);
+		//Sleep(20);
+
 		//puts("Connection accepted");
 
 		//g_lock.lock();
+		OutputDebugString("1st thread");
 
-
-		memset(recvbufName, 0, sizeof recvbufName);
-
-
-		recv(new_socket, recvbufName, recvbuflenName, NULL);
-
-		//puts(recvbuf);
-
-
-		splitV = splitString(recvbufName, ' ');
-
-
-
-
-
-
-		lenVect = splitV.size();
-
-
-		//cout << "\n----------" << endl;
-
-		//for (int i = 0; i < len; i++)
-		////cout << splitV[i] << endl;
-
-
-		//
-		//robot.mouseMoveTo(0, 0);
-
-
-		//Reply to the client
-		//message = "mehedee\n";
-
-
-		if (lenVect > 0){
-			//cout << splitV[0] << "=====" << endl;
-
-
-			string testDe = " " + splitV[0] + " " + "\n";
-			OutputDebugString(testDe.c_str());
-
-
-			//int Flag = -1;
-			//Flag = getIntFromString(splitV[0]);
-
-
-			//performAction(splitV,new_socket, robot);
-
-
-			if (splitV[0] == COMMAND_MOUSE_PAD_TOUCH_D){
-				mouseUpCalled = 1;
-			}
-
-
-
-
-
-			if (splitV[0] == FLAG_SEARCH){
-				char hostname[100];
-				gethostname(hostname, 100);
-
-				//cout << "message added  " << hostname << endl;
-				int hostnameLen = strlen(hostname);
-
-
-
-				hostname[hostnameLen] = '\n';
-				hostname[hostnameLen + 1] = '\0';
-
-
-
-				//cout << "message added 2 |" << hostname[hostnameLen] << endl;
-
-
-
-				send(new_socket, hostname, hostnameLen + 2, 0);
-
-			}
-			else if (splitV[0] == FLAG_STAR_PAD){
-				 
-				std::thread tPad = std::thread(onePadThread , &new_socket);
-				
-
-			}
-
-
-//			closesocket(new_socket);
-		}
-
-
-		/*if (new_socket != INVALID_SOCKET)
+		//try
 		{
-		closesocket(new_socket);
-		}*/
+			memset(recvbufName, 0, sizeof recvbufName);
 
+
+			recv(new_socket, recvbufName, recvbuflenName, NULL);
+
+			//puts(recvbuf);
+
+
+			splitV = splitString(recvbufName, ' ');
+
+			OutputDebugString(recvbufName);
+
+
+
+
+			lenVect = splitV.size();
+
+
+			//cout << "\n----------" << endl;
+
+			//for (int i = 0; i < len; i++)
+			////cout << splitV[i] << endl;
+
+
+			//
+			//robot.mouseMoveTo(0, 0);
+
+
+			//Reply to the client
+			//message = "mehedee\n";
+
+
+			if (lenVect > 0){
+				//cout << splitV[0] << "=====" << endl;
+
+
+				string testDe = " " + splitV[0] + " " + "\n";
+				OutputDebugString(testDe.c_str());
+
+
+				//int Flag = -1;
+				//Flag = getIntFromString(splitV[0]);
+
+
+				//performAction(splitV,new_socket, robot);
+
+
+				if (splitV[0] == COMMAND_MOUSE_PAD_TOUCH_D){
+					mouseUpCalled = 1;
+				}
+
+
+
+
+
+				if (splitV[0] == FLAG_SEARCH){
+					char hostname[100];
+					gethostname(hostname, 100);
+
+					int hostnameLen = strlen(hostname);
+
+
+
+					hostname[hostnameLen] = '\n';
+					hostname[hostnameLen + 1] = '\0';
+
+
+
+					//cout << "message added 2 |" << hostname[hostnameLen] << endl;
+
+
+
+					send(new_socket, hostname, hostnameLen + 2, 0);
+
+				}
+				else if (splitV[0] == FLAG_STAR_PAD){
+
+			//		std::thread tPad = std::thread(onePadThread, &new_socket);
+
+
+				}
+
+
+				//			closesocket(new_socket);
+			}
+
+
+			/*if (new_socket != INVALID_SOCKET)
+			{
+			closesocket(new_socket);
+			}*/
+		}
+		//catch (const char *ex)
+		{
+
+		}
 		closesocket(s);
 		WSACleanup();
 
@@ -312,20 +322,24 @@ void onePadThread(SOCKET* new_socket)
 	Robot robot = new Robot();
 	bool clickAndHold = false; 
 	
+	OutputDebugString("2nd thread");
 
 
-	send(*new_socket, "4", 1, 0);
+	//send(*new_socket, "4", 1, 0);
 
 	while (true)
 	{
 
-	memset(recvbufName, 0, sizeof recvbufName);
+		memset(recvbuf, 0, sizeof recvbuf);
 	
-	recv(*new_socket, recvbufName, recvbuflenName, NULL);
+		recv(*new_socket, recvbuf, recvbuflen, NULL);
 	
-	splitV = splitString(recvbufName, ' ');
+		splitV = splitString(recvbuf, ' ');
 	
 	lenVect = splitV.size();
+
+
+	OutputDebugString(recvbuf);
 
 
 
