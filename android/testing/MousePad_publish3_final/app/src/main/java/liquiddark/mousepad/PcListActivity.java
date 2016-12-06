@@ -170,8 +170,11 @@ public class PcListActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+
+
                 Intent openMousePad = new Intent(PcListActivity.this, PadActivity.class);
                 openMousePad.putExtra("_IP", _ipList.get(position));
+
 
                 startActivity(openMousePad);
 
@@ -612,7 +615,7 @@ public class PcListActivity extends Activity {
 
 
 
-        public  String FLAG = "_SEARCH";
+        public  String FLAG = "18";
         public  String N_FLAG = "_MOUSE";
 
 
@@ -658,8 +661,11 @@ public class PcListActivity extends Activity {
                             _ipList.add(address.getHostAddress());
 
                             DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
-//                            DOS.writeUTF(FLAG);
-                            DOS.write("_SEARCH".getBytes());
+
+                            DOS.write(FLAG.getBytes());
+
+                            //DOS.writeUTF(FLAG);
+                            //DOS.write("_SEARCH".getBytes());
                             DOS.flush();
 
                             DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
@@ -684,6 +690,7 @@ public class PcListActivity extends Activity {
 
                             if (socket != null) {
                                 try {
+                                    Log.d("__LL","socket closing");
                                     socket.close();
                                     // pcListArrayAdapter.notifyDataSetChanged();
                                     //pcListArrayAdapter.notifyDataSetChanged();
@@ -773,7 +780,7 @@ public class PcListActivity extends Activity {
     class IpTest implements Runnable {
 
 
-        public  String FLAG = "_SEARCH";
+        public  String FLAG = "18";
         public  String N_FLAG = "_MOUSE";
 
         String TAG = "_H_IpTest";
@@ -958,7 +965,7 @@ public class PcListActivity extends Activity {
                             DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
                             //DOS.writeUTF(FLAG);
 
-                            DOS.write("18 _SEARCH".getBytes());
+                            DOS.write(FLAG.getBytes());
 
                             Log.d("_LL"+TAG, " ____send done  =" +FLAG);
 
@@ -972,7 +979,7 @@ public class PcListActivity extends Activity {
                             Log.d("_LL"+TAG, "server's host name 2_e = " + serverHostName);
 
                             serverHostName
-                                    = dataInputStream.readLine();
+                                    = dataInputStream.readUTF();
 
 
                             Log.d("_LL"+TAG, "server's host name 2 = " + serverHostName);

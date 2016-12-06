@@ -48,6 +48,8 @@ public class PadActivity extends Activity {
 
     private Context thisContext ;
 
+    public static boolean threadRun = true;
+
     private static final int MAX_CLICK_DURATION = 200;
     private static String COMMAND_CLOSE_WINDOW = "7";
     private static final String COMMAND_TAB_WINDOW = "8";
@@ -100,8 +102,8 @@ public class PadActivity extends Activity {
 
     private Connection connection;
     private Socket socket;
-    private Queue<String> eventQueue;
-
+    private static Queue<String> eventQueue;
+    private int dumpDelete;
 
 
     @Override
@@ -117,7 +119,7 @@ public class PadActivity extends Activity {
         vibration = (Vibrator) getApplication().getSystemService(Context.VIBRATOR_SERVICE);
 
 
-        ipTest2test = new IpTest2("",this);
+        //ipTest2test = new IpTest2("",this);
         rootPcListLayoutVIewEvent();
 
 
@@ -165,7 +167,7 @@ public class PadActivity extends Activity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
-
+        threadRun = true;
 
         InetAddress address = null;
         try {
@@ -199,8 +201,9 @@ public class PadActivity extends Activity {
         __oldCount = -1;
         saveX = 0;
         saveY = 0;
-        eventQueue = new LinkedList();
+        eventQueue = new LinkedList<String>();
 
+        (new Thread(new IpTest2(eventQueue,thisContext))).start();
     }
 
     @Override
@@ -250,7 +253,7 @@ public class PadActivity extends Activity {
                 toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
 
-                (new Thread(new IpTest2(Constant.Action.COMMAND_COPY,thisContext))).start();
+                //(new Thread(new IpTest2(Constant.Action.COMMAND_COPY,thisContext))).start();
             }
         });
 
@@ -261,7 +264,7 @@ public class PadActivity extends Activity {
                 toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
 
-                (new Thread(new IpTest2(Constant.Action.COMMAND_PEST,thisContext))).start();
+                //(new Thread(new IpTest2(Constant.Action.COMMAND_PEST,thisContext))).start();
 
             }
         });
@@ -274,7 +277,7 @@ public class PadActivity extends Activity {
                 toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
 
-                (new Thread(new IpTest2(Constant.Action.COMMAND_CUT,thisContext))).start();
+                //(new Thread(new IpTest2(Constant.Action.COMMAND_CUT,thisContext))).start();
 
             }
         });
@@ -326,7 +329,8 @@ public class PadActivity extends Activity {
                             //  __backspaceIsNotPressed = true;
 
                             if(keyboardEventGetET2.getText().toString().isEmpty())
-                                (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
+                                dumpDelete = 10;
+                                //(new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
 
                         }
                         if( event.getAction() == KeyEvent.ACTION_UP){
@@ -343,7 +347,7 @@ public class PadActivity extends Activity {
                     {
                         case KeyEvent.KEYCODE_DPAD_CENTER:
                         case KeyEvent.KEYCODE_ENTER:
-                            (new Thread(new IpTest2(COMMAND_ENTER,thisContext))).start();
+                            //(new Thread(new IpTest2(COMMAND_ENTER,thisContext))).start();
 
                             return true;
 
@@ -374,7 +378,7 @@ public class PadActivity extends Activity {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
 
-                    (new Thread(new IpTest2(COMMAND_ENTER,thisContext))).start();
+                    //(new Thread(new IpTest2(COMMAND_ENTER,thisContext))).start();
 
 
                     handled = true;
@@ -404,7 +408,7 @@ public class PadActivity extends Activity {
             public void onClick(View v) {
                 String val = COMMAND_LEFT_CLICK;
 
-                (new Thread(new IpTest2(val,thisContext))).start();
+                //(new Thread(new IpTest2(val,thisContext))).start();
             }
         });
 
@@ -417,7 +421,7 @@ public class PadActivity extends Activity {
 
                 String val = COMMAND_LONG_CLICK;
                 Log.d("mouse_button_click", "onLongClick: ");
-                (new Thread(new IpTest2(val,thisContext))).start();
+                //(new Thread(new IpTest2(val,thisContext))).start();
 
 
                 return true;
@@ -429,7 +433,7 @@ public class PadActivity extends Activity {
                 String val = COMMAND_RIGHT_CLICK;
 
 
-                (new Thread(new IpTest2(val,thisContext))).start();
+                //(new Thread(new IpTest2(val,thisContext))).start();
             }
         });
     }
@@ -452,7 +456,7 @@ public class PadActivity extends Activity {
 
                 String val = COMMAND_LONG_CLICK;
                 Log.d("mouse_button_click", "onLongClick: ");
-                (new Thread(new IpTest2(val,thisContext))).start();
+                //(new Thread(new IpTest2(val,thisContext))).start();
 
                 return true;
             }
@@ -519,8 +523,10 @@ public class PadActivity extends Activity {
                 tmpY = (int)event.getY();
 
                 String val = tempAction+" "+ (tmpX-saveX)+" "+ (tmpY-saveY);
-                Thread t = new Thread(new IpTest2(val,thisContext));
-                t.start();
+                eventQueue.add(val);
+
+//                Thread t = new Thread(new IpTest2(val,thisContext));
+//                t.start();
 
 //                try {
 //                    t.join();
@@ -540,7 +546,7 @@ public class PadActivity extends Activity {
 
 
 
-                Log.d("__LL",""+val);
+               // Log.d("__LL",""+val);
 
 
 
@@ -561,7 +567,7 @@ public class PadActivity extends Activity {
             public void onClick(View v) {
                 String val = COMMAND_ENTER;
 
-                (new Thread(new IpTest2(val,thisContext))).start();
+                //(new Thread(new IpTest2(val,thisContext))).start();
 
             }
         });
@@ -590,7 +596,7 @@ public class PadActivity extends Activity {
 
                     // val = COMMAND_SCROLL_VERTICAL_DOWN;
 
-                    (new Thread(new IpTest2(val,thisContext))).start();
+                    //(new Thread(new IpTest2(val,thisContext))).start();
 
 
 
@@ -615,7 +621,7 @@ public class PadActivity extends Activity {
             public void onClick(View v) {
                 String val = COMMAND_ESCAPE;
 
-                (new Thread(new IpTest2(val,thisContext))).start();
+                //(new Thread(new IpTest2(val,thisContext))).start();
             }
         });
     }
@@ -626,7 +632,7 @@ public class PadActivity extends Activity {
             public void onClick(View v) {
                 String val = COMMAND_CLOSE_WINDOW;
 
-                (new Thread(new IpTest2(val,thisContext))).start();
+                //(new Thread(new IpTest2(val,thisContext))).start();
             }
         });
     }
@@ -754,8 +760,8 @@ public class PadActivity extends Activity {
             if(before!=0 && count<__oldCount)
             {
                 __oldCount = count;
-                if(!keyboardEventGetET2.getText().toString().isEmpty())
-                    (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
+                if(!keyboardEventGetET2.getText().toString().isEmpty())dumpDelete=10;
+                    //(new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
             }else
             if(count!=0){
                 if(pos>=0) {
@@ -765,14 +771,16 @@ public class PadActivity extends Activity {
                     Log.d("_LL","got u2 = "+temp+" "+start+" "+before+" "+count);
 
                     if(count != before)
-                        (new Thread(new IpTest2("22 " + temp, thisContext))).start();
+                        dumpDelete =10;
+                        //(new Thread(new IpTest2("22 " + temp, thisContext))).start();
 
                 }
             }else {
                 __oldCount = count;
 
                 if(!keyboardEventGetET2.getText().toString().isEmpty())
-                    (new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
+                    dumpDelete =10;
+                    //(new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
             }
 
 //        //    if(count == 0) __oldCount = -1;
@@ -925,7 +933,7 @@ public class PadActivity extends Activity {
         DataOutputStream DOS = null;
         try {
             DOS = new DataOutputStream(socket.getOutputStream());
-            DOS.write(val.getBytes());
+            DOS.writeUTF(val);
             DOS.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -934,25 +942,39 @@ public class PadActivity extends Activity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        threadRun = false;
 
-}
+        super.onDestroy();
+    }
+
 
 
 class IpTest2 implements Runnable{
 
 
-    public static String FLAG = "_SEARCH";
-    public static String N_FLAG = "_MOUSE";
     String val;
     String TAG = "IpTest";
     byte[] ipAddress ;
 
+     Queue<String> eventQueue;
 
     private Context padActContext ;
     public IpTest2(){
 
+
+
     }
-    public IpTest2(String val,Context context){
+
+    public IpTest2(Queue<String> eventQueue,Context context){
+        this.eventQueue = eventQueue;
+        this.padActContext = context;
+        ipAddress = PadActivity.IpToTheThread;
+    }
+
+
+    private IpTest2(String val,Context context){
         this.val = val;
         ipAddress = PadActivity.IpToTheThread;
         padActContext = context;
@@ -964,7 +986,9 @@ class IpTest2 implements Runnable{
 
     @Override
     public void run() {
-        test();
+
+        if(threadRun)
+            test();
     }
 
     private String getHostAddress() {
@@ -979,13 +1003,14 @@ class IpTest2 implements Runnable{
 
         return ip;
     }
-
+     String testString;
 
 
     synchronized void test(){
         Socket socket = null;
 
 
+        Log.d("__LL"," in thread : ");
 
         //===
         try {
@@ -1001,22 +1026,64 @@ class IpTest2 implements Runnable{
 
                     try {
 
-                        socket = new Socket(address, 1239);
+                        socket = new Socket(address, Constant.GLOBAL_PORT_NUMBER);
 
                         DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
-                        DOS.write(val.getBytes());
-                        // DOS.flush();
+//                        DOS.writeUTF("4"); //connect to pad
+                        DOS.write("4".getBytes()); //connect to pad
+
+
+                        for(int i = 10 ; i <20;i++) {
+                           // DOS = new DataOutputStream(socket.getOutputStream());
+                          //  DOS.writeUTF(i+"");
+
+                        }
+
+
+                        int ii=10,j =0;
+                        while (true) {
+                            testString="";
+
+                                {
+
+
+
+
+
+
+                                if(!eventQueue.isEmpty())
+                                {
+                                    testString = eventQueue.poll();
+                                 //   Log.d("__LL", " in thread : "+testString );
+
+                                    DOS = new DataOutputStream(socket.getOutputStream());
+                                   // DOS.writeUTF(testString);
+                                    DOS.write(testString.getBytes());
+
+                                    Log.d("__LL", " in thread2 : "+testString );
+
+                                }
+
+                            }
+
+                        }
+
+                        //DOS.flush();
 
 
                     } catch(Exception ex){
+
+                        if(!socket.isClosed())
+                            socket.close();
+
 
                         if(true){
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
 
-                                    Toast.makeText(padActContext,"Connection closed",Toast.LENGTH_SHORT).show();
-                                    padActContext.startActivity(new Intent(padActContext,PcListActivity.class));
+//                                    Toast.makeText(padActContext,"Connection closed",Toast.LENGTH_SHORT).show();
+//                                    padActContext.startActivity(new Intent(padActContext,PcListActivity.class));
 
                                 }
                             });
@@ -1024,10 +1091,12 @@ class IpTest2 implements Runnable{
 
                         Log.d(TAG ,"exception ");
                     }
+                    if(!socket.isClosed())
+                        socket.close();
 
 
 
-                    //Thread.sleep(10);
+
                 }
                 //else if (!address.getHostAddress().equals(address.getHostName())) {
 
@@ -1039,19 +1108,16 @@ class IpTest2 implements Runnable{
             }
 
         }catch (Exception ex){
+            Log.d("__LL", " exception " );
 
         } finally {
-            if (socket != null) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
 
-
-                    e.printStackTrace();
-                }
-            }
         }
+        Log.d("__LL", " out thread : " );
+
     }
+
+
 
 
 
@@ -1090,4 +1156,5 @@ class IpTest2 implements Runnable{
         return false;
     }
 
+}
 }
