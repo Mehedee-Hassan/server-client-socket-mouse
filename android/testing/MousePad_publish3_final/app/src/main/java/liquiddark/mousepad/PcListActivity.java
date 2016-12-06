@@ -662,9 +662,12 @@ public class PcListActivity extends Activity {
 
                             DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
 
-                            DOS.write(FLAG.getBytes());
+//                            c++
+//                            DOS.write(FLAG.getBytes());
 
-                            //DOS.writeUTF(FLAG);
+//                            java
+                            DOS.writeUTF(FLAG);
+
                             //DOS.write("_SEARCH".getBytes());
                             DOS.flush();
 
@@ -963,9 +966,11 @@ public class PcListActivity extends Activity {
 
 
                             DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
-                            //DOS.writeUTF(FLAG);
 
-                            DOS.write(FLAG.getBytes());
+                            //java
+                            DOS.writeUTF(FLAG);
+//                          c++
+//                          DOS.write(FLAG.getBytes());
 
                             Log.d("_LL"+TAG, " ____send done  =" +FLAG);
 
@@ -977,9 +982,11 @@ public class PcListActivity extends Activity {
 
 
                             Log.d("_LL"+TAG, "server's host name 2_e = " + serverHostName);
+//                            when java
+                            serverHostName = dataInputStream.readUTF();
 
-                            serverHostName
-                                    = dataInputStream.readUTF();
+//                            when c++
+//                            serverHostName = dataInputStream.readLine();
 
 
                             Log.d("_LL"+TAG, "server's host name 2 = " + serverHostName);
