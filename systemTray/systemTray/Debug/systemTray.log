@@ -1,57 +1,9 @@
-﻿Build started 05-Dec-16 4:59:24 AM.
+﻿Build started 06-Dec-16 6:00:11 AM.
      1>Project "D:\programming\_project\server-client-socket-mouse\systemTray\systemTray\systemTray.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         G:\ProgramFiles\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
-         main.cpp
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(253): warning C4005: 'RT_MANIFEST' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(699) : see previous definition of 'RT_MANIFEST'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(254): warning C4005: 'CREATEPROCESS_MANIFEST_RESOURCE_ID' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(50) : see previous definition of 'CREATEPROCESS_MANIFEST_RESOURCE_ID'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(255): warning C4005: 'ISOLATIONAWARE_MANIFEST_RESOURCE_ID' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(253) : see previous definition of 'ISOLATIONAWARE_MANIFEST_RESOURCE_ID'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(256): warning C4005: 'ISOLATIONAWARE_NOSTATICIMPORT_MANIFEST_RESOURCE_ID' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(359) : see previous definition of 'ISOLATIONAWARE_NOSTATICIMPORT_MANIFEST_RESOURCE_ID'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(257): warning C4005: 'MINIMUM_RESERVED_MANIFEST_RESOURCE_ID' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(51) : see previous definition of 'MINIMUM_RESERVED_MANIFEST_RESOURCE_ID'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(258): warning C4005: 'MAXIMUM_RESERVED_MANIFEST_RESOURCE_ID' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(629) : see previous definition of 'MAXIMUM_RESERVED_MANIFEST_RESOURCE_ID'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(1978): warning C4005: 'PWR_FAIL' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(1710) : see previous definition of 'PWR_FAIL'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(2457): warning C4005: 'HTERROR' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(1709) : see previous definition of 'HTERROR'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(2458): warning C4005: 'HTTRANSPARENT' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(1712) : see previous definition of 'HTTRANSPARENT'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(10503): warning C4005: 'IDI_APPLICATION' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(1615) : see previous definition of 'IDI_APPLICATION'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(10504): warning C4005: 'IDI_HAND' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(1618) : see previous definition of 'IDI_HAND'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(10505): warning C4005: 'IDI_QUESTION' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(1621) : see previous definition of 'IDI_QUESTION'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(10506): warning C4005: 'IDI_EXCLAMATION' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(1624) : see previous definition of 'IDI_EXCLAMATION'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(10507): warning C4005: 'IDI_ASTERISK' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(1627) : see previous definition of 'IDI_ASTERISK'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(10509): warning C4005: 'IDI_WINLOGO' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(1629) : see previous definition of 'IDI_WINLOGO'
-     1>c:\program files (x86)\windows kits\8.1\include\um\winuser.h(10512): warning C4005: 'IDI_SHIELD' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(1631) : see previous definition of 'IDI_SHIELD'
-     1>d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\utility.h(145): warning C4172: returning address of local variable or temporary
-     1>d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\utility.h(177): warning C4101: 'e' : unreferenced local variable
-     1>d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\utility.h(199): warning C4101: 'e' : unreferenced local variable
-     1>d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\main_c.h(158): warning C4800: 'Robot *' : forcing value to bool 'true' or 'false' (performance warning)
-     1>d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\main_c.h(159): warning C4101: 'len' : unreferenced local variable
-     1>d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\main_c.h(117): warning C4101: 'message' : unreferenced local variable
-     1>d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\main_c.h(429): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\main_c.h(430): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\main.cpp(15): warning C4005: 'ID_TRAY_APP_ICON' : macro redefinition
-                 d:\programming\_project\server-client-socket-mouse\systemtray\systemtray\resource.h(1345) : see previous definition of 'ID_TRAY_APP_ICON'
-       Link:
-         G:\ProgramFiles\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\programming\_project\server-client-socket-mouse\systemTray\Debug\systemTray.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\programming\_project\server-client-socket-mouse\systemTray\Debug\systemTray.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\programming\_project\server-client-socket-mouse\systemTray\Debug\systemTray.lib" /MACHINE:X86 Debug\Resource.res
-         Debug\Robot.obj
-         Debug\main.obj
+     1>Link:
          systemTray.vcxproj -> D:\programming\_project\server-client-socket-mouse\systemTray\Debug\systemTray.exe
      1>Done Building Project "D:\programming\_project\server-client-socket-mouse\systemTray\systemTray\systemTray.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.09
+Time Elapsed 00:00:00.04

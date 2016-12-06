@@ -22,6 +22,7 @@ using namespace std;
 
 const string COMMAND_MOUSE_PAD_TOUCH_D = "1";
 const string COMMAND_MOUSE_MOVE = "3";
+const string FLAG_STAR_PAD = "4";
 const string COMMAND_CLOSE_WINDOW = "7";
 const string COMMAND_TAB_WINDOW = "8";
 const string COMMAND_ENTER = "9";
@@ -34,6 +35,7 @@ const string COMMAND_MOUSE_LEFT_CLICKHOLD = "15";
 const string COMMAND_MOUSE_PAD_SHORT_CLICK = "5";
 const string COMMAND_MOUSE_PAD_UP = "16";
 const string FLAG_SEARCH = "18";
+
 const string COMMAND_COPY = "19";
 const string COMMAND_PEST = "20";
 const string COMMAND_CUT = "21";

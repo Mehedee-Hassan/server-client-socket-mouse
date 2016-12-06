@@ -116,25 +116,27 @@ int WINAPI WinMain(HINSTANCE hThisInstance,
 
 
 
-	HANDLE myhandleA = (HANDLE)_beginthreadex(0, 0, &mythread, (void*)0, 0, 0);
+	//HANDLE myhandleA = (HANDLE)_beginthreadex(0, 0, &mythread, (void*)0, 0, 0);
 
 	//WaitForSingleObject(myhandleA, INFINITE);
 	//CloseHandle(myhandleA);
 
 
-//	std::thread t = std::thread(main3);
+	std::thread t = std::thread(main3);
 	
-	//t.detach();
+	t.detach();
 
 	first = false;
 
 
 	/* Run the message loop. It will run until GetMessage() returns 0 */
 
+
+
 	while (GetMessage(&messages, NULL, 0, 0))
 	{
 		/* Translate virtual-key messages into character messages */
-		//TranslateMessage(&messages);
+		TranslateMessage(&messages);
 		/* Send message to WindowProcedure */
 		
 
@@ -178,31 +180,15 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		break;
 	case WM_CREATE:
 
-		//printIPs();
-		//bitmap = (HBITMAP)LoadImage(NULL, MAKEINTRESOURCE(IDB_BITMAP3), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-		//bitmap = (HBITMAP)LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_BITMAP3), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-		//GetModuleHandle(NULL), MAKEINTRESOURCE(ID_ICON1), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE
-
+	
 		bitmap = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_BITMAP2));
-		
-		//SetForegroundWindow((HWND)(((ULONG)Hwnd) | 0x01));
-		
-		
-
-		/*ShowWindow(Hwnd, SW_HIDE);
-		Hmenu = CreatePopupMenu();
-		AppendMenu(Hmenu, MF_STRING, ID_TRAY_EXIT, TEXT("Exit The Demo"));*/
-		
-
+	
 
 
 		break;
 
 	case WM_SYSCOMMAND:
-		/*In WM_SYSCOMMAND messages, the four low-order bits of the wParam parameter
-		are used internally by the system. To obtain the correct result when testing the value of wParam,
-		an application must combine the value 0xFFF0 with the wParam value by using the bitwise AND operator.*/
-
+	
 		switch (wParam & 0xFFF0)
 		{
 		case SC_MINIMIZE:

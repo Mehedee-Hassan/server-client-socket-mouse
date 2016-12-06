@@ -38,7 +38,7 @@ string myPcName;
 
 int socketManagement();
 void performAction(vector<string>, SOCKET, Robot & robot);
-
+void onePadThread(SOCKET* new_socket);
 int mouseUpCalled = 1;
 
 int main3(){
@@ -108,6 +108,17 @@ void printIPs(){
 
 void dummy(int a){}
 
+
+
+int recvbuflenName = DEFAULT_BUFLEN;
+char recvbufName[DEFAULT_BUFLEN];
+
+
+
+
+
+
+
 int socketManagement()
 {
 	WSADATA wsa;
@@ -173,12 +184,14 @@ int socketManagement()
 	//printIPs();
 	int lenVect;
 	vector<string> splitV;
-	
 
-	
+
+
 
 	int i = 0;
 	string tmpString = "";
+
+
 	while ((new_socket = accept(s, (struct sockaddr *)&client, &c)) != INVALID_SOCKET)
 	{
 		//puts("Connection accepted");
@@ -186,20 +199,19 @@ int socketManagement()
 		//g_lock.lock();
 
 
-		memset(recvbuf, 0, sizeof recvbuf);
-		
+		memset(recvbufName, 0, sizeof recvbufName);
 
 
-		recv(new_socket, recvbuf, recvbuflen, NULL);
+		recv(new_socket, recvbufName, recvbuflenName, NULL);
 
 		//puts(recvbuf);
 
 
-		splitV = splitString(recvbuf, ' ');
+		splitV = splitString(recvbufName, ' ');
 
 
 
-		
+
 
 
 		lenVect = splitV.size();
@@ -208,7 +220,7 @@ int socketManagement()
 		//cout << "\n----------" << endl;
 
 		//for (int i = 0; i < len; i++)
-			////cout << splitV[i] << endl;
+		////cout << splitV[i] << endl;
 
 
 		//
@@ -223,7 +235,7 @@ int socketManagement()
 			//cout << splitV[0] << "=====" << endl;
 
 
-			string testDe = " " + splitV[0] + " " +"\n";
+			string testDe = " " + splitV[0] + " " + "\n";
 			OutputDebugString(testDe.c_str());
 
 
@@ -239,8 +251,8 @@ int socketManagement()
 			}
 
 
-			
-			
+
+
 
 			if (splitV[0] == FLAG_SEARCH){
 				char hostname[100];
@@ -263,138 +275,175 @@ int socketManagement()
 				send(new_socket, hostname, hostnameLen + 2, 0);
 
 			}
-			/*else if (splitV[0] == COMMAND_MOUSE_MOVE) {
-				int x = stof(splitV[1]);
-				int y = stof(splitV[2]);
-				robot.mouseMoveTo(x, y);
-
-			}*/
-
-			else if (splitV[0] == COMMAND_MOUSE_LEFT_CLICK) {
-				robot.mouseLeftCLick(false);
-			}
-
-			else if (splitV[0] == COMMAND_MOUSE_RIGHT_CLICK) {
-				robot.mouseRightClick();
-			}
-
-			else if (splitV[0] == COMMAND_MOUSE_PAD_SHORT_CLICK) {
-				robot.mouseLeftCLick(false);
-			}
-			else if (splitV[0] == COMMAND_MOUSE_LEFT_CLICKHOLD){
-				robot.mouseLeftCLick(true);
-				clickAndHold = true;
-
-			}
-
-			else if (splitV[0] == COMMAND_MOUSE_PAD_UP){
-				if (clickAndHold == true){
-					clickAndHold = false;
-					robot.mouseLeftCLickUp();
-
-				}
-
-				mouseUpCalled = 2;
-
-			}
-			else if (splitV[0] == COMMAND_CLOSE_WINDOW) {
-				robot.AltF4();
-			}
-
-			else if (splitV[0] == COMMAND_TAB_WINDOW) {
-
-			}
-
-			else if (splitV[0] == COMMAND_ENTER) {
-				robot.pressEnter();
-
-			}
-
-			else if (splitV[0] == COMMAND_SCROLL_VERTICAL_DOWN) {
-				robot.mouseScroll(1);
-			}
-
-			else if (splitV[0] == COMMAND_SCROLL_VERTICAL_UP) {
-				robot.mouseScroll(2);
-			}
-
-			else if (splitV[0] == COMMAND_ESC) {
-				robot.pressESC();
-			}
-
-			else if (splitV[0] == COMMAND_COPY) {
-				robot.copyCommand();
-			}
-
-			else if (splitV[0] == COMMAND_CUT) {
-				robot.cutCommand();
-			}
-
-
-
-			else if (splitV[0] == COMMAND_PEST) {
-				robot.pestCommand();
-			}
-
-			else if (splitV[0] == TYPE_KEY_ALPHSBET) {
-
-				if (splitV.size() > 1){
-					
-					std::string aa = " " + splitV[1] + " " + std::to_string(splitV.size()) + " \n";
-
-
-					OutputDebugString(aa.c_str());
-					
-
-					robot.keyboard(splitV[1]);
-				}
-			}
-			else if (splitV[0] == TYPE_KEY_DELETE) {
-
-				robot.keyTypeDelete();
-			}
-			
-
-
-			if (splitV[0] == COMMAND_MOUSE_MOVE &&mouseUpCalled==1) {
-
-			
+			else if (splitV[0] == FLAG_STAR_PAD){
+				 
+				std::thread tPad = std::thread(onePadThread , &new_socket);
 				
-				int x = stoi(splitV[1]);
-				int y = stoi(splitV[2]);
-				robot.mouseMoveTo(x, y);
-
-				//thread tw1 = robot.callMoveTo(x,y);
-				//tw1.join();
-
 
 			}
 
 
+//			closesocket(new_socket);
+		}
 
+
+		/*if (new_socket != INVALID_SOCKET)
+		{
+		closesocket(new_socket);
+		}*/
+
+		closesocket(s);
+		WSACleanup();
+
+		return 0;
+
+		//	_endthread();
+	}
+}
+
+
+
+void onePadThread(SOCKET* new_socket)
+
+{
+
+	int lenVect;
+	vector<string> splitV;
+	Robot robot = new Robot();
+	bool clickAndHold = false; 
+	
+
+
+	send(*new_socket, "4", 1, 0);
+
+	while (true)
+	{
+
+	memset(recvbufName, 0, sizeof recvbufName);
+	
+	recv(*new_socket, recvbufName, recvbuflenName, NULL);
+	
+	splitV = splitString(recvbufName, ' ');
+	
+	lenVect = splitV.size();
+
+
+
+
+	if (lenVect > 0){
+		if (splitV[0] == COMMAND_MOUSE_LEFT_CLICK) {
+			robot.mouseLeftCLick(false);
+		}
+
+		else if (splitV[0] == COMMAND_MOUSE_RIGHT_CLICK) {
+			robot.mouseRightClick();
+		}
+
+		else if (splitV[0] == COMMAND_MOUSE_PAD_SHORT_CLICK) {
+			robot.mouseLeftCLick(false);
+		}
+		else if (splitV[0] == COMMAND_MOUSE_LEFT_CLICKHOLD){
+			robot.mouseLeftCLick(true);
+			clickAndHold = true;
+
+		}
+
+		else if (splitV[0] == COMMAND_MOUSE_PAD_UP){
+			if (clickAndHold == true){
+				clickAndHold = false;
+				robot.mouseLeftCLickUp();
+
+			}
+
+			mouseUpCalled = 2;
+
+		}
+		else if (splitV[0] == COMMAND_CLOSE_WINDOW) {
+			robot.AltF4();
+		}
+
+		else if (splitV[0] == COMMAND_TAB_WINDOW) {
+
+		}
+
+		else if (splitV[0] == COMMAND_ENTER) {
+			robot.pressEnter();
+
+		}
+
+		else if (splitV[0] == COMMAND_SCROLL_VERTICAL_DOWN) {
+			robot.mouseScroll(1);
+		}
+
+		else if (splitV[0] == COMMAND_SCROLL_VERTICAL_UP) {
+			robot.mouseScroll(2);
+		}
+
+		else if (splitV[0] == COMMAND_ESC) {
+			robot.pressESC();
+		}
+
+		else if (splitV[0] == COMMAND_COPY) {
+			robot.copyCommand();
+		}
+
+		else if (splitV[0] == COMMAND_CUT) {
+			robot.cutCommand();
+		}
+
+
+
+		else if (splitV[0] == COMMAND_PEST) {
+			robot.pestCommand();
+		}
+
+		else if (splitV[0] == TYPE_KEY_ALPHSBET) {
+
+			if (splitV.size() > 1){
+
+				std::string aa = " " + splitV[1] + " " + std::to_string(splitV.size()) + " \n";
+
+
+				OutputDebugString(aa.c_str());
+
+
+				robot.keyboard(splitV[1]);
+			}
+		}
+		else if (splitV[0] == TYPE_KEY_DELETE) {
+
+			robot.keyTypeDelete();
+		}
+
+
+
+		if (splitV[0] == COMMAND_MOUSE_MOVE &&mouseUpCalled == 1) {
+
+
+
+			int x = stoi(splitV[1]);
+			int y = stoi(splitV[2]);
+			robot.mouseMoveTo(x, y);
+
+			//thread tw1 = robot.callMoveTo(x,y);
+			//tw1.join();
 
 
 		}
-		//g_lock.unlock();
-
-
-
 	}
-
-
-	if (new_socket == INVALID_SOCKET)
-	{
-		printf("accept failed with error code : %d", WSAGetLastError());
-		return 1;
-	}
-
-	closesocket(s);
-	WSACleanup();
-
-	return 0;
-
-//	_endthread();
 }
+
+
+
+
+	//g_lock.unlock();
+
+
+	closesocket(*new_socket);
+
+}
+
+
 
 
 void performAction(vector<string>  splitV, SOCKET new_socket, Robot &robot){
