@@ -44,6 +44,8 @@ public class MousePadServer {
         Commands runCommands = new Commands(utilities.MY_HOST_NAME);
 
 
+        initExtraVars();
+
 
         while (true)
         {
@@ -52,7 +54,6 @@ public class MousePadServer {
 
             String flag_or_message;
             try {
-
 
                 clientSocket = serverSocket.accept();
 
@@ -80,78 +81,12 @@ public class MousePadServer {
 
                         System.out.println("search =" + flag_or_message);
                         runCommands.searchedForServer(clientSocket);
-
-                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_CLOSE_WINDOW)) {
-
-
-                        System.out.println("close window block try");
-                        runCommands.closeWindow(robot);
+                    }
+                    else if(flag_or_message.equals(Constant.Action.FLAG_CONNECT_TO_PAD)){
 
 
-                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_MOUSE_LEFT_CLICK)) {
-
-                        runCommands.mouseLeftClick(robot);
-
-                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_CLICK_AND_HOLD)) {
-
-                        robot.mousePress(InputEvent.BUTTON1_MASK);
-                        mouseLongClick = true;
-
-                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_FINGURE_UP)) {
-
-
-                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_MOUSE_RIGHT_CLICK)) {
-
-
-                        robot.mousePress(InputEvent.BUTTON3_MASK);
-                        robot.mouseRelease(InputEvent.BUTTON3_MASK);
-
-
-                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_ESC)) {
-
-
-                        System.out.println("close window block try");
-                        // Robot robot = new Robot();
-                        robot.keyPress(KeyEvent.VK_ESCAPE);
-                        robot.keyRelease(KeyEvent.VK_ESCAPE);
-
-
-                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_ENTER)) {
-
-
-                        System.out.println("close window block try");
-                        //  Robot robot = new Robot();
-                        robot.keyPress(KeyEvent.VK_ENTER);
-                        robot.keyRelease(KeyEvent.VK_ENTER);
-
-                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_SCROLL_VERTICAL_DOWN)) {
-
-
-                        System.out.println("scroll down block");
-                        // Robot robot = new Robot();
-                        robot.mouseWheel(1);
-
-
-                    } else if (flag_or_message.equalsIgnoreCase(Constant.Action.COMMAND_SCROLL_VERTICAL_UP)) {
-
-
-                        System.out.println("close window block try");
-                        //   Robot robot = new Robot();
-                        robot.mouseWheel(-1);
-
-
-                    } else
-
-                    {
-
-                        System.out.println("else block");
-
-                        String[] coordinate = flag_or_message.split(" ");
-
-                        System.out.println(coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
-
-                        setMousePosition(coordinate[0], coordinate[1], coordinate[2]);
-
+                        Thread t = new Thread(new ServerThread(clientSocket,Constant.SOCKET_PORT,dataInputStream));
+                        t.start();
 
                     }
 
@@ -168,7 +103,18 @@ public class MousePadServer {
 
      }
 
+    private static void initExtraVars() {
 
+        initLastMousePosVars();
+    }
+
+    private static void initLastMousePosVars() {
+
+
+        lastx = MouseInfo.getPointerInfo().getLocation().x;
+        lasty = MouseInfo.getPointerInfo().getLocation().y;
+
+    }
 
 
     private static void systemTrayRun() {
@@ -255,27 +201,38 @@ public class MousePadServer {
     public static  int currentX = 0;
     public static  int currentY = 0;
 
-    private static void setMousePosition(String flag ,String xpos ,String ypos) {
+    private static void setMousePosition(String flag ,String xpos ,String ypos,Robot robot) {
 
 
         System.out.println(" == "+xpos+" "+ypos);
 
 
         try {
+
+            String flag_int = flag;
+
             int flag_i = Integer.parseInt(flag);
-            float xf = Float.parseFloat(xpos);
-            float yf = Float.parseFloat(ypos);
-            System.out.println((int)xf+" "+(int)yf);
+//            float xf = Float.parseFloat(xpos);
+//            float yf = Float.parseFloat(ypos);
+
+
+            int tfx = Integer.parseInt(xpos);
+            int tfy = Integer.parseInt(ypos);
+
+        //    System.out.println((int)xf+" "+(int)yf);
 
 
 
-            Robot robot = new Robot();
+
+            System.out.println("=current mouse pos ="+tfx+" "+tfy);
 
 
-            System.out.println("=current mouse pos ="+currentX+" "+currentY);
-
-            if(flag_i == Constant.Action.SHORT_TOUCH){
-
+            if(flag.equals(Constant.Action.COMMAND_FINGURE_UP)){
+               // initLastMousePosVars();
+            }
+            else
+            if(flag.equals(Constant.Action.SHORT_TOUCH))
+            {
 
                 if(mouseLongClick){
 
@@ -286,30 +243,18 @@ public class MousePadServer {
                     robot.mouseRelease(InputEvent.BUTTON1_MASK);
                 }
 
-            }else{
-                robot.mouseMove((int)xf+currentX,(int)yf+currentY);
-
-                currentX = MouseInfo.getPointerInfo().getLocation().x;
-                currentY = MouseInfo.getPointerInfo().getLocation().y;
-
             }
+            if(flag.equals(Constant.Action.MOUSE_MOVE)) {
+                System.out.print("mouse move");
 
-
-            if(flag_i == 2){
-                System.out.println("UP");
-                //firstTimeCoordinate = true;
-
-                //currentX = (int)MouseInfo.getPointerInfo().getLocation().getX();
-                //currentY = (int)MouseInfo.getPointerInfo().getLocation().getY();
-
-                lastx = (int)xf;
-                lasty = (int)yf;
+                robot.mouseMove(tfx + MouseInfo.getPointerInfo().getLocation().x, tfy + MouseInfo.getPointerInfo().getLocation().y);
             }
+          //  lastx = MouseInfo.getPointerInfo().getLocation().x;
+          //  lasty = MouseInfo.getPointerInfo().getLocation().y;
 
 
 
-
-        } catch (AWTException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
