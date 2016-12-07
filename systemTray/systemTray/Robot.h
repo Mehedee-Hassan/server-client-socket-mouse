@@ -29,7 +29,7 @@ public:
 	
 	~Robot();
 
-
+	void keyboard(char ch);
 	void keyboard(char*);
 	void mouse();
 	//void mouseMoveTo(float, float);
@@ -60,6 +60,7 @@ public:
 	void pestCommand();
 
 	void keyTypeDelete();
+
 
 
 	std::thread callMoveTo(int x,int y){
@@ -96,4 +97,28 @@ void Robot::mouseMoveTo(int dx, int dy){
 
 
 
+}
+
+
+void Robot::keyboard(char ch){
+
+
+
+	memset(&keyboardInput, 0, sizeof(keyboardInput));
+
+
+		memset(&keyboardInput, 0, sizeof(keyboardInput));
+
+		keyboardInput.type = INPUT_KEYBOARD;
+		keyboardInput.ki.wVk = 0;
+		keyboardInput.ki.dwFlags = KEYEVENTF_UNICODE;
+		keyboardInput.ki.wScan = ch;
+
+
+
+		SendInput(1, &keyboardInput, sizeof(INPUT)); // 3rd param is size of an INPUT structure
+
+		keyboardInput.ki.dwFlags = KEYEVENTF_KEYUP;
+		SendInput(1, &keyboardInput, sizeof(INPUT));
+	
 }

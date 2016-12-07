@@ -101,7 +101,7 @@ vector<string> splitString(char * message, char delimiter){
 
 
 
-vector<string> splitString2(char * message, char delimiter){
+vector<string> splitString2(const char * message, char delimiter){
 
 
 	int len = strlen(message);

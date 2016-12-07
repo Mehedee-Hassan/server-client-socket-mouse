@@ -14,7 +14,7 @@
 #include <mutex>
 #include <chrono>
 
-#define DEFAULT_BUFLEN 20
+#define DEFAULT_BUFLEN 17
 #define TCP_PORT 1239
 
 int recvbuflen = DEFAULT_BUFLEN;
@@ -325,6 +325,7 @@ void onePadThread(SOCKET* new_socket)
 
 	int lenVect;
 	vector<string> splitV;
+	vector<string> newLiveVector;
 	Robot robot = new Robot();
 	bool clickAndHold = false; 
 	SOCKET testSocket = *new_socket;
@@ -343,130 +344,171 @@ void onePadThread(SOCKET* new_socket)
 
 
 			recv(testSocket, recvbuf, recvbuflen, NULL);
-			
-			
+
+
 			/*if (strlen(recvbuf) == 0)
 				continue;*/
-			splitV = splitString(recvbuf, ' ');
 
-			//g_lock.unlock();
+			int pos = 0;
+
+			newLiveVector = splitString(recvbuf, '\n');
+
+			int sizeOfnewLineVector = newLiveVector.size();
+			
+			if (sizeOfnewLineVector > 0)
+			{
+
+				while (sizeOfnewLineVector > pos)
+				{
+
+					if (newLiveVector[pos].length() > 0 )
+					if (newLiveVector[pos][0] != '\n')
+					{
+
+					splitV = splitString2(	newLiveVector[pos].c_str() , ' ');
 
 
-			lenVect = splitV.size();
 
 
-			OutputDebugString(recvbuf);
-			OutputDebugString("  ");
+					//g_lock.unlock();
+					
+					lenVect = splitV.size();
 
-			if (lenVect > 0){
 
-				if (splitV[0] == COMMAND_MOUSE_LEFT_CLICK) {
-					OutputDebugString("left click");
+					OutputDebugString(recvbuf);
 
-					robot.mouseLeftCLick(false);
-				}
 
-				else if (splitV[0] == COMMAND_MOUSE_RIGHT_CLICK) {
-					robot.mouseRightClick();
-				}
+					if (lenVect <= 3)
+					
+					if (lenVect > 0 ){
 
-				else if (splitV[0] == COMMAND_MOUSE_PAD_SHORT_CLICK) {
-					OutputDebugString("short click");
+						try{
+							OutputDebugString("\n");
+							OutputDebugString(splitV[0].c_str());
 
-					robot.mouseLeftCLick(false);
-				}
-				else if (splitV[0] == COMMAND_MOUSE_LEFT_CLICKHOLD){
-					OutputDebugString("left hold click");
+							if (splitV[0] == COMMAND_MOUSE_LEFT_CLICK) {
+								OutputDebugString("left click");
 
-					robot.mouseLeftCLick(true);
-					clickAndHold = true;
+								robot.mouseLeftCLick(false);
+							}
 
-				}
+							else if (splitV[0] == COMMAND_MOUSE_RIGHT_CLICK) {
+								robot.mouseRightClick();
+							}
 
-				else if (splitV[0] == COMMAND_MOUSE_PAD_UP){
-					if (clickAndHold == true){
-						clickAndHold = false;
-						robot.mouseLeftCLickUp();
+							else if (splitV[0] == COMMAND_MOUSE_PAD_SHORT_CLICK) {
+								OutputDebugString("short click");
+
+								robot.mouseLeftCLick(false);
+							}
+							else if (splitV[0] == COMMAND_MOUSE_LEFT_CLICKHOLD){
+								OutputDebugString("left hold click");
+
+								robot.mouseLeftCLick(true);
+								clickAndHold = true;
+
+							}
+
+							else if (splitV[0] == COMMAND_MOUSE_PAD_UP){
+
+								OutputDebugString("pad up");
+								if (clickAndHold == true){
+									clickAndHold = false;
+									robot.mouseLeftCLickUp();
+
+								}
+
+								mouseUpCalled = 2;
+
+							}
+							else if (splitV[0] == COMMAND_CLOSE_WINDOW) {
+								OutputDebugString("close window");
+
+								robot.AltF4();
+							}
+
+							else if (splitV[0] == COMMAND_TAB_WINDOW) {
+
+							}
+
+							else if (splitV[0] == COMMAND_ENTER) {
+								robot.pressEnter();
+								OutputDebugString("command neter");
+
+
+							}
+
+							else if (splitV[0] == COMMAND_SCROLL_VERTICAL_DOWN) {
+								robot.mouseScroll(1);
+							}
+
+							else if (splitV[0] == COMMAND_SCROLL_VERTICAL_UP) {
+								robot.mouseScroll(2);
+							}
+
+							else if (splitV[0] == COMMAND_ESC) {
+								robot.pressESC();
+							}
+
+							else if (splitV[0] == COMMAND_COPY) {
+								robot.copyCommand();
+							}
+
+							else if (splitV[0] == COMMAND_CUT) {
+								robot.cutCommand();
+							}
+
+
+
+							else if (splitV[0] == COMMAND_PEST) {
+								robot.pestCommand();
+							}
+
+							else if (splitV[0] == TYPE_KEY_ALPHSBET) {
+
+								if (splitV.size() == 2){
+
+									std::string aa = " |" + splitV[1] + "| " + std::to_string(splitV.size()) + " \n";
+
+
+
+									OutputDebugString(aa.c_str());
+
+									if (splitV[1].length() > 1)
+										robot.keyboard(splitV[1][0]);
+								}
+							}
+							else if (splitV[0] == TYPE_KEY_DELETE) {
+
+								robot.keyTypeDelete();
+							}
+
+
+
+							if (splitV[0] == COMMAND_MOUSE_MOVE && lenVect == 3) {
+
+
+								if (lenVect > 1){
+									int x = stoi(splitV[1]);
+									int y = stoi(splitV[2]);
+									robot.mouseMoveTo(x, y);
+								}
+								//thread tw1 = robot.callMoveTo(x,y);
+								//tw1.join();
+
+
+							}
+					}
+					catch (exception &ex){
 
 					}
-
-					mouseUpCalled = 2;
-
 				}
-				else if (splitV[0] == COMMAND_CLOSE_WINDOW) {
-					robot.AltF4();
-				}
-
-				else if (splitV[0] == COMMAND_TAB_WINDOW) {
-
-				}
-
-				else if (splitV[0] == COMMAND_ENTER) {
-					robot.pressEnter();
-
-				}
-
-				else if (splitV[0] == COMMAND_SCROLL_VERTICAL_DOWN) {
-					robot.mouseScroll(1);
-				}
-
-				else if (splitV[0] == COMMAND_SCROLL_VERTICAL_UP) {
-					robot.mouseScroll(2);
-				}
-
-				else if (splitV[0] == COMMAND_ESC) {
-					robot.pressESC();
-				}
-
-				else if (splitV[0] == COMMAND_COPY) {
-					robot.copyCommand();
-				}
-
-				else if (splitV[0] == COMMAND_CUT) {
-					robot.cutCommand();
-				}
-
-
-
-				else if (splitV[0] == COMMAND_PEST) {
-					robot.pestCommand();
-				}
-
-				else if (splitV[0] == TYPE_KEY_ALPHSBET) {
-
-					if (splitV.size() > 1){
-
-						std::string aa = " " + splitV[1] + " " + std::to_string(splitV.size()) + " \n";
-
-
-
-						OutputDebugString(aa.c_str());
-
-
-						robot.keyboard(splitV[1]);
 					}
-				}
-				else if (splitV[0] == TYPE_KEY_DELETE) {
-
-					robot.keyTypeDelete();
+					pos++;
 				}
 
-
-
-				if (splitV[0] == COMMAND_MOUSE_MOVE) {
-
-
-					if (lenVect > 1){
-						int x = stoi(splitV[1]);
-						int y = stoi(splitV[2]);
-						robot.mouseMoveTo(x, y);
-					}
-					//thread tw1 = robot.callMoveTo(x,y);
-					//tw1.join();
-
-
-				}
-			}
+			
+		}
 		}
 		catch (exception &ex){
 
