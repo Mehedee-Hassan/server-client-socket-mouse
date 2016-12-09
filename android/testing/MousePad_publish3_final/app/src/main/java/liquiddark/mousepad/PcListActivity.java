@@ -33,6 +33,7 @@ import android.widget.Toast;
 import liquiddark.mousepad.adapter.PcListArrayAdapter;
 import liquiddark.mousepad.activity.InstructionActivity;
 import liquiddark.mousepad.activity.InstructionActivity4;
+import liquiddark.mousepad.constant.Constant;
 import liquiddark.mousepad.socket.Connection;
 
 import java.io.DataInputStream;
@@ -43,6 +44,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -663,10 +665,10 @@ public class PcListActivity extends Activity {
                             DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
 
 //                            c++
-//                            DOS.write(FLAG.getBytes());
+                            DOS.write(FLAG.getBytes());
 
 //                            java
-                            DOS.writeUTF(FLAG);
+//                            DOS.writeUTF(FLAG);
 
                             //DOS.write("_SEARCH".getBytes());
                             DOS.flush();
@@ -675,7 +677,7 @@ public class PcListActivity extends Activity {
                             String serverHostName = "";
 
                             serverHostName
-                                    = dataInputStream.readUTF();
+                                    = dataInputStream.readLine();
 
                             Log.d(TAG, "server's host name = " + serverHostName);
 
@@ -783,8 +785,6 @@ public class PcListActivity extends Activity {
     class IpTest implements Runnable {
 
 
-        public  String FLAG = "18";
-        public  String N_FLAG = "_MOUSE";
 
         String TAG = "_H_IpTest";
         byte[] ipAddress;
@@ -946,8 +946,7 @@ public class PcListActivity extends Activity {
 //                    if(address.isReachable(1500) || ping(address.getHostAddress()))
 ///                    if(address.isReachable(1500))
 
-                    if(isReachableByTcp(address.getHostAddress(),1239,1500))
-                    {
+                    if (isReachableByTcp(address.getHostAddress(), 1239, 1500)) {
 
                         try {
 
@@ -955,24 +954,21 @@ public class PcListActivity extends Activity {
                                     + "| " + address.getCanonicalHostName()
                             );
 
-                            if(socket==null)
-                            socket = new Socket(address, 1239);
+                            if (socket == null)
+                                socket = new Socket(address, 1239);
 
 
-                            Log.d("_LL"+TAG, "___try catch =" + address.toString() + " " + address.getHostName());
-
-
-
+                            Log.d("_LL" + TAG, "___try catch =" + address.toString() + " " + address.getHostName());
 
 
                             DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
 
                             //java
-                            DOS.writeUTF(FLAG);
+                            DOS.writeBytes(Constant.FLAGS.SEARCH);
 //                          c++
 //                          DOS.write(FLAG.getBytes());
 
-                            Log.d("_LL"+TAG, " ____send done  =" +FLAG);
+                            Log.d("_LL" + TAG, " ____send done  =" + Constant.FLAGS.SEARCH);
 
                             DOS.flush();
 
@@ -981,27 +977,28 @@ public class PcListActivity extends Activity {
                             String serverHostName = "";
 
 
-                            Log.d("_LL"+TAG, "server's host name 2_e = " + serverHostName);
+                            Log.d("_LL" + TAG, "server's host name 2_e = " + serverHostName);
 //                            when java
-                            serverHostName = dataInputStream.readUTF();
+//                            serverHostName = dataInputStream.readUTF();
 
-//                            when c++
+//                            when visual c++
 //                            serverHostName = dataInputStream.readLine();
 
+//                            when qt c++
+                                byte[] hostname = new byte[200];
+                                dataInputStream.read(hostname);
+                                serverHostName = getStringFromBytes(hostname);
 
-                            Log.d("_LL"+TAG, "server's host name 2 = " + serverHostName);
+
+                            Log.d("_LL" + TAG, "server's host name 2 = " + serverHostName);
 
 
-
-
-                            if(!_ipList.contains(address.getHostAddress())) {
+                            if (!_ipList.contains(address.getHostAddress())) {
                                 _ipList.add(address.getHostAddress());
-                                if(!_hostNameList.contains(serverHostName)){
+                                if (!_hostNameList.contains(serverHostName)) {
                                     _hostNameList.add(serverHostName);
                                 }
                             }
-
-
 
 
                             new Handler(Looper.getMainLooper()).post(new Runnable() { // Tried new Handler(Looper.myLopper()) also
@@ -1011,23 +1008,23 @@ public class PcListActivity extends Activity {
                                     progressBarClientList.setVisibility(View.GONE);
 
 
-                                    if(!_ipList.isEmpty()){
+                                    if (!_ipList.isEmpty()) {
                                         imageViewPcMobile.setVisibility(View.GONE);
                                         tvConnectionStatus.setText("Choose your pc");
 
-                                       // mpFound.setVolume(0.1f,0.1f);
-                                     //   mpFound.start();
+                                        // mpFound.setVolume(0.1f,0.1f);
+                                        //   mpFound.start();
 
                                         helpkeyImageView.setVisibility(View.GONE);
 
 
-                                    }else {
+                                    } else {
                                         tvConnectionStatus.setText("couldn't find your pc");
                                     }
 
                                     //if(numberOfTimePingCalled > 230 || addManualIpFlag)
                                     {
-                                      //  addManualIpFlag = false;
+                                        //  addManualIpFlag = false;
                                     }
                                 }
                             });
@@ -1036,8 +1033,9 @@ public class PcListActivity extends Activity {
                         } catch (Exception ex) {
 
 
-                            Log.d("_LL"+TAG, " exception "+ ex.getMessage());
-
+                            Log.d("_LL" + TAG, " exception " + ex.getMessage());
+                            if (!socket.isClosed())
+                                socket.close();
 
                         } finally {
 
@@ -1045,7 +1043,7 @@ public class PcListActivity extends Activity {
                             if (socket != null) {
                                 try {
 
-                                   socket.close();
+                                    socket.close();
 
                                     new Handler(Looper.getMainLooper()).post(new Runnable() { // Tried new Handler(Looper.myLopper()) also
                                         @Override
@@ -1054,7 +1052,7 @@ public class PcListActivity extends Activity {
                                             progressBarClientList.setVisibility(View.GONE);
 
 
-                                            if(pcListArrayAdapter.getCount()!=0){
+                                            if (pcListArrayAdapter.getCount() != 0) {
                                                 imageViewPcMobile.setVisibility(View.GONE);
                                             }
                                         }
@@ -1082,5 +1080,14 @@ public class PcListActivity extends Activity {
         }
 
 
+        public String getStringFromBytes(byte[] hostname) {
+            String returnString = "";
+            int len = hostname.length;
+
+            for(int i  = 0 ; i < len; i ++){
+                returnString += Byte.toString(hostname[i]);
+            }
+            return returnString;
+        }
     }
 }

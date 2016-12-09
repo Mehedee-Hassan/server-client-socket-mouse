@@ -34,6 +34,8 @@ import android.widget.Toast;
 import liquiddark.mousepad.constant.Constant;
 import liquiddark.mousepad.socket.Connection;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -539,6 +541,9 @@ public class PadActivity extends Activity {
                 tmpY = (int)event.getY();
 
                 String val = tempAction+" "+ (tmpX-saveX)+" "+ (tmpY-saveY);
+
+                Log.d("_LL","move--"+val);
+
                 eventQueue.add(val);
 
 //                Thread t = new Thread(new IpTest2(val,thisContext));
@@ -986,10 +991,10 @@ class IpTest2 implements Runnable{
 
 
 //                        java
-                          DOS.writeUTF("4"); //connect to pad
+//                          DOS.writeUTF("4"); //connect to pad
 
 //                        c++
-//                        DOS.write("4".getBytes()); //connect to pad
+                        DOS.write("4".getBytes()); //connect to pad
 
 
                         for(int i = 10 ; i <20;i++) {
@@ -1000,14 +1005,12 @@ class IpTest2 implements Runnable{
 
 
                         int ii=10,j =0;
+
+                        DataOutputStream testBuffered ;
                         while (true) {
                             testString="";
 
                                 {
-
-
-
-
 
 
                                 if(!eventQueue.isEmpty())
@@ -1015,14 +1018,21 @@ class IpTest2 implements Runnable{
                                     testString = eventQueue.poll();
                                  //   Log.d("__LL", " in thread : "+testString );
 
-                                    DOS = new DataOutputStream(socket.getOutputStream());
+                                    testBuffered = new DataOutputStream(new BufferedOutputStream( socket.getOutputStream()));
+
 
 //                                    java
-                                      DOS.writeUTF(testString);
+//                                      DOS.writeUTF(testString);
 //                                    c++
-//                                    DOS.write(testString.getBytes());
+                                    testBuffered.writeBytes("\n");
+                                    testBuffered.writeBytes(testString);
+                                    testBuffered.writeBytes("\n");
 
-                                    Log.d("__LL", " in thread2 : "+testString );
+
+                                    Log.d("___LL", " in thread2 : "+testString );
+                                    testBuffered.flush();
+
+
 
                                 }
 

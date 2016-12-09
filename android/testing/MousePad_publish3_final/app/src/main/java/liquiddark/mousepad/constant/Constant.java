@@ -20,5 +20,16 @@ public class Constant{
 
     }
 
+    public static class COMMANDS{
+
+    }
+    public static class FLAGS{
+
+        public static final String SEARCH = "18";
+        public static final String PAD_START = "4";
+
+
+
+    }
 
 }
