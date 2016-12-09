@@ -39,6 +39,7 @@ import liquiddark.mousepad.socket.Connection;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -985,7 +986,7 @@ public class PcListActivity extends Activity {
                                 serverHostName = getStringFromBytes(hostname);
 
 
-                            Log.d("_LL" + TAG, "server's host name 2 = " + serverHostName);
+                            Log.d("_LL" + TAG, "server's host name 2 = "+hostname+" " + serverHostName);
 
 
                             if (!_ipList.contains(address.getHostAddress())) {
@@ -1076,12 +1077,23 @@ public class PcListActivity extends Activity {
 
 
         public String getStringFromBytes(byte[] hostname) {
-            String returnString = "";
-            int len = hostname.length;
+//            String returnString = "";
+//            int len = hostname.length;
+//
+//            for(int i  = 0 ; i < len; i ++){
+//                returnString += Byte.toString(hostname[i]);
+//            }
 
-            for(int i  = 0 ; i < len; i ++){
-                returnString += Byte.toString(hostname[i]);
+
+            String returnString ="";
+
+
+            try {
+                returnString = new String (hostname ,"UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
+
             return returnString;
         }
     }

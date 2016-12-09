@@ -1001,16 +1001,13 @@ class IpTest2 implements Runnable{
                         DOS.writeBytes(Constant.FLAGS.PAD_START); //connect to pad
 
 
-                        for(int i = 10 ; i <20;i++) {
-                           // DOS = new DataOutputStream(socket.getOutputStream());
-                          //  DOS.writeUTF(i+"");
-
-                        }
+                   
 
 
                         int ii=10,j =0;
 
                         DataOutputStream testBuffered ;
+                        testBuffered = new DataOutputStream(new BufferedOutputStream( socket.getOutputStream()));
                         while (true) {
                             testString="";
 
@@ -1020,19 +1017,18 @@ class IpTest2 implements Runnable{
                                 if(!eventQueue.isEmpty())
                                 {
                                     testString = eventQueue.poll();
-                                 //   Log.d("__LL", " in thread : "+testString );
 
-                                    testBuffered = new DataOutputStream(new BufferedOutputStream( socket.getOutputStream()));
+                                     Thread.sleep(5);
+
+
+                                 //   Log.d("__LL", " in thread : "+testString );
 
 
 //                                    java
 //                                      DOS.writeUTF(testString);
 //                                    c++
-                                    testBuffered.writeBytes("\n");
-                                    testBuffered.writeBytes(testString);
-                                    testBuffered.writeBytes("\n");
 
-
+                                    testBuffered.writeBytes("\n"+testString+"\n");
                                     Log.d("___LL", " in thread2 : "+testString );
                                     testBuffered.flush();
 
