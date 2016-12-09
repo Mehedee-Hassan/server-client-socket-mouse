@@ -994,7 +994,11 @@ class IpTest2 implements Runnable{
 //                          DOS.writeUTF("4"); //connect to pad
 
 //                        c++
-                        DOS.write("4".getBytes()); //connect to pad
+//                        DOS.writeBytes(Constant.FLAGS.PAD_START); //connect to pad
+
+//                        qt c++
+                        //                        c++
+                        DOS.writeBytes(Constant.FLAGS.PAD_START); //connect to pad
 
 
                         for(int i = 10 ; i <20;i++) {

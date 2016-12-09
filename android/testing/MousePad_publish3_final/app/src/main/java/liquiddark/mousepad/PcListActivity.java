@@ -617,11 +617,6 @@ public class PcListActivity extends Activity {
 
 
 
-        public  String FLAG = "18";
-        public  String N_FLAG = "_MOUSE";
-
-
-
         private String getHostAddress() {
             InetAddress addr = null;
             try {
@@ -665,7 +660,7 @@ public class PcListActivity extends Activity {
                             DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
 
 //                            c++
-                            DOS.write(FLAG.getBytes());
+                            DOS.write(Constant.FLAGS.SEARCH.getBytes());
 
 //                            java
 //                            DOS.writeUTF(FLAG);
