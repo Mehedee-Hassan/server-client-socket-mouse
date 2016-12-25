@@ -24,6 +24,11 @@ public class Constant{
         public static final String COMMAND_FINGURE_UP               = "16";
         public static final String FLAG_SEARCH                      = "18";
         public static final String FLAG_CONNECT_TO_PAD              = "4" ;
+        public static final String COMMAND_COPY                     = "19";
+        public static final String COMMAND_PEST                     = "20";
+        public static final String COMMAND_CUT                      = "21";
+        public static final String TYPE_ALPHA                       = "22";
+        public static final String TYPE_DELETE                      = "23";
     }
 
 

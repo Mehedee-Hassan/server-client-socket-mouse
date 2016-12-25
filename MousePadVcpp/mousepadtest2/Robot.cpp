@@ -465,6 +465,7 @@ void Robot::keyboard(string  line){
 
 
 
+
 void Robot::keyTypeDelete(){
 	INPUT ip;
 	ip.type = INPUT_KEYBOARD;

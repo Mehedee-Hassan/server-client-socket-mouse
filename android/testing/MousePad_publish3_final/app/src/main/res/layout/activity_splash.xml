@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#ff7043"
     android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-    tools:context="com.liquiddark.mousepad.mhr.mousepad.SplashActivity">
+    tools:context="liquiddark.mousepad.SplashActivity">
 
 
     <ImageView

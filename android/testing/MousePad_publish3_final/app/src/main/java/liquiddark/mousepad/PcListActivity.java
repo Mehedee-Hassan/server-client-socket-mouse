@@ -661,7 +661,7 @@ public class PcListActivity extends Activity {
                             DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
 
 //                            c++
-                            DOS.write(Constant.FLAGS.SEARCH.getBytes());
+                            DOS.write(("\n"+Constant.FLAGS.SEARCH).getBytes());
 
 //                            java
 //                            DOS.writeUTF(FLAG);

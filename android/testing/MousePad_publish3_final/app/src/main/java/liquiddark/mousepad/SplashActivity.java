@@ -49,7 +49,8 @@ public class SplashActivity extends Activity {
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putBoolean("__APP_FIRST_TIME_STARTED",true);
                     editor.apply();
-                    ShortcutIcon();
+
+                    //ShortcutIcon();
 
                 }else {
                     mainIntent= new Intent(SplashActivity.this,PcListActivity.class);
@@ -59,7 +60,9 @@ public class SplashActivity extends Activity {
 
                 startActivity(mainIntent);
                 overridePendingTransition(R.xml.slide_in, R.xml.slide_out);
+
                 finish();
+
             }
         }, SPLASH_DISPLAY_LENGTH);
 

@@ -6,56 +6,17 @@
     android:layout_height="match_parent"
 
     android:id="@+id/rootPcListLayoutVIew"
-    tools:context="com.liquiddark.mousepad.mhr.mousepad.PadActivity">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/keyboardShowlayout"
-        android:visibility="gone"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:padding="10dp"
-            android:inputType="text|textMultiLine"
-            android:text=""
-            android:ems="10"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:id="@+id/keyboardEventGetET2"
-            android:imeOptions="actionSend"
-            />
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:src="@drawable/clear_key"
-            android:id="@+id/clearETbutton"
-            android:layout_marginTop="16dp"
-            android:layout_below="@+id/keyboardEventGetET2"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="20dp" />
-
-        <!--<ImageView-->
-            <!--android:layout_width="100dp"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:src="@drawable/back_key2"-->
-            <!--android:id="@+id/backButtonKeyboard"-->
-            <!--android:layout_marginTop="34dp"-->
-            <!--android:layout_marginEnd="37dp"-->
-            <!--android:layout_below="@+id/keyboardEventGetET2"-->
-            <!--android:layout_alignParentEnd="true" />-->
-    </RelativeLayout>
+    tools:context="liquiddark.mousepad.PadActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/mousePadLayout"
         android:layout_below="@+id/keyboardShowlayout"
-        android:layout_toEndOf="@+id/keyboardShowlayout">
+        android:layout_toEndOf="@+id/keyboardShowlayout"
+        android:layout_toRightOf="@+id/keyboardShowlayout"
+
+        >
 
         <View android:layout_height="fill_parent"
             android:layout_width="fill_parent"
@@ -82,6 +43,8 @@
             android:id="@+id/closeWindowButton"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+
             android:layout_marginBottom="10dp"
 
             />
@@ -97,6 +60,8 @@
             android:layout_alignBaseline="@+id/closeWindowButton"
             android:layout_alignBottom="@+id/closeWindowButton"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+
             android:layout_marginEnd="12dp" />
 
         <LinearLayout
@@ -118,6 +83,8 @@
                 android:id="@+id/mouse_left"
                 android:layout_weight="50"
                 android:layout_marginEnd="1dp"
+                android:layout_marginRight="1dp"
+
 
                 />
 
@@ -127,6 +94,8 @@
                 android:background="@drawable/mouse_right3"
                 android:id="@+id/mouse_right"
                 android:layout_marginStart="1dp"
+                android:layout_marginLeft="1dp"
+
                 android:layout_weight="50" />
 
 
@@ -139,9 +108,13 @@
             android:id="@+id/escapeButton"
             android:background="@drawable/esc_key_new1"
             android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
             android:layout_alignBaseline="@+id/closeWindowButton"
             android:layout_alignBottom="@+id/closeWindowButton"
-            android:layout_toEndOf="@+id/closeWindowButton" />
+            android:layout_toEndOf="@+id/closeWindowButton"
+            android:layout_toRightOf="@+id/closeWindowButton"
+
+            />
 
         <View android:layout_height="150dp"
             android:layout_width="27dp"
@@ -153,7 +126,8 @@
             android:clickable="true"
             android:focusable="true"
             android:layout_above="@+id/linearLayout2"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"/>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -195,7 +169,60 @@
             android:id="@+id/openKeyboardIv"
             android:layout_marginLeft="2dp"
             android:layout_above="@+id/linearLayout2"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+
+
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/keyboardShowlayout"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:padding="10dp"
+            android:inputType="text|textMultiLine|textNoSuggestions"
+            android:text=""
+            android:ems="10"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:id="@+id/keyboardEventGetET2"
+            android:imeOptions="actionSend"
+
+            />
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:src="@drawable/clear_key"
+            android:id="@+id/clearETbutton"
+            android:layout_marginTop="19dp"
+            android:layout_below="@+id/keyboardEventGetET2"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+
+            />
+
+        <!--<ImageView-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:src="@drawable/back_key2"-->
+            <!--android:id="@+id/backButtonKeyboard"-->
+            <!--android:layout_marginTop="34dp"-->
+            <!--android:layout_marginEnd="37dp"-->
+            <!--android:layout_below="@+id/keyboardEventGetET2"-->
+            <!--android:layout_alignParentEnd="true" />-->
     </RelativeLayout>
 
 

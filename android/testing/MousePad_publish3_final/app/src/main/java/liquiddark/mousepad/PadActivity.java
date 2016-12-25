@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Vibrator;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.DragEvent;
@@ -108,6 +109,7 @@ public class PadActivity extends Activity {
     private int dumpDelete;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,7 +143,7 @@ public class PadActivity extends Activity {
             public void onGlobalFocusChanged(View oldFocus, View newFocus) {
 
                 int difference = rootPcListLayoutVIew.getRootView().getHeight() - mousePadLayout.getHeight() ;
-                Log.d("_LL"," clicked here "+difference);
+                //Log.d("_LL"," clicked here "+difference);
 
 
                 if(difference > 30){
@@ -195,7 +197,7 @@ public class PadActivity extends Activity {
         pauseResumeInit();
 
         super.onPause();
-        //finish();
+        finish();
     }
 
     private void pauseResumeInit() {
@@ -205,7 +207,10 @@ public class PadActivity extends Activity {
         saveY = 0;
         eventQueue = new LinkedList<String>();
 
-        (new Thread(new IpTest2(eventQueue,thisContext))).start();
+        ipTest2test = new IpTest2(eventQueue,thisContext);
+
+        (new Thread(ipTest2test)).start();
+
     }
 
     @Override
@@ -252,11 +257,12 @@ public class PadActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Toast toast = Toast.makeText(PadActivity.this,"copy",Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 0);
+                toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 250);
                 toast.show();
 
                 //(new Thread(new IpTest2(Constant.Action.COMMAND_COPY,thisContext))).start();
-                eventQueue.add(Constant.Action.COMMAND_COPY);
+                eventQAdeed(Constant.Action.COMMAND_COPY);
+
 
             }
         });
@@ -264,24 +270,27 @@ public class PadActivity extends Activity {
         pestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast toast = Toast.makeText(PadActivity.this,"pest",Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 0);
+                Toast toast = Toast.makeText(PadActivity.this,"paste",Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL,0, 250);
                 toast.show();
-                eventQueue.add(Constant.Action.COMMAND_PEST);
+                eventQAdeed(Constant.Action.COMMAND_PEST);
+
 
                 //(new Thread(new IpTest2(Constant.Action.COMMAND_PEST,thisContext))).start();
 
             }
         });
 
+
         cutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Toast toast = Toast.makeText(PadActivity.this,"cut",Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 0);
+                toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 250);
                 toast.show();
-                eventQueue.add(Constant.Action.COMMAND_CUT);
+                eventQAdeed(Constant.Action.COMMAND_CUT);
+
 
                 //(new Thread(new IpTest2(Constant.Action.COMMAND_CUT,thisContext))).start();
 
@@ -316,7 +325,7 @@ public class PadActivity extends Activity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-                Log.d("_LL"," = "+keyCode);
+                //Log.d("_LL"," = "+keyCode);
 
 
 
@@ -335,7 +344,8 @@ public class PadActivity extends Activity {
                             //  __backspaceIsNotPressed = true;
 
                             if(keyboardEventGetET2.getText().toString().isEmpty())
-                                eventQueue.add(Constant.Action.TYPE_DELETE);
+                                eventQAdeed(Constant.Action.TYPE_DELETE);
+
 
                             //(new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
 
@@ -354,7 +364,8 @@ public class PadActivity extends Activity {
                     {
                         case KeyEvent.KEYCODE_DPAD_CENTER:
                         case KeyEvent.KEYCODE_ENTER:
-                            eventQueue.add(COMMAND_ENTER);
+                            eventQAdeed(COMMAND_ENTER);
+
 
                             //(new Thread(new IpTest2(COMMAND_ENTER,thisContext))).start();
 
@@ -368,7 +379,7 @@ public class PadActivity extends Activity {
 
 
 
-                //  Log.d("_LL"," back space = "+__backspaceIsNotPressed);
+                //  //Log.d("_LL"," back space = "+__backspaceIsNotPressed);
 
                 return false;
 
@@ -388,7 +399,8 @@ public class PadActivity extends Activity {
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
 
                     //(new Thread(new IpTest2(COMMAND_ENTER,thisContext))).start();
-                    eventQueue.add(COMMAND_ENTER);
+                    eventQAdeed(COMMAND_ENTER);
+
 
 
                     handled = true;
@@ -398,6 +410,11 @@ public class PadActivity extends Activity {
                 return handled;
             }
         });
+    }
+
+    private void eventQAdeed(String commandEnter) {
+        eventQueue.add(commandEnter);
+        ipTest2test.added();
     }
 
     private void enableWifi() {
@@ -417,7 +434,8 @@ public class PadActivity extends Activity {
             @Override
             public void onClick(View v) {
 //                String val = COMMAND_LEFT_CLICK;
-                eventQueue.add(COMMAND_LEFT_CLICK);
+                eventQAdeed(COMMAND_LEFT_CLICK);
+
 
 
                 //(new Thread(new IpTest2(val,thisContext))).start();
@@ -432,9 +450,10 @@ public class PadActivity extends Activity {
                 vibration.vibrate(50);
 
 //                String val = COMMAND_LONG_CLICK;
-                Log.d("mouse_button_click", "onLongClick: ");
+                //Log.d("mouse_button_click", "onLongClick: ");
 
-                eventQueue.add(COMMAND_LONG_CLICK);
+                eventQAdeed(COMMAND_LONG_CLICK);
+
 
                 //(new Thread(new IpTest2(val,thisContext))).start();
 
@@ -446,7 +465,8 @@ public class PadActivity extends Activity {
             @Override
             public void onClick(View v) {
 //                String val = COMMAND_RIGHT_CLICK;
-                eventQueue.add(COMMAND_RIGHT_CLICK);
+                eventQAdeed(COMMAND_RIGHT_CLICK);
+
 
 
                 //(new Thread(new IpTest2(val,thisContext))).start();
@@ -471,10 +491,11 @@ public class PadActivity extends Activity {
             public boolean onLongClick(View v) {
 
 //                String val = COMMAND_LONG_CLICK;
-                Log.d("mouse_button_click", "onLongClick: ");
+                //Log.d("mouse_button_click", "onLongClick: ");
                 //(new Thread(new IpTest2(val,thisContext))).start();
 
-                eventQueue.add(COMMAND_LONG_CLICK);
+                eventQAdeed(COMMAND_LONG_CLICK);
+
 
                 return true;
             }
@@ -528,7 +549,7 @@ public class PadActivity extends Activity {
                     tempAction =3;
                     //saveX = event.getX();
                     //saveY = event.getY();
-                    Log.d("_LL","move--");
+                    //Log.d("_LL","move--");
 
 
 
@@ -542,9 +563,11 @@ public class PadActivity extends Activity {
 
                 String val = tempAction+" "+ (tmpX-saveX)+" "+ (tmpY-saveY);
 
-                Log.d("_LL","move--"+val);
+                //Log.d("_LL","move--"+val);
 
-                eventQueue.add(val);
+                eventQAdeed(val);
+
+
 
 //                Thread t = new Thread(new IpTest2(val,thisContext));
 //                t.start();
@@ -567,7 +590,7 @@ public class PadActivity extends Activity {
 
 
 
-               // Log.d("__LL",""+val);
+               // //Log.d("__LL",""+val);
 
 
 
@@ -589,7 +612,9 @@ public class PadActivity extends Activity {
 //                String val = COMMAND_ENTER;
 
                 //(new Thread(new IpTest2(val,thisContext))).start();
-                eventQueue.add(COMMAND_ENTER);
+                eventQAdeed(COMMAND_ENTER);
+
+
             }
         });
     }
@@ -619,7 +644,8 @@ public class PadActivity extends Activity {
 
                     //(new Thread(new IpTest2(val,thisContext))).start();
 
-                        eventQueue.add(val);
+                        eventQAdeed(val);
+
 
 
 
@@ -643,7 +669,7 @@ public class PadActivity extends Activity {
                 String val = COMMAND_ESCAPE;
 
                 //(new Thread(new IpTest2(val,thisContext))).start();
-                eventQueue.add(val);
+                eventQAdeed(val);
 
             }
         });
@@ -656,7 +682,7 @@ public class PadActivity extends Activity {
                 String val = COMMAND_CLOSE_WINDOW;
 
                 //(new Thread(new IpTest2(val,thisContext))).start();
-                eventQueue.add(val);
+                eventQAdeed(val);
 
             }
         });
@@ -680,14 +706,14 @@ public class PadActivity extends Activity {
         ipToSednExtraction();
 
 
-        Log.d("mouse_button_click", "onLongClick: "+MousePad.isLongClickable()+" "+MousePad.isClickable());
+        //Log.d("mouse_button_click", "onLongClick: "+MousePad.isLongClickable()+" "+MousePad.isClickable());
 
         MousePad.setLongClickable(true);
         MousePad.setClickable(true);
         MousePad.setFocusable(true);
 
 
-        Log.d("mouse_button_click", "onLongClick: "+MousePad.isLongClickable()+" "+MousePad.isClickable());
+        //Log.d("mouse_button_click", "onLongClick: "+MousePad.isLongClickable()+" "+MousePad.isClickable());
 
 
 
@@ -750,7 +776,7 @@ public class PadActivity extends Activity {
         keyboardEventGetET2 = (EditText) findViewById(R.id.keyboardEventGetET2);
         keyboardEventGetET2.addTextChangedListener(textWatcher);
 
-
+      //  keyboardEventGetET2.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
 
 
@@ -780,14 +806,15 @@ public class PadActivity extends Activity {
             boolean passMeThrough = false;
             char temp = 0 ;
 
-            Log.d("_LL","got u = "+temp);
+            //Log.d("_LL","got u = "+temp);
 
             if(before!=0 && count<__oldCount)
             {
                 __oldCount = count;
                 if(!keyboardEventGetET2.getText().toString().isEmpty())
                     //(new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
-                eventQueue.add(Constant.Action.TYPE_DELETE);
+                eventQAdeed(Constant.Action.TYPE_DELETE);
+
 
             }else
             if(count!=0){
@@ -795,19 +822,23 @@ public class PadActivity extends Activity {
                     __oldCount = count;
 
                     temp = s.charAt(pos);
-                    Log.d("_LL","got u2 = "+temp+" "+start+" "+before+" "+count);
+                    //Log.d("_LL","got u2 = "+temp+" "+start+" "+before+" "+count);
 
-                    if(count != before)
-                        eventQueue.add(Constant.Action.TYPE_ALPHA+" "+temp);
+                    if(count != before) {
+                        eventQAdeed(Constant.Action.TYPE_ALPHA + " " + temp);
 
+                    }
                     //(new Thread(new IpTest2("22 " + temp, thisContext))).start();
 
                 }
             }else {
                 __oldCount = count;
 
-                if(!keyboardEventGetET2.getText().toString().isEmpty())
-                    eventQueue.add(Constant.Action.TYPE_DELETE);
+                if(!keyboardEventGetET2.getText().toString().isEmpty()) {
+                    eventQAdeed(Constant.Action.TYPE_DELETE);
+
+
+                }
 
                 //(new Thread(new IpTest2(Constant.Action.TYPE_DELETE,thisContext))).start();
             }
@@ -830,13 +861,28 @@ public class PadActivity extends Activity {
 
             __numberOfTimeBaackPressed++;
 
-            if(__numberOfTimeBaackPressed >1) {
+            if(__numberOfTimeBaackPressed >2) {
                 startActivity(new Intent(PadActivity.this, PcListActivity.class));
                 overridePendingTransition(R.xml.slide_in2, R.xml.slide_out2);
                 finish();
+
+
                 return super.onKeyDown(keyCode, event);
 
+            }if(__numberOfTimeBaackPressed >1) {
+                Toast.makeText(this, "press again to exit", Toast.LENGTH_SHORT).show();
+
+                new Handler().postDelayed(new Runnable(){
+                    @Override
+                    public void run() {
+                        __numberOfTimeBaackPressed = 0;
+
+                    }
+                }, 10000);
+
             }
+
+            else
             Toast.makeText(this,"exit pad?!!",Toast.LENGTH_SHORT).show();
 
 
@@ -854,14 +900,28 @@ public class PadActivity extends Activity {
         overridePendingTransition(R.xml.slide_in2,R.xml.slide_out2);
 
         __numberOfTimeBaackPressed++;
-        Toast.makeText(this,"exit pad?!!",Toast.LENGTH_SHORT).show();
 
         if(__numberOfTimeBaackPressed >2) {
             startActivity(new Intent(PadActivity.this, PcListActivity.class));
             overridePendingTransition(R.xml.slide_in2, R.xml.slide_out2);
             finish();
             super.onBackPressed();
+        }if(__numberOfTimeBaackPressed >1){
+
+            Toast.makeText(this,"press again to exit",Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable(){
+                @Override
+                public void run() {
+                    __numberOfTimeBaackPressed = 0;
+
+                }
+            }, 10000);
+
         }
+
+        else
+            Toast.makeText(this,"exit pad?!!",Toast.LENGTH_SHORT).show();
 
 
     }
@@ -879,7 +939,7 @@ public class PadActivity extends Activity {
                 getSystemService(Context.INPUT_METHOD_SERVICE);
 
 
-        Log.d("_LL"," value = "+_isBackPressed);
+        //Log.d("_LL"," value = "+_isBackPressed);
 
         if(!_isBackPressed && imm!=null){
             imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
@@ -910,7 +970,7 @@ public class PadActivity extends Activity {
 
 
 
-class IpTest2 implements Runnable{
+class IpTest2 implements Runnable,AddedToQueue{
 
 
     String val;
@@ -920,6 +980,8 @@ class IpTest2 implements Runnable{
      Queue<String> eventQueue;
 
     private Context padActContext ;
+    private int addedItemToQueue;
+
     public IpTest2(){
 
 
@@ -930,6 +992,7 @@ class IpTest2 implements Runnable{
         this.eventQueue = eventQueue;
         this.padActContext = context;
         ipAddress = PadActivity.IpToTheThread;
+        addedItemToQueue=0;
     }
 
 
@@ -969,7 +1032,7 @@ class IpTest2 implements Runnable{
         Socket socket = null;
 
 
-        Log.d("__LL"," in thread : ");
+        //Log.d("__LL"," in thread : ");
 
         //===
         try {
@@ -1001,7 +1064,6 @@ class IpTest2 implements Runnable{
                         DOS.writeBytes(Constant.FLAGS.PAD_START); //connect to pad
 
 
-                   
 
 
                         int ii=10,j =0;
@@ -1009,19 +1071,23 @@ class IpTest2 implements Runnable{
                         DataOutputStream testBuffered ;
                         testBuffered = new DataOutputStream(new BufferedOutputStream( socket.getOutputStream()));
                         while (true) {
+
+
                             testString="";
-
+                           // if(addedItemToQueue>0)
+//                            if(j++>2)
                                 {
-
+//                                    j = 0;
 
                                 if(!eventQueue.isEmpty())
                                 {
                                     testString = eventQueue.poll();
+                                    addedItemToQueue--;
 
-                                     Thread.sleep(5);
+                                     Thread.sleep(2);
 
 
-                                 //   Log.d("__LL", " in thread : "+testString );
+                                 //   //Log.d("__LL", " in thread : "+testString );
 
 
 //                                    java
@@ -1029,11 +1095,15 @@ class IpTest2 implements Runnable{
 //                                    c++
 
                                     testBuffered.writeBytes("\n"+testString+"\n");
-                                    Log.d("___LL", " in thread2 : "+testString );
+                                 //   //Log.d("___LL", " in thread2 : "+testString );
                                     testBuffered.flush();
 
 
 
+                                }
+                                else {
+
+                                    Thread.sleep(2);
                                 }
 
                             }
@@ -1049,17 +1119,9 @@ class IpTest2 implements Runnable{
                             socket.close();
 
 
-                        if(true){
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
 
 
-                                }
-                            });
-                        }
-
-                        Log.d(TAG ,"exception ");
+                        //Log.d(TAG ,"exception ");
                     }
                     if(!socket.isClosed())
                         socket.close();
@@ -1078,12 +1140,12 @@ class IpTest2 implements Runnable{
             }
 
         }catch (Exception ex){
-            Log.d("__LL", " exception " );
+            //Log.d("__LL", " exception " );
 
         } finally {
 
         }
-        Log.d("__LL", " out thread : " );
+        //Log.d("__LL", " out thread : " );
 
     }
 
@@ -1101,7 +1163,7 @@ class IpTest2 implements Runnable{
             int val = process.waitFor();
 
 
-            //Log.d(TAG+" check", "check&&&& =" + url+"| "+process.getInputStream().toString() );
+            ////Log.d(TAG+" check", "check&&&& =" + url+"| "+process.getInputStream().toString() );
 
 
             if(val == 0)
@@ -1126,5 +1188,10 @@ class IpTest2 implements Runnable{
         return false;
     }
 
+    @Override
+    public void added() {
+
+        addedItemToQueue ++;
+    }
 }
 }

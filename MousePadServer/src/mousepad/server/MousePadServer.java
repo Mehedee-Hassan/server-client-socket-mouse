@@ -2,6 +2,8 @@ package mousepad.server;
 
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import mousepad.server.constant.Constant;
+import mousepad.server.dump.MakePcInfoUI;
+
 
 
 import javax.swing.*;
@@ -45,6 +47,8 @@ public class MousePadServer {
 
 
         initExtraVars();
+        new MakePcInfoUI();
+
 
 
         while (true)
@@ -102,6 +106,8 @@ public class MousePadServer {
 
 
      }
+
+
 
     private static void initExtraVars() {
 
